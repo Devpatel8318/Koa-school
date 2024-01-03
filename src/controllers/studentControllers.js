@@ -1,4 +1,4 @@
-import db from '../connection/db.js'
+import { deleteOneResult } from '../queries/resultQueries.js'
 import {
     createOneStudent,
     deleteOneStudent,
@@ -79,11 +79,10 @@ export const deleteStudent = async (ctx) => {
         await deleteOneStudent(ctx.params.id)
 
         if (ctx.state.student.result) {
-            const deleteResult = await db
-                .collection('results')
-                .deleteOne({ _id: ctx.state.student.result })
-
-            if (deleteResult.deletedCount === 0) {
+            const deletedResult = await deleteOneResult({
+                _id: ctx.state.student.result,
+            })
+            if (deletedResult.deletedCount === 0) {
                 ctx.throw(404, 'Result of student not deleted')
             }
         }
@@ -91,7 +90,8 @@ export const deleteStudent = async (ctx) => {
         ctx.status = 200
         ctx.body = { message: 'Student deleted successfully' }
     } catch (err) {
+        console.log(err)
         ctx.status = 500
-        ctx.body = { error: 'Internal server error' }
+        ctx.body = { error: err.message || 'Internal server error' }
     }
 }

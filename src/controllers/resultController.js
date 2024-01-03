@@ -1,4 +1,3 @@
-import db from '../connection/db.js'
 import { ObjectId } from 'mongodb'
 import {
     createOneResult,
@@ -8,27 +7,7 @@ import {
     updateOneResult,
 } from '../queries/resultQueries.js'
 import { updateOneStudent } from '../queries/studentQueries.js'
-
-const transformDoc = (resultDoc) => {
-    return {
-        _id: resultDoc[0]._id,
-        Signed_By: resultDoc[0].Signed_By,
-        studentInfo: resultDoc[0].studentInfo,
-        Marks: resultDoc[0].Marks.map((mark) => {
-            const correspondingSubject = resultDoc[0].subjectInfo.find(
-                (subject) => subject._id === mark.sub_code
-            )
-            return {
-                sub_code: mark.sub_code,
-                marks: mark.marks,
-                name: correspondingSubject.name,
-                credit: correspondingSubject.credit,
-                maximumMarks: correspondingSubject.maximumMarks,
-                description: correspondingSubject.description,
-            }
-        }),
-    }
-}
+import { transformDoc } from '../utils/transformDoc.js'
 
 export const getResults = async (ctx) => {
     try {
@@ -100,7 +79,6 @@ export const createResult = async (ctx) => {
         ctx.status = 201
         ctx.body = resultDoc.insertedId
     } catch (err) {
-        console.log(err)
         if (err.code === 11000) {
             ctx.status = 409
             ctx.body = { error: 'Result Already Exists' }
@@ -130,14 +108,15 @@ export const deleteResult = async (ctx) => {
 
         await deleteOneResult({ _id: ctx.params.id })
 
-        const updatedStudent = updateOneStudent(
+        const updatedStudent = await updateOneStudent(
             new ObjectId(foundDoc.Student),
             { $unset: { result: '' } }
         )
+        console.log(updatedStudent)
 
         if (updatedStudent.modifiedCount === 0) {
             ctx.status = 500
-            ctx.body = { error: 'Failed to update Student' }
+            ctx.body = { warning: 'Failed to update Student' }
             return
         }
 
@@ -145,6 +124,6 @@ export const deleteResult = async (ctx) => {
         ctx.body = { message: 'Result deleted successfully' }
     } catch (err) {
         ctx.status = 500
-        ctx.body = { error: 'Internal server error' }
+        ctx.body = { error: err.message || 'Internal server error' }
     }
 }
