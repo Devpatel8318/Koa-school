@@ -1,8 +1,13 @@
-import db from '../connection/db.js'
+import {
+    createOneSubject,
+    deleteOneSubject,
+    findAllSubjects,
+    updateOneSubject,
+} from '../queries/subjectQueries.js'
 
 export const getAllSubjects = async (ctx) => {
     try {
-        const subjects = await db.collection('subjects').find().toArray()
+        const subjects = await findAllSubjects()
         ctx.status = 200
         ctx.body = subjects
     } catch (err) {
@@ -12,29 +17,13 @@ export const getAllSubjects = async (ctx) => {
 }
 
 export const getSingleSubject = async (ctx) => {
-    const subjectId = ctx.params.id
-
-    try {
-        const subjectDoc = await db
-            .collection('subjects')
-            .findOne({ _id: subjectId })
-
-        if (!subjectDoc) ctx.throw(404, 'Subject not found')
-
-        ctx.status = 200
-        ctx.body = subjectDoc
-    } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
-    }
+    ctx.status = 200
+    ctx.body = ctx.state.subject
 }
 
 export const createSubject = async (ctx) => {
     try {
-        const subjectDoc = await db
-            .collection('subjects')
-            .insertOne(ctx.request.body)
-
+        const subjectDoc = await createOneSubject(ctx.request.body)
         if (!subjectDoc) ctx.throw(500, 'Failed to create Subject')
 
         ctx.status = 201
@@ -52,15 +41,8 @@ export const createSubject = async (ctx) => {
 export const updateSubject = async (ctx) => {
     const subjectId = ctx.params.id
     const updates = ctx.request.body
-
     try {
-        const updatedSubject = await db
-            .collection('subjects')
-            .updateOne({ _id: subjectId }, { $set: updates })
-
-        if (updatedSubject.matchedCount === 0)
-            ctx.throw(404, 'Subject not found')
-
+        await updateOneSubject(subjectId, updates)
         ctx.status = 200
         ctx.body = { message: 'Subject updated successfully' }
     } catch (err) {
@@ -71,14 +53,8 @@ export const updateSubject = async (ctx) => {
 
 export const deleteSubject = async (ctx) => {
     const subjectId = ctx.params.id
-
     try {
-        const subjectDoc = await db
-            .collection('subjects')
-            .deleteOne({ _id: subjectId })
-
-        if (subjectDoc.deletedCount === 0) ctx.throw(404, 'Subject not found')
-
+        await deleteOneSubject(subjectId)
         ctx.status = 200
         ctx.body = { message: 'Subject deleted successfully' }
     } catch (err) {

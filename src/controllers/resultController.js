@@ -1,47 +1,14 @@
 import db from '../connection/db.js'
 import { ObjectId } from 'mongodb'
+import {
+    createOneResult,
+    deleteOneResult,
+    findAllResults,
+    getOneFormattedResult,
+    updateOneResult,
+} from '../queries/resultQueries.js'
+import { updateOneStudent } from '../queries/studentQueries.js'
 
-const pipeline = (argument) => [
-    {
-        $match: argument,
-    },
-    {
-        $addFields: {
-            convertedStudentId: { $toObjectId: '$Student' },
-        },
-    },
-    {
-        $lookup: {
-            from: 'students',
-            localField: 'convertedStudentId',
-            foreignField: '_id',
-            as: 'studentInfo',
-        },
-    },
-    {
-        $unwind: '$studentInfo',
-    },
-    {
-        $lookup: {
-            from: 'subjects',
-            localField: 'Marks.sub_code',
-            foreignField: '_id',
-            as: 'subjectInfo',
-        },
-    },
-    {
-        $project: {
-            _id: 1,
-            Signed_By: 1,
-            Marks: 1,
-            'studentInfo._id': 1,
-            'studentInfo.firstName': 1,
-            'studentInfo.lastName': 1,
-            'studentInfo.email': 1,
-            subjectInfo: 1,
-        },
-    },
-]
 const transformDoc = (resultDoc) => {
     return {
         _id: resultDoc[0]._id,
@@ -65,7 +32,7 @@ const transformDoc = (resultDoc) => {
 
 export const getResults = async (ctx) => {
     try {
-        const results = await db.collection('results').find().toArray()
+        const results = await findAllResults()
         ctx.status = 200
         ctx.body = results
     } catch (err) {
@@ -75,45 +42,27 @@ export const getResults = async (ctx) => {
 }
 
 export const getSingleResult = async (ctx) => {
-    try {
-        const resultDoc = await db
-            .collection('results')
-            .findOne({ _id: ctx.params.id })
-
-        if (!resultDoc) ctx.throw(404, 'Result not found')
-
-        ctx.status = 200
-        ctx.body = resultDoc
-    } catch (err) {
-        ctx.status = 500
-        ctx.body = { error: 'Internal server error' }
-    }
+    ctx.status = 200
+    ctx.body = ctx.state.result
 }
 
 export const getSingleFormattedResult = async (ctx) => {
     try {
-        const resultDoc = await db
-            .collection('results')
-            .aggregate(pipeline({ _id: ctx.params.id }))
-            .toArray()
-
-        if (!resultDoc || resultDoc?.length === 0)
-            ctx.throw(404, 'Result not found')
+        const resultDoc = await getOneFormattedResult({ _id: ctx.params.id })
 
         ctx.status = 200
         ctx.body = transformDoc(resultDoc)
     } catch (err) {
         ctx.status = 500
-        ctx.body = { error: 'Internal server error' }
+        ctx.body = { error: err.message || 'Internal server error' }
     }
 }
 
 export const getFormattedResultByStudent = async (ctx) => {
     try {
-        const resultDoc = await db
-            .collection('results')
-            .aggregate(pipeline({ Student: ctx.params.id }))
-            .toArray()
+        const resultDoc = await getOneFormattedResult({
+            Student: ctx.state.student._id,
+        })
 
         if (!resultDoc || resultDoc?.length === 0)
             ctx.throw(404, 'Result not found')
@@ -121,32 +70,28 @@ export const getFormattedResultByStudent = async (ctx) => {
         ctx.status = 200
         ctx.body = transformDoc(resultDoc)
     } catch (err) {
+        console.log(err)
         ctx.status = 500
-        ctx.body = { error: 'Internal server error' }
+        ctx.body = { error: err.message || 'Internal server error' }
     }
 }
 
 export const createResult = async (ctx) => {
     try {
-        const resultDoc = await db
-            .collection('results')
-            .insertOne(ctx.request.body)
+        const resultDoc = await createOneResult(ctx.request.body)
 
         if (!resultDoc) {
             ctx.status = 500
             ctx.body = { error: 'Failed to create Result' }
             return
         }
-
-        const updatedStudent = await db
-            .collection('students')
-            .updateOne(
-                { _id: new ObjectId(ctx.request.body.Student) },
-                { $set: { result: resultDoc.insertedId } }
-            )
+        const updatedStudent = await updateOneStudent(
+            new ObjectId(ctx.request.body.Student),
+            { $set: { result: resultDoc.insertedId } }
+        )
 
         if (!updatedStudent) {
-            await db.collection('result').deleteOne(ctx.request.body)
+            await deleteOneResult(ctx.request.body)
             ctx.status = 500
             ctx.body = { error: 'Failed to update Student' }
             return
@@ -155,6 +100,7 @@ export const createResult = async (ctx) => {
         ctx.status = 201
         ctx.body = resultDoc.insertedId
     } catch (err) {
+        console.log(err)
         if (err.code === 11000) {
             ctx.status = 409
             ctx.body = { error: 'Result Already Exists' }
@@ -169,16 +115,7 @@ export const updateResult = async (ctx) => {
     const updates = ctx.request.body
 
     try {
-        const updatedResult = await db
-            .collection('results')
-            .updateOne({ _id: ctx.params.id }, { $set: updates })
-
-        if (updatedResult.matchedCount === 0) {
-            ctx.status = 404
-            ctx.body = { error: 'Result not found' }
-            return
-        }
-
+        await updateOneResult(ctx.params.id, updates)
         ctx.status = 200
         ctx.body = { message: 'Result updated successfully' }
     } catch (err) {
@@ -189,32 +126,14 @@ export const updateResult = async (ctx) => {
 
 export const deleteResult = async (ctx) => {
     try {
-        const foundDoc = await db
-            .collection('results')
-            .findOne({ _id: ctx.params.id })
+        const foundDoc = ctx.state.result
 
-        if (!foundDoc) {
-            ctx.status = 404
-            ctx.body = { error: 'Result not found' }
-            return
-        }
+        await deleteOneResult({ _id: ctx.params.id })
 
-        const deleteResult = await db
-            .collection('results')
-            .deleteOne({ _id: ctx.params.id })
-
-        if (deleteResult.deletedCount === 0) {
-            ctx.status = 404
-            ctx.body = { error: 'Result not Deleted' }
-            return
-        }
-
-        const updatedStudent = await db
-            .collection('students')
-            .updateOne(
-                { _id: new ObjectId(foundDoc.Student) },
-                { $unset: { result: '' } }
-            )
+        const updatedStudent = updateOneStudent(
+            new ObjectId(foundDoc.Student),
+            { $unset: { result: '' } }
+        )
 
         if (updatedStudent.modifiedCount === 0) {
             ctx.status = 500

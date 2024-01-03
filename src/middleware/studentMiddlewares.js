@@ -1,4 +1,4 @@
-import db from '../connection/db.js'
+import { findOneStudent } from '../queries/studentQueries.js'
 import { passwordEncryption } from '../utils/passwordEncryption.js'
 
 export const validLoginCredentials = async (ctx, next) => {
@@ -18,10 +18,7 @@ export const validLoginCredentials = async (ctx, next) => {
 
 export const doesStudentExistByEmail = async (ctx, next) => {
     try {
-        const student = await db
-            .collection('students')
-            .findOne({ email: ctx.request.body.email })
-
+        const student = await findOneStudent({ email: ctx.request.body.email })
         if (!student) {
             ctx.throw(404, 'Student not found')
         } else {
@@ -36,10 +33,13 @@ export const doesStudentExistByEmail = async (ctx, next) => {
 
 export const doesStudentExistById = async (ctx, next) => {
     try {
-        const student = await db
-            .collection('students')
-            .findOne({ _id: ctx.params.id }, { projection: { password: 0 } })
-
+        // const student = await db
+        //     .collection('students')
+        //     .findOne({ _id: ctx.params.id }, { projection: { password: 0 } })
+        const student = await findOneStudent(
+            { _id: ctx.params.id },
+            { projection: { password: 0 } }
+        )
         if (!student) {
             ctx.throw(404, 'Student not found')
         } else {

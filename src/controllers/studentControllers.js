@@ -1,4 +1,9 @@
 import db from '../connection/db.js'
+import {
+    createOneStudent,
+    deleteOneStudent,
+    findAllStudents,
+} from '../queries/studentQueries.js'
 
 export const getStudents = async (ctx) => {
     try {
@@ -10,12 +15,7 @@ export const getStudents = async (ctx) => {
         if (ctx.query.result === 'true') {
             filter = { result: { $exists: true } }
         }
-
-        const students = await db
-            .collection('students')
-            .find(filter)
-            .project({ password: 0 })
-            .toArray()
+        const students = await findAllStudents(filter)
 
         ctx.status = 200
         ctx.body = students
@@ -30,27 +30,22 @@ export const getSingleStudent = async (ctx) => {
 }
 
 export const loginStudent = async (ctx) => {
-    try {
-        const foundStudent = ctx.state.student
+    const foundStudent = ctx.state.student
 
-        if (foundStudent.password !== ctx.request.body.password)
-            ctx.throw(401, 'Wrong password')
+    if (foundStudent.password !== ctx.request.body.password)
+        ctx.throw(401, 'Wrong password')
 
-        delete foundStudent.password
+    delete foundStudent.password
 
-        ctx.status = 200
-        ctx.body = foundStudent
-    } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
-    }
+    ctx.status = 200
+    ctx.body = foundStudent
 }
 
 export const createStudent = async (ctx) => {
     try {
         const student = ctx.request.body
 
-        const studentDoc = await db.collection('students').insertOne(student)
+        const studentDoc = await createOneStudent(student)
 
         if (!studentDoc || !studentDoc.insertedId) {
             ctx.throw(500, 'Failed to create the student')
@@ -70,10 +65,7 @@ export const createStudent = async (ctx) => {
 export const updateStudent = async (ctx) => {
     const updates = ctx.request.body
     try {
-        await db
-            .collection('students')
-            .updateOne({ _id: ctx.params.id }, { $set: updates })
-
+        await updateStudent(ctx.params.id, updates)
         ctx.status = 200
         ctx.body = { message: 'Student updated successfully' }
     } catch (err) {
@@ -84,7 +76,7 @@ export const updateStudent = async (ctx) => {
 
 export const deleteStudent = async (ctx) => {
     try {
-        await db.collection('students').deleteOne({ _id: ctx.params.id })
+        await deleteOneStudent(ctx.params.id)
 
         if (ctx.state.student.result) {
             const deleteResult = await db

@@ -6,6 +6,7 @@ import {
     getSingleSubject,
     updateSubject,
 } from '../controllers/subjectControllers.js'
+import { doesSubjectExistById } from '../middleware/subjectMiddlewares.js'
 
 const router = new Router({ prefix: '/subjects' })
 
@@ -13,15 +14,15 @@ const router = new Router({ prefix: '/subjects' })
 router.get('/', getAllSubjects)
 
 // get single subject
-router.get('/:id', getSingleSubject)
+router.get('/:id', doesSubjectExistById, getSingleSubject)
 
 // create subject
 router.post('/', createSubject)
 
 // update subject
-router.patch('/:id', updateSubject)
+router.patch('/:id', doesSubjectExistById, updateSubject)
 
 // delete subject
-router.delete('/:id', deleteSubject)
+router.delete('/:id', doesSubjectExistById, deleteSubject)
 
 export default router
