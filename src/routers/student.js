@@ -4,6 +4,7 @@ import {
     validLoginCredentials,
     doesStudentExistByEmail,
     doesStudentExistById,
+    validateAndEncryptPassword,
 } from '../middleware/studentMiddlewares.js'
 import {
     createStudent,
@@ -20,19 +21,24 @@ const router = new Router({ prefix: '/students' })
 router.get('/', getStudents)
 
 // Get Single student
-
 router.get('/:id', validId, doesStudentExistById, getSingleStudent)
 
 // Student Login
-router.post('/login', validLoginCredentials, doesStudentExistByEmail, loginStudent)
+router.post(
+    '/login',
+    validLoginCredentials,
+    doesStudentExistByEmail,
+    validateAndEncryptPassword,
+    loginStudent
+)
 
 // Create a new student
-router.post('/', createStudent)
+router.post('/', validateAndEncryptPassword, createStudent)
 
 // Update a Student
-router.patch('/:id', validId, updateStudent)
+router.patch('/:id', validId, doesStudentExistById, updateStudent)
 
 // Delete a student
-router.delete('/:id', validId, deleteStudent)
+router.delete('/:id', validId, doesStudentExistById, deleteStudent)
 
 export default router

@@ -1,5 +1,4 @@
 import db from '../connection/db.js'
-import { passwordEncryption } from '../utils/passwordEncryption.js'
 
 export const getStudents = async (ctx) => {
     try {
@@ -26,32 +25,21 @@ export const getStudents = async (ctx) => {
     }
 }
 export const getSingleStudent = async (ctx) => {
-    try {
-        // const studentDoc = await db
-        //     .collection('students')
-        //     .findOne({ _id: ctx.params.id }, { projection: { password: 0 } })
-
-        // if (!studentDoc) ctx.throw(404, 'Student not found')
-
-        ctx.status = 200
-        ctx.body = ctx.state.student
-    } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
-    }
+    ctx.status = 200
+    ctx.body = ctx.state.student
 }
 
 export const loginStudent = async (ctx) => {
     try {
-        const student = ctx.state.student
+        const foundStudent = ctx.state.student
 
-        if (student.password !== passwordEncryption(ctx.request.body.password))
+        if (foundStudent.password !== ctx.request.body.password)
             ctx.throw(401, 'Wrong password')
 
-        delete student.password
+        delete foundStudent.password
 
         ctx.status = 200
-        ctx.body = student
+        ctx.body = foundStudent
     } catch (err) {
         ctx.status = err.status || 500
         ctx.body = { error: err.message || 'Internal server error' }
@@ -61,18 +49,6 @@ export const loginStudent = async (ctx) => {
 export const createStudent = async (ctx) => {
     try {
         const student = ctx.request.body
-        if (!student.password) ctx.throw(400, 'Please provide a password')
-
-        const encryptedPassword = passwordEncryption(student.password)
-
-        if (encryptedPassword === false) {
-            ctx.throw(
-                400,
-                'Password should contain at least one uppercase letter, one special character, and one number'
-            )
-        } else {
-            student.password = encryptedPassword
-        }
 
         const studentDoc = await db.collection('students').insertOne(student)
 
@@ -94,12 +70,9 @@ export const createStudent = async (ctx) => {
 export const updateStudent = async (ctx) => {
     const updates = ctx.request.body
     try {
-        const updatedStudent = await db
+        await db
             .collection('students')
             .updateOne({ _id: ctx.params.id }, { $set: updates })
-
-        if (updatedStudent.matchedCount === 0)
-            ctx.throw(404, 'Student not found')
 
         ctx.status = 200
         ctx.body = { message: 'Student updated successfully' }
@@ -111,25 +84,12 @@ export const updateStudent = async (ctx) => {
 
 export const deleteStudent = async (ctx) => {
     try {
-        const studentId = ctx.params.id
-        const foundStudentDoc = await db
-            .collection('students')
-            .findOne({ _id: studentId }, { projection: { result: 1 } })
+        await db.collection('students').deleteOne({ _id: ctx.params.id })
 
-        if (!foundStudentDoc) ctx.throw(404, 'Student not found')
-
-        const studentDoc = await db
-            .collection('students')
-            .deleteOne({ _id: studentId })
-
-        if (studentDoc.deletedCount === 0) {
-            ctx.throw(404, 'Student not found')
-        }
-
-        if (foundStudentDoc.result) {
+        if (ctx.state.student.result) {
             const deleteResult = await db
                 .collection('results')
-                .deleteOne({ _id: foundStudentDoc.result })
+                .deleteOne({ _id: ctx.state.student.result })
 
             if (deleteResult.deletedCount === 0) {
                 ctx.throw(404, 'Result of student not deleted')
