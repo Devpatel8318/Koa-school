@@ -8,6 +8,7 @@ import { Server } from 'socket.io'
 import studentRouter from './routers/student.js'
 import subjectRouter from './routers/subject.js'
 import resultRouter from './routers/result.js'
+import allowedUsers from './routers/allowedUsers.js'
 
 config()
 const app = new Koa()
@@ -44,6 +45,7 @@ app.use(async (ctx, next) => {
 app.use(studentRouter.routes())
 app.use(subjectRouter.routes())
 app.use(resultRouter.routes())
+app.use(allowedUsers.routes())
 
 app.use(async (ctx) => {
     ctx.status = 404

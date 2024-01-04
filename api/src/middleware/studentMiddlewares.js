@@ -33,9 +33,6 @@ export const doesStudentExistByEmail = async (ctx, next) => {
 
 export const doesStudentExistById = async (ctx, next) => {
     try {
-        // const student = await db
-        //     .collection('students')
-        //     .findOne({ _id: ctx.params.id }, { projection: { password: 0 } })
         const student = await findOneStudent(
             { _id: ctx.params.id },
             { projection: { password: 0 } }

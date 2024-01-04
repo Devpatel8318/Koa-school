@@ -5,6 +5,7 @@ config()
 import studentSchema from '../schema/studentSchema.js'
 import subjectSchema from '../schema/subjectSchema.js'
 import resultSchema from '../schema/resultSchema.js'
+import allowedUsersSchema from '../schema/allowedUsersSchema.js'
 
 const mongodbConnection = async () => {
     try {
@@ -23,10 +24,17 @@ const mongodbConnection = async () => {
         await db.createCollection('results', {
             validator: { $jsonSchema: resultSchema },
         })
+        await db.createCollection('allowedUsers', {
+            validator: { $jsonSchema: allowedUsersSchema },
+        })
 
         await db
             .collection('students')
             .createIndex({ email: 1 }, { unique: true })
+
+        await db
+            .collection('allowedUsers')
+            .createIndex({ name: 1 }, { unique: true })
 
         return db
     } catch (error) {
