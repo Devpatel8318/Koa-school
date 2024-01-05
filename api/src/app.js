@@ -9,6 +9,7 @@ import studentRouter from './routers/student.js'
 import subjectRouter from './routers/subject.js'
 import resultRouter from './routers/result.js'
 import allowedUsers from './routers/allowedUsers.js'
+import { findAllowedUsersName } from './queries/allowedUsersQueries.js'
 
 config()
 const app = new Koa()
@@ -54,20 +55,28 @@ app.use(async (ctx) => {
 
 //socket.io logic
 const onlineUsers = new Map()
-const allowedNames = ['dev', 'rutul']
 
 io.on('connection', (socket) => {
     console.log('New user connected')
 
-    socket.on('join', (name, callback) => {
-        if (!allowedNames.includes(name)) {
-            callback({ error: 'Name is not allowed' })
-            return
-        }
+    socket.on('join', async (name, callback) => {
+        try {
+            const allowedUsers = await findAllowedUsersName()
+            const userNames = allowedUsers.map((user) => user.name)
 
-        onlineUsers.set(socket.id, name)
-        callback({ socketId: socket.id })
-        io.emit('onlineUsers', Array.from(onlineUsers))
+            if (!userNames.includes(name)) {
+                callback({ error: 'Name is not allowed' })
+                return
+            }
+
+            onlineUsers.set(socket.id, name)
+            callback({ socketId: socket.id })
+            io.emit('onlineUsers', Array.from(onlineUsers))
+        } catch (error) {
+            console.error('Error:', error)
+            // Handle error if any
+            callback({ error: 'Error processing request' })
+        }
     })
 
     socket.on(
@@ -85,6 +94,10 @@ io.on('connection', (socket) => {
         onlineUsers.delete(socket.id)
         io.emit('onlineUsers', Array.from(onlineUsers.values()))
         console.log('User disconnected')
+    })
+
+    socket.on('sendBroadcast', (message) => {
+        io.emit('Broadcast', message)
     })
 })
 

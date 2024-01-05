@@ -4,6 +4,7 @@ import axios from 'axios'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ResultForm from './Pages/ResultForm'
 import Chat from './Pages/Chat'
+import AllowedUsers from './Pages/AllowedUsers'
 
 axios.defaults.baseURL = 'http://localhost:8000'
 
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/" element={<Results />} />
                 <Route path="/resultform" element={<ResultForm />} />
                 <Route path="/chat" element={<Chat />} />
+                <Route path="/allowedUsers" element={<AllowedUsers />} />
             </Routes>
         </BrowserRouter>
     )

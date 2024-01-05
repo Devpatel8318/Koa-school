@@ -3,6 +3,12 @@ import db from '../connection/db.js'
 export const findAllowedUsers = async () => {
     return await db.collection('allowedUsers').find().toArray()
 }
+export const findAllowedUsersName = async () => {
+    return await db
+        .collection('allowedUsers')
+        .find({}, { projection: { _id: 0, name: 1 } })
+        .toArray()
+}
 
 export const findUserByName = async (name) => {
     return await db.collection('allowedUsers').findOne({ name })

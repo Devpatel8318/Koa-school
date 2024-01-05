@@ -5,8 +5,6 @@ function ResultForm() {
     const [students, setStudents] = useState([])
     const [subjects, setSubjects] = useState([])
 
-    // for post
-
     const [formData, setFormData] = useState({
         Signed_By: null,
         Student: null,

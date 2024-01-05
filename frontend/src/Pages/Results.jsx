@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import ResultSelector from '../components/ResultSelector'
 
 function Results() {
     const [students, setStudents] = useState([])
@@ -11,8 +12,7 @@ function Results() {
             const response = await axios.get('/students?result=true')
             setStudents(response.data)
         } catch (error) {
-            console.error('Error fetching students:', error)
-            alert('Something went wrong while fetching students.')
+            handleFetchError('students', error)
         }
     }
 
@@ -22,9 +22,13 @@ function Results() {
             const formattedResult = await axios.get(`/results/formatted/students/${selectedStudent}`)
             setResult(formattedResult.data)
         } catch (error) {
-            console.error('Error fetching result:', error)
-            alert('Something went wrong while fetching the result.')
+            handleFetchError('result', error)
         }
+    }
+
+    const handleFetchError = (data, error) => {
+        console.error(`Error fetching ${data}:`, error)
+        alert(`Something went wrong while fetching ${data}.`)
     }
 
     const handleStudentChange = (event) => {
@@ -63,27 +67,12 @@ function Results() {
 
     useEffect(() => {
         fetchResult()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedStudent])
 
     return (
         <div className="mt-12 text-5xl text-center">
             <h1>Results</h1>
-            <div className="flex text-2xl flex-col w-11/12 mx-auto sm:w-9/12 md:w-8/12 mt-12">
-                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                        <div className="overflow-hidden">
-                            <label htmlFor="students">Choose Result of student:</label><br />
-                            <select className='mt-4 text-xl' name="students" id="students" onChange={handleStudentChange} value={selectedStudent}>
-                                <option value="" disabled selected>Select an option</option>
-                                {students && students.map(student => (
-                                    <option key={student._id} value={student._id}>{student.firstName} {student.lastName}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <ResultSelector handleStudentChange={handleStudentChange} selectedStudent={selectedStudent} students={students} />
             {selectedStudent && result && Object.keys(result).length > 0 && (
                 <>
                     <div className="flex flex-col w-11/12 mx-auto sm:w-9/12 md:w-8/12 mt-10">
@@ -99,7 +88,6 @@ function Results() {
                                             </div>
                                         </div>
                                     </div>
-
                                     <table className="min-w-full text-sm font-light text-center sm:text-lg">
                                         <thead className="font-medium border-b">
                                             <tr>
@@ -129,15 +117,11 @@ function Results() {
                         </div>
                     </div>
                     <div className='mt-16 text-3xl'>
-                        <button
-                            onClick={handleDelete}
-                            className="bg-red-500 hover:bg-red-400 text-white py-2 px-9 rounded focus:outline-none focus:shadow-outline"
-                        >
+                        <button onClick={handleDelete} className="bg-red-500 hover:bg-red-400 text-white py-2 px-9 rounded focus:outline-none focus:shadow-outline">
                             Delete
                         </button>
                     </div>
                 </>
-
             )}
         </div>
     )

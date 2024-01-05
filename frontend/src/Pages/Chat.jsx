@@ -28,6 +28,11 @@ const Chat = () => {
             ])
         })
 
+        newSocket.on('Broadcast', (message) => {
+            console.log(message);
+            alert("Broadcast received: " +  message)
+        })
+
         return () => {
             newSocket.disconnect()
         }
