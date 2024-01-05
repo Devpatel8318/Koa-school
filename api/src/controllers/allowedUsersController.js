@@ -1,8 +1,33 @@
+import { generateAuthToken } from '../utils/jwtFunctions.js'
+import { serialize } from 'cookie'
 import {
     addOneUser,
     deleteUser,
     findAllowedUsers,
 } from '../queries/allowedUsersQueries.js'
+
+export const loginAdmin = async (ctx) => {
+    if (ctx.request.body.password !== process.env.PASSKEY) {
+        ctx.status = 401
+        ctx.body = {
+            error: 'Wrong passkey',
+        }
+        return
+    }
+    const token = generateAuthToken()
+    ctx.cookies.set('myToken', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Strict',
+        maxAge: 60 * 60 * 1000, //60 minutes
+        path: '/',
+        overwrite: true,
+    })
+    ctx.status = 200
+    ctx.body = {
+        message: 'ok',
+    }
+}
 
 export const getUsers = async (ctx) => {
     try {

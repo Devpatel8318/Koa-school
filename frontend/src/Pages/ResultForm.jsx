@@ -148,18 +148,18 @@ function ResultForm() {
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-stretch mt-16">
+                    <div className="flex items-stretch mt-16">
 
-                        <div class="self-center flex-1 text-center">
+                        <div className="self-center flex-1 text-center">
                             <label className="block text-gray-700 text-lg font-bold mb-2" htmlFor="firstName">
                                 Signed By
                             </label>
-                            <input type="text" name='Signed_By' class=" shadow-xl bg-gray-100 font-bold p-4 w-48" value={formData.Signed_By} onChange={handleChange}></input>
+                            <input type="text" name='Signed_By' className=" shadow-xl bg-gray-100 font-bold p-4 w-48" value={formData.Signed_By} onChange={handleChange}></input>
                         </div>
                     </div>
-                    <div class="flex items-stretch mt-16">
-                        <div class="self-center flex-1 text-center">
-                            <button id="button" type="submit" class="bg-indigo-600 shadow-xl  hover:bg-indigo-500 text-white font-bold rounded-full p-4 w-48">Submit</button>
+                    <div className="flex items-stretch mt-16">
+                        <div className="self-center flex-1 text-center">
+                            <button id="button" type="submit" className="bg-indigo-600 shadow-xl  hover:bg-indigo-500 text-white font-bold rounded-full p-4 w-48">Submit</button>
                         </div>
                     </div>
 

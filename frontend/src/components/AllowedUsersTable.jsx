@@ -1,6 +1,54 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useRef, useState } from 'react'
 
-function AllowedUsersTable({ inputedNameRef, handleAddUser, allowedUsers, handleRemoveUser }) {
+function AllowedUsersTable() {
+
+
+    const inputedNameRef = useRef(null)
+    const [allowedUsers, setAllowedUsers] = useState([])
+
+    const handleRemoveUser = async (name) => {
+        const confirmation = window.confirm(`Are you sure you want to remove ${name}?`)
+        if (!confirmation) return
+
+        try {
+            await axios.delete('/allowedUsers/' + name)
+            fetchAllowedUsers()
+        } catch (error) {
+            alert('Error:' + error.response.data.error)
+            console.error('Error removing user:', error)
+        }
+    }
+
+    const fetchAllowedUsers = async () => {
+        try {
+            const response = await axios.get('/allowedUsers')
+            setAllowedUsers(response.data)
+        } catch (error) {
+            alert('Error:' + error.response.data.error)
+            console.error('Error fetching allowed users:', error)
+        }
+    }
+
+    const handleAddUser = async () => {
+        try {
+            if (!inputedNameRef.current.value) {
+                alert('Please enter Name')
+                return
+            }
+            await axios.post('/allowedUsers', { name: inputedNameRef.current.value })
+            fetchAllowedUsers()
+            inputedNameRef.current.value = ''
+        } catch (error) {
+            alert('Error:' + error.response.data.error)
+            console.error('Error adding user:', error)
+        }
+    }
+
+    useEffect(() => {
+        fetchAllowedUsers()
+    }, [])
+
     return (
         <>
             <div className='w-full max-w-md mx-auto text-center bg-white mt-8 rounded-lg px-2 pt-2 pb-2 mb-2'>

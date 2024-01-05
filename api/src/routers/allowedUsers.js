@@ -4,14 +4,19 @@ import {
     getUser,
     getUsers,
     removeUser,
+    loginAdmin,
 } from '../controllers/allowedUsersController.js'
-import { doesUserExistByName } from '../middleware/allowedUsersMiddleware.js'
+import {
+    auth,
+    doesUserExistByName,
+} from '../middleware/allowedUsersMiddleware.js'
 
 const router = new Router({ prefix: '/allowedusers' })
 
-router.get('/', getUsers)
-router.get('/:name', doesUserExistByName, getUser)
-router.post('/', addUser)
-router.delete('/:name', doesUserExistByName, removeUser)
+router.post('/admin', loginAdmin)
+router.get('/', auth, getUsers)
+router.get('/:name', auth, doesUserExistByName, getUser)
+router.post('/', auth, addUser)
+router.delete('/:name', auth, doesUserExistByName, removeUser)
 
 export default router
