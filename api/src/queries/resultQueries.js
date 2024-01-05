@@ -42,8 +42,19 @@ const pipeline = (argument) => [
     },
 ]
 
-export const findAllResults = async () => {
-    return await db.collection('results').find().toArray()
+export const findAllResults = async (
+    page = 1,
+    perPage = 5,
+    sortOptions = {}
+) => {
+    const skip = (page - 1) * perPage
+    return await db
+        .collection('results')
+        .find()
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(perPage)
+        .toArray()
 }
 
 export const findOneResultById = async (id) => {

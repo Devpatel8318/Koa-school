@@ -1,7 +1,18 @@
 import db from '../connection/db.js'
 
-export const findAllSubjects = async () => {
-    return await db.collection('subjects').find().toArray()
+export const findAllSubjects = async (
+    page = 1,
+    perPage = 5,
+    sortOptions = {}
+) => {
+    const skip = (page - 1) * perPage
+    return await db
+        .collection('subjects')
+        .find()
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(perPage)
+        .toArray()
 }
 
 export const findSubjectById = async (id) => {

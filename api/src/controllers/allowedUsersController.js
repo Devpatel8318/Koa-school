@@ -6,7 +6,17 @@ import {
 
 export const getUsers = async (ctx) => {
     try {
-        const results = await findAllowedUsers()
+        const page = parseInt(ctx.query.page) || 1
+        const perPage = parseInt(ctx.query.perPage) || 10
+        let sortOptions = {}
+
+        if (ctx.query.sortBy && ctx.query.sortOrder) {
+            const sortOrder =
+                ctx.query.sortOrder.toLowerCase() === 'desc' ? -1 : 1
+            sortOptions[ctx.query.sortBy] = sortOrder
+        }
+
+        const results = await findAllowedUsers(page, perPage, sortOptions)
         ctx.status = 200
         ctx.body = results
     } catch (err) {

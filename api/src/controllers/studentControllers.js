@@ -7,7 +7,10 @@ import {
 
 export const getStudents = async (ctx) => {
     try {
+        const page = parseInt(ctx.query.page) || 1
+        const perPage = parseInt(ctx.query.perPage) || 10
         let filter = {}
+        let sortOptions = {}
 
         if (ctx.query.result === 'false') {
             filter = { result: { $exists: false } }
@@ -15,7 +18,19 @@ export const getStudents = async (ctx) => {
         if (ctx.query.result === 'true') {
             filter = { result: { $exists: true } }
         }
-        const students = await findAllStudents(filter)
+
+        if (ctx.query.sortBy && ctx.query.sortOrder) {
+            const sortOrder =
+                ctx.query.sortOrder.toLowerCase() === 'desc' ? -1 : 1
+            sortOptions[ctx.query.sortBy] = sortOrder
+        }
+
+        const students = await findAllStudents(
+            filter,
+            page,
+            perPage,
+            sortOptions
+        )
 
         ctx.status = 200
         ctx.body = students
@@ -24,6 +39,7 @@ export const getStudents = async (ctx) => {
         ctx.body = { error: err }
     }
 }
+
 export const getSingleStudent = async (ctx) => {
     ctx.status = 200
     ctx.body = ctx.state.student

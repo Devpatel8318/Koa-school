@@ -7,7 +7,17 @@ import {
 
 export const getAllSubjects = async (ctx) => {
     try {
-        const subjects = await findAllSubjects()
+        const page = parseInt(ctx.query.page) || 1
+        const perPage = parseInt(ctx.query.perPage) || 10
+        let sortOptions = {}
+
+        if (ctx.query.sortBy && ctx.query.sortOrder) {
+            const sortOrder =
+                ctx.query.sortOrder.toLowerCase() === 'desc' ? -1 : 1
+            sortOptions[ctx.query.sortBy] = sortOrder
+        }
+
+        const subjects = await findAllSubjects(page, perPage, sortOptions)
         ctx.status = 200
         ctx.body = subjects
     } catch (err) {

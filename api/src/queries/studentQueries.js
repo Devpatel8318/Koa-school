@@ -1,11 +1,21 @@
 import db from '../connection/db.js'
 
-export const findAllStudents = async (filter) => {
-    return await db
+export const findAllStudents = async (
+    filter,
+    page = 1,
+    perPage = 5,
+    sortOptions = {}
+) => {
+    const skip = (page - 1) * perPage
+    const students = await db
         .collection('students')
         .find(filter)
         .project({ password: 0 })
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(perPage)
         .toArray()
+    return students
 }
 
 export const findOneStudent = async (filter, projection = {}) => {
