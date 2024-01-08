@@ -78,7 +78,7 @@ function ResultForm() {
             if(!formData.Signed_By){
                 return alert("Please provide Signed By")
             }
-            await axios.post('http://localhost:8000/results', formData)
+            await axios.post('/results', formData)
             alert("Result Created")
             setFormData({
                 Signed_By: "",

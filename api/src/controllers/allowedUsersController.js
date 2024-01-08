@@ -1,5 +1,4 @@
 import { generateAuthToken } from '../utils/jwtFunctions.js'
-import { serialize } from 'cookie'
 import {
     addOneUser,
     deleteUser,
@@ -31,8 +30,8 @@ export const loginAdmin = async (ctx) => {
 
 export const getUsers = async (ctx) => {
     try {
-        const page = parseInt(ctx.query.page) || 1
-        const perPage = parseInt(ctx.query.perPage) || 10
+        const page = parseInt(ctx.query.page)
+        const perPage = parseInt(ctx.query.perPage)
         let sortOptions = {}
 
         if (ctx.query.sortBy && ctx.query.sortOrder) {
@@ -56,7 +55,6 @@ export const getUser = async (ctx) => {
 
 export const addUser = async (ctx) => {
     try {
-        console.log(ctx.request.body.name)
         const allowedUserDoc = await addOneUser(ctx.request.body.name)
 
         if (!allowedUserDoc) {
@@ -67,7 +65,6 @@ export const addUser = async (ctx) => {
         ctx.status = 201
         ctx.body = allowedUserDoc.name
     } catch (err) {
-        console.log(err)
         ctx.status = 500
         ctx.body = { error: err.message }
     }

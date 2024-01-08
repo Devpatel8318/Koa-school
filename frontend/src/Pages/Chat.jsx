@@ -96,7 +96,7 @@ const Chat = () => {
                     </div>
                     <div className='border-2 bg-white w-4/5 h-5/6 px-5 py-2 flex flex-col rounded-md'>
                         <MessageBar handleSendMessage={handleSendMessage} recipient={recipient} onlineUsers={onlineUsers} setRecipient={setRecipient} currentUser={currentUser} message={message} setMessage={setMessage} />
-                        <div className='flex flex-col gap-2 justify-start overflow-x-hidden overflow-scroll'>
+                        <div className='flex flex-col gap-2 justify-start overflow-x-hidden overflow-auto'>
                             {receivedMessages.length > 0 &&
                                 receivedMessages.map((message, index) => (
                                     <Message index={index} message={message} />

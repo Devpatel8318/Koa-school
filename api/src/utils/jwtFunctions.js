@@ -13,7 +13,6 @@ export const generateAuthToken = () => {
 
 export const isTokenValid = function (token) {
     try {
-        console.log(token)
         jwt.verify(token, process.env.JWT_SECRET)
         return true
     } catch (err) {

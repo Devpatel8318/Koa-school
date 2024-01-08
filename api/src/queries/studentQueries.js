@@ -2,8 +2,8 @@ import db from '../connection/db.js'
 
 export const findAllStudents = async (
     filter,
-    page = 1,
-    perPage = 5,
+    page,
+    perPage,
     sortOptions = {}
 ) => {
     const skip = (page - 1) * perPage

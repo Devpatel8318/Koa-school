@@ -11,8 +11,8 @@ import { transformDoc } from '../utils/transformDoc.js'
 
 export const getResults = async (ctx) => {
     try {
-        const page = parseInt(ctx.query.page) || 1
-        const perPage = parseInt(ctx.query.perPage) || 10
+        const page = parseInt(ctx.query.page) 
+        const perPage = parseInt(ctx.query.perPage) 
 
         let sortOptions = {}
         if (ctx.query.sortBy && ctx.query.sortOrder) {
@@ -122,7 +122,6 @@ export const deleteResult = async (ctx) => {
             new ObjectId(foundDoc.Student),
             { $unset: { result: '' } }
         )
-        console.log(updatedStudent)
 
         if (updatedStudent.modifiedCount === 0) {
             ctx.status = 500

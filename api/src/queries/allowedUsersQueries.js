@@ -1,10 +1,6 @@
 import db from '../connection/db.js'
 
-export const findAllowedUsers = async (
-    page = 1,
-    perPage = 5,
-    sortOptions = {}
-) => {
+export const findAllowedUsers = async (page, perPage, sortOptions = {}) => {
     const skip = (page - 1) * perPage
     return await db
         .collection('allowedUsers')

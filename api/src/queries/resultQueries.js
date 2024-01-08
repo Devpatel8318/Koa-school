@@ -42,11 +42,7 @@ const pipeline = (argument) => [
     },
 ]
 
-export const findAllResults = async (
-    page = 1,
-    perPage = 5,
-    sortOptions = {}
-) => {
+export const findAllResults = async (page, perPage, sortOptions = {}) => {
     const skip = (page - 1) * perPage
     return await db
         .collection('results')
