@@ -8,7 +8,7 @@ const Chat = () => {
     const [name, setName] = useState('')
     const [onlineUsers, setOnlineUsers] = useState([])
     const [currentUser, setCurrentUser] = useState({ id: null, name: '' })
-    const [receivedMessages, setReceivedMessages] = useState([])
+    const [newMessages, setNewMessages] = useState([])
     const [message, setMessage] = useState('')
     const [recipient, setRecipient] = useState({ id: null, name: '' })
     const [socket, setSocket] = useState(null)
@@ -46,7 +46,7 @@ const Chat = () => {
             recipientId: recipient.id,
             message,
         })
-        setReceivedMessages((messages) => [
+        setNewMessages((messages) => [
             ...messages,
             {
                 senderName: `You to ${recipient.name}`,
@@ -66,7 +66,7 @@ const Chat = () => {
         })
 
         newSocket.on('newMessage', ({ message, senderName }) => {
-            setReceivedMessages((messages) => [
+            setNewMessages((messages) => [
                 ...messages,
                 { senderName, message },
             ])
@@ -75,6 +75,14 @@ const Chat = () => {
         newSocket.on('Broadcast', (message) => {
             console.log(message)
             alert("Broadcast received: " + message)
+            setNewMessages((messages) => [
+                ...messages,
+                {
+                    senderName: "Broadcast",
+                    message,
+                    broadcast: true
+                },
+            ])
         })
 
         return () => {
@@ -97,8 +105,8 @@ const Chat = () => {
                     <div className='border-2 bg-white w-4/5 h-5/6 px-5 py-2 flex flex-col rounded-md'>
                         <MessageBar handleSendMessage={handleSendMessage} recipient={recipient} onlineUsers={onlineUsers} setRecipient={setRecipient} currentUser={currentUser} message={message} setMessage={setMessage} />
                         <div className='flex flex-col gap-2 justify-start overflow-x-hidden overflow-auto'>
-                            {receivedMessages.length > 0 &&
-                                receivedMessages.map((message, index) => (
+                            {newMessages.length > 0 &&
+                                newMessages.map((message, index) => (
                                     <Message index={index} message={message} />
                                 ))}
                         </div>
