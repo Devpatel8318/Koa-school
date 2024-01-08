@@ -12,7 +12,7 @@ function AllowedUsersTable() {
         if (!confirmation) return
 
         try {
-            await axios.delete('/allowedUsers/' + name)
+            await axios.delete('http://localhost:8080/allowedUsers/' + name)
             fetchAllowedUsers()
         } catch (error) {
             alert('Error:' + error.response.data.error)
@@ -22,8 +22,8 @@ function AllowedUsersTable() {
 
     const fetchAllowedUsers = async () => {
         try {
-            const response = await axios.get('/allowedUsers')
-            setAllowedUsers(response.data)
+            const response = await axios.get('http://localhost:8080/allowedUsers')
+            setAllowedUsers(response.data.data)
         } catch (error) {
             alert('Error:' + error.response.data.error)
             console.error('Error fetching allowed users:', error)
@@ -36,7 +36,7 @@ function AllowedUsersTable() {
                 alert('Please enter Name')
                 return
             }
-            await axios.post('/allowedUsers', { name: inputedNameRef.current.value })
+            await axios.post('http://localhost:8080/allowedUsers', { name: inputedNameRef.current.value })
             fetchAllowedUsers()
             inputedNameRef.current.value = ''
         } catch (error) {

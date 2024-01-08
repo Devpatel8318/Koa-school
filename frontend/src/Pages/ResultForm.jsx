@@ -13,7 +13,7 @@ function ResultForm() {
 
     const fetchStudents = async () => {
         try {
-            const response = await axios.get('/students?result=false')
+            const response = await axios.get('http://localhost:8000/students?result=false')
             setStudents(response.data)
         } catch (error) {
             alert('Error')
@@ -23,7 +23,7 @@ function ResultForm() {
 
     const fetchSubjects = async () => {
         try {
-            const response = await axios.get('/subjects')
+            const response = await axios.get('http://localhost:8000/subjects')
             setSubjects(response.data)
         } catch (error) {
             alert('Error')
@@ -73,7 +73,7 @@ function ResultForm() {
             if (!formData.Signed_By) {
                 return alert("Please provide Signed By")
             }
-            await axios.post('/results', formData)
+            await axios.post('http://localhost:8000/results', formData)
             alert("Result Created")
             setFormData({
                 Signed_By: "",

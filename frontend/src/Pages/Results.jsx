@@ -10,7 +10,7 @@ function Results() {
 
     const fetchStudents = async () => {
         try {
-            const response = await axios.get('/students?result=true')
+            const response = await axios.get('http://localhost:8000/students?result=true')
             setStudents(response.data)
         } catch (error) {
             handleFetchError('students', error)
@@ -20,7 +20,7 @@ function Results() {
     const fetchResult = async () => {
         try {
             if (!selectedStudent) return
-            const formattedResult = await axios.get(`/results/formatted/students/${selectedStudent}`)
+            const formattedResult = await axios.get(`http://localhost:8000/results/formatted/students/${selectedStudent}`)
             setResult(formattedResult.data)
         } catch (error) {
             handleFetchError('result', error)
@@ -45,7 +45,7 @@ function Results() {
             const confirmDeletion = window.confirm('Are you sure you want to delete this Result?')
 
             if (confirmDeletion) {
-                const deleteResponse = await axios.delete(`/results/${result._id}`)
+                const deleteResponse = await axios.delete(`http://localhost:8000/results/${result._id}`)
 
                 if (deleteResponse.status === 200) {
                     alert('Student deleted successfully.')

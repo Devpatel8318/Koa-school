@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/app.js",
+    "rest": "nodemon src/rest/index.js",
+    "admin": "nodemon src/admin/index.js",
     "build": "babel src/ -d dist/"
   },
   "keywords": [],

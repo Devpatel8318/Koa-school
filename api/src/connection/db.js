@@ -2,10 +2,10 @@ import { MongoClient } from 'mongodb'
 import { config } from 'dotenv'
 config()
 
-import studentSchema from '../schema/studentSchema.js'
-import subjectSchema from '../schema/subjectSchema.js'
-import resultSchema from '../schema/resultSchema.js'
-import allowedUsersSchema from '../schema/allowedUsersSchema.js'
+import studentSchema from '../rest/schema/studentSchema.js'
+import subjectSchema from '../rest/schema/subjectSchema.js'
+import resultSchema from '../rest/schema/resultSchema.js'
+import allowedUsersSchema from '../admin/schema/allowedUsersSchema.js'
 
 const mongodbConnection = async () => {
     try {

@@ -1,18 +1,21 @@
 import { findOneStudent } from '../queries/studentQueries.js'
-import { passwordEncryption } from '../utils/passwordEncryption.js'
+import { passwordEncryption } from '../helpers/passwordEncryption.js'
 
 export const validLoginCredentials = async (ctx, next) => {
     try {
         const { email, password } = ctx.request.body
 
         if (!password || !email) {
-            ctx.throw(400, 'Please provide credentials')
+            throw new Error('Please provide credentials')
         } else {
             await next()
         }
     } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
+        const response = {}
+        response.success = false
+        response.reason = err.message
+        response.message = 'Something went wrong'
+        ctx.body = response
     }
 }
 
@@ -20,14 +23,17 @@ export const doesStudentExistByEmail = async (ctx, next) => {
     try {
         const student = await findOneStudent({ email: ctx.request.body.email })
         if (!student) {
-            ctx.throw(404, 'Student not found')
+            throw new Error('Student not found')
         } else {
             ctx.state.student = student
             await next()
         }
     } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
+        const response = {}
+        response.success = false
+        response.reason = err.message
+        response.message = 'Something went wrong'
+        ctx.body = response
     }
 }
 
@@ -38,14 +44,17 @@ export const doesStudentExistById = async (ctx, next) => {
             { projection: { password: 0 } }
         )
         if (!student) {
-            ctx.throw(404, 'Student not found')
+            throw new Error(404, 'Student not found')
         } else {
             ctx.state.student = student
             await next()
         }
     } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
+        const response = {}
+        response.success = false
+        response.reason = err.message
+        response.message = 'Something went wrong'
+        ctx.body = response
     }
 }
 
@@ -54,8 +63,7 @@ export const validateAndEncryptPassword = async (ctx, next) => {
         const student = ctx.request.body
         const encryptedPassword = passwordEncryption(student.password)
         if (encryptedPassword === false) {
-            ctx.throw(
-                400,
+            throw new Error(
                 'Password should contain at least one uppercase letter, one special character, and one number'
             )
         } else {
@@ -63,7 +71,10 @@ export const validateAndEncryptPassword = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
+        const response = {}
+        response.success = false
+        response.reason = err.message
+        response.message = 'Something went wrong'
+        ctx.body = response
     }
 }

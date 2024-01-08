@@ -1,4 +1,4 @@
-import db from '../connection/db.js'
+import db from '../../connection/db.js'
 
 const pipeline = (argument) => [
     {

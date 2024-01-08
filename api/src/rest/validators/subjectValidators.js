@@ -5,13 +5,16 @@ export const doesSubjectExistById = async (ctx, next) => {
         const subjectDoc = await findSubjectById(ctx.params.id)
 
         if (!subjectDoc) {
-            ctx.throw(404, 'Subject not found')
+            throw new Error('Subject not found')
         } else {
             ctx.state.subject = subjectDoc
             await next()
         }
     } catch (err) {
-        ctx.status = err.status || 500
-        ctx.body = { error: err.message || 'Internal server error' }
+        const response = {}
+        response.success = false
+        response.reason = 'unauthorized'
+        response.message = 'Something went wrong'
+        ctx.body = response
     }
 }

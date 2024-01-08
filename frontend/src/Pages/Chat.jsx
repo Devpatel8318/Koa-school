@@ -58,7 +58,7 @@ const Chat = () => {
     }
 
     useEffect(() => {
-        const newSocket = io('http://localhost:8000')
+        const newSocket = io('http://localhost:8080')
         setSocket(newSocket)
 
         newSocket.on('onlineUsers', (users) => {

@@ -6,10 +6,8 @@ import {
     removeUser,
     loginAdmin,
 } from '../controllers/allowedUsersController.js'
-import {
-    auth,
-    doesUserExistByName,
-} from '../middleware/allowedUsersMiddleware.js'
+import { auth } from '../middleware/allowedUsersMiddleware.js'
+import { doesUserExistByName } from '../validators/doesUserExistByName.js'
 
 const router = new Router({ prefix: '/allowedusers' })
 
@@ -20,3 +18,13 @@ router.post('/', auth, addUser)
 router.delete('/:name', auth, doesUserExistByName, removeUser)
 
 export default router
+
+// code optimzed
+// body1 done done
+// middleware auth done
+// validators done
+// helpers done
+
+
+// rest done
+// admin done

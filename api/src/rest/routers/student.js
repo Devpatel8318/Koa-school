@@ -5,7 +5,7 @@ import {
     doesStudentExistByEmail,
     doesStudentExistById,
     validateAndEncryptPassword,
-} from '../middleware/studentMiddlewares.js'
+} from '../validators/studentValidators.js'
 import {
     createStudent,
     deleteStudent,
@@ -33,7 +33,7 @@ router.post(
 )
 
 // Create a new student
-router.post('/',validateAndEncryptPassword,createStudent)
+router.post('/', validateAndEncryptPassword, createStudent)
 
 // Update a Student
 router.patch('/:id', validId, doesStudentExistById, updateStudent)

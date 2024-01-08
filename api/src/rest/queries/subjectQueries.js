@@ -1,4 +1,4 @@
-import db from '../connection/db.js'
+import db from '../../connection/db.js'
 
 export const findAllSubjects = async (page, perPage, sortOptions = {}) => {
     const skip = (page - 1) * perPage

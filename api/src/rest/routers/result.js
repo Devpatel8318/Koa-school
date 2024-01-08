@@ -9,11 +9,11 @@ import {
     getSingleResult,
     updateResult,
 } from '../controllers/resultController.js'
+import { doesStudentExistById } from '../validators/studentValidators.js'
 import {
     doesResultExistById,
     validStudent,
-} from '../middleware/resultMiddlewares.js'
-import { doesStudentExistById } from '../middleware/studentMiddlewares.js'
+} from '../validators/resultValidators.js'
 
 const router = new Router({ prefix: '/results' })
 
@@ -38,8 +38,8 @@ router.get(
 
 router.post('/', createResult)
 
-router.patch('/:id', validId, doesResultExistById,updateResult)
+router.patch('/:id', validId, doesResultExistById, updateResult)
 
-router.delete('/:id', validId, doesResultExistById , deleteResult)
+router.delete('/:id', validId, doesResultExistById, deleteResult)
 
 export default router

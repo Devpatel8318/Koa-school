@@ -6,7 +6,7 @@ import {
     getSingleSubject,
     updateSubject,
 } from '../controllers/subjectControllers.js'
-import { doesSubjectExistById } from '../middleware/subjectMiddlewares.js'
+import { doesSubjectExistById } from '../validators/subjectValidators.js'
 
 const router = new Router({ prefix: '/subjects' })
 

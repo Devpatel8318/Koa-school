@@ -13,7 +13,7 @@ const AllowedUsers = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await axios.post('/allowedUsers/admin', {
+            await axios.post('http://localhost:8080/allowedUsers/admin', {
                 password: passwordRef.current.value
             })
             setAuthenticated(true)
@@ -28,7 +28,7 @@ const AllowedUsers = () => {
     }, [])
 
     useEffect(() => {
-        const newSocket = io('http://localhost:8000')
+        const newSocket = io('http://localhost:8080')
         setSocket(newSocket)
         return () => {
             newSocket.disconnect()

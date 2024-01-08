@@ -6,7 +6,7 @@ import ResultForm from './Pages/ResultForm'
 import Chat from './Pages/Chat'
 import AllowedUsers from './Pages/AllowedUsers'
 
-axios.defaults.baseURL = 'http://localhost:8000'
+// axios.defaults.baseURL = 'http://localhost:8000'
 axios.defaults.withCredentials = true
 function App() {
     return (
