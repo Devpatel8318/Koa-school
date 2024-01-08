@@ -13,31 +13,6 @@ const Chat = () => {
     const [recipient, setRecipient] = useState({ id: null, name: '' })
     const [socket, setSocket] = useState(null)
 
-    useEffect(() => {
-        const newSocket = io('http://localhost:8000')
-        setSocket(newSocket)
-
-        newSocket.on('onlineUsers', (users) => {
-            setOnlineUsers(users)
-        })
-
-        newSocket.on('newMessage', ({ message, senderName }) => {
-            setReceivedMessages((messages) => [
-                ...messages,
-                { senderName, message },
-            ])
-        })
-
-        newSocket.on('Broadcast', (message) => {
-            console.log(message);
-            alert("Broadcast received: " +  message)
-        })
-
-        return () => {
-            newSocket.disconnect()
-        }
-    }, [])
-
     const handleSubmitName = (ev) => {
         ev.preventDefault()
         if (!name.length > 0) {
@@ -81,6 +56,31 @@ const Chat = () => {
         ])
         setMessage('')
     }
+
+    useEffect(() => {
+        const newSocket = io('http://localhost:8000')
+        setSocket(newSocket)
+
+        newSocket.on('onlineUsers', (users) => {
+            setOnlineUsers(users)
+        })
+
+        newSocket.on('newMessage', ({ message, senderName }) => {
+            setReceivedMessages((messages) => [
+                ...messages,
+                { senderName, message },
+            ])
+        })
+
+        newSocket.on('Broadcast', (message) => {
+            console.log(message)
+            alert("Broadcast received: " + message)
+        })
+
+        return () => {
+            newSocket.disconnect()
+        }
+    }, [])
 
     return (
         <div className='w-full h-screen bg-blue-100 flex items-center justify-center '>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import ResultSelector from '../components/ResultSelector'
+import TableHeader from '../components/TableHeader'
 
 function Results() {
     const [students, setStudents] = useState([])
@@ -89,15 +90,7 @@ function Results() {
                                         </div>
                                     </div>
                                     <table className="min-w-full text-sm font-light text-center sm:text-lg">
-                                        <thead className="font-medium border-b">
-                                            <tr>
-                                                <th scope="col" className="px-6 py-4">sub_code</th>
-                                                <th scope="col" className="px-6 py-4">name</th>
-                                                <th scope="col" className="px-6 py-4">credits</th>
-                                                <th scope="col" className="px-6 py-4">obtained marks</th>
-                                                <th scope="col" className="px-6 py-4">Maximum Marks</th>
-                                            </tr>
-                                        </thead>
+                                        <TableHeader titles={["sub_code", "name", "credits", "obtained marks", "Maximum Marks"]} />
                                         <tbody>
                                             {result?.Marks?.map((data, index) => (
                                                 <tr

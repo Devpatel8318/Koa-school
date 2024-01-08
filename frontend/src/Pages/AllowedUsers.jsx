@@ -10,6 +10,19 @@ const AllowedUsers = () => {
     const passwordRef = useRef(null)
     const [socket, setSocket] = useState(null)
 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            await axios.post('/allowedUsers/admin', {
+                password: passwordRef.current.value
+            })
+            setAuthenticated(true)
+        } catch (err) {
+            alert('Wrong Password')
+            passwordRef.current.value = ''
+        }
+    }
+
     useEffect(() => {
         document.title = "Admin Panel"
     }, [])
@@ -22,19 +35,6 @@ const AllowedUsers = () => {
         }
     }, [])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        try {
-            await axios.post('/allowedUsers/admin', {
-                password: passwordRef.current.value
-            })
-            setAuthenticated(true)
-        } catch (err) {
-            alert('Wrong Password')
-            passwordRef.current.value = ''
-        }
-
-    }
     return (
         <>
             {!authenticated ? (
