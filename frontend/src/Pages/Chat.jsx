@@ -83,7 +83,7 @@ const Chat = () => {
     }
 
     return (
-        <div className='w-full h-screen bg-blue-100 flex items-center justify-center'>
+        <div className='w-full h-screen bg-blue-100 flex items-center justify-center '>
             {!currentUser.id ? (
                 <NameForm handleSubmitName={handleSubmitName} setName={setName} name={name} />
             ) : (
