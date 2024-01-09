@@ -4,7 +4,7 @@ import db from '../../connection/db.js'
 
 const tableName = 'students'
 
-export const findAllStudents = async (
+export const getAllStudents = async (
     filter,
     page,
     perPage,
@@ -21,7 +21,7 @@ export const findAllStudents = async (
     return students
 }
 
-export const findOneStudent = async (filter, projection = {}) => {
+export const getOneStudent = async (filter, projection = {}) => {
     return await db.collection(tableName).findOne(filter, projection)
 }
 
@@ -29,12 +29,10 @@ export const createOneStudent = async (body) => {
     return db.collection(tableName).insertOne({ ...body, studentID: uuidv4() })
 }
 
-export const updateOneStudent = async (studId, updates) => {
-    return await db
-        .collection(tableName)
-        .updateOne({ studentID: studId }, updates)
+export const updateOneStudent = async (studentID, updates) => {
+    return await db.collection(tableName).updateOne({ studentID }, updates)
 }
 1
-export const deleteOneStudent = async (studId) => {
-    await db.collection(tableName).deleteOne({ studentID: studId })
+export const deleteOneStudent = async (studentID) => {
+    await db.collection(tableName).deleteOne({ studentID })
 }

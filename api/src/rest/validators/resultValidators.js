@@ -4,7 +4,7 @@ import * as resultQueries from '../queries/resultQueries.js'
 export const doesResultExistById = async (ctx, next) => {
     try {
         const { id } = ctx.params
-        const resultDoc = await resultQueries.findOneResult({
+        const resultDoc = await resultQueries.getOneResult({
             resultID: id,
         })
         if (!resultDoc) {

@@ -12,7 +12,7 @@ export const getAllSubjects = async (ctx) => {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
 
-        const subjects = await subjectQueries.findAllSubjects(
+        const subjects = await subjectQueries.getAllSubjects(
             parseInt(page),
             parseInt(perPage),
             sortOptions

@@ -35,7 +35,7 @@ export const getUsers = async (ctx) => {
         if (sortBy && sortOrder)
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
 
-        const allowedUsers = await allowedUsersQueries.findAllowedUsers(
+        const allowedUsers = await allowedUsersQueries.getAllAllowedUsers(
             parseInt(page),
             parseInt(perPage),
             sortOptions
@@ -57,9 +57,7 @@ export const addUser = async (ctx) => {
     let response = {}
     const { name } = ctx.request.body
     try {
-        const allowedUserDoc = await allowedUsersQueries.addOneUser(name)
-
-        if (!allowedUserDoc) throw new Error('failed to add User')
+        await allowedUsersQueries.addOneUser(name)
 
         response = successObject('new user created')
     } catch (err) {
@@ -72,10 +70,7 @@ export const removeUser = async (ctx) => {
     let response = {}
     const { name } = ctx.params
     try {
-        const res = await allowedUsersQueries.deleteUser(name)
-        if (!res.deletedCount) {
-            throw new Error('User Does not Exist')
-        }
+        await allowedUsersQueries.deleteUser(name)
 
         response = successObject('User deleted successfully')
     } catch (err) {

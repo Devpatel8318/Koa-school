@@ -30,7 +30,7 @@ export const isLoginCredentialsValid = async (ctx, next) => {
 export const doesStudentExistByEmail = async (ctx, next) => {
     try {
         const { email } = ctx.request.body
-        const student = await studentQueries.findOneStudent({ email: email })
+        const student = await studentQueries.getOneStudent({ email: email })
         if (!student) {
             throw new Error('Student not found')
         } else {
@@ -49,7 +49,7 @@ export const doesStudentExistByEmail = async (ctx, next) => {
 export const doesStudentExistById = async (ctx, next) => {
     try {
         const { id } = ctx.params
-        const student = await studentQueries.findOneStudent(
+        const student = await studentQueries.getOneStudent(
             { studentID: id },
             { projection: { password: 0, _id: 0 } }
         )

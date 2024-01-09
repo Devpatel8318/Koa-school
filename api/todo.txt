@@ -9,23 +9,27 @@ DONE fix passkey check done
 DONE password valid and encryption different functions done
 
 
-_id:uuid
-destructuring
 validator array[v1,v2,v3,v4,v5,v6,v7]
 fields validation baaki
 
-encryptedPassword ctx.state to pass password
-lowercase Student
-remove snake_case
+
+DONE lowercase Student
+DONE remove snake_case
+DONE proper destructuring 
+DONE _id:uuid
+DONE remove unnecessary error checking
+
+"encryptedPassword" into  "ctx.state"  to pass the "password"
 password verification should be done inside validators
-proper destructuring 
 ID => Id
-remove unnecessary error checking
 getUsers => getAllUsers
 prevent results to get duplicated
 hide password from students (findOne field)
 Student = student
 final code optimize 
+
+
+
 
 
 

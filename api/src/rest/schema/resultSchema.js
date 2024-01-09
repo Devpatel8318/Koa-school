@@ -1,6 +1,6 @@
 const resultSchema = {
     bsonType: 'object',
-    required: ['Signed_By', 'Student', 'Marks'],
+    required: ['Signed_By', 'studentID', 'Marks'],
     properties: {
         _id: {
             bsonType: 'objectId',
@@ -11,7 +11,7 @@ const resultSchema = {
         Signed_By: {
             bsonType: 'string',
         },
-        Student: {
+        studentID: {
             bsonType: 'string',
         },
         Marks: {

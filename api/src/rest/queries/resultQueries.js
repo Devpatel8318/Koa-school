@@ -9,7 +9,7 @@ const pipeline = (argument) => [
     {
         $lookup: {
             from: 'students',
-            localField: 'Student',
+            localField: 'studentID',
             foreignField: 'studentID',
             as: 'studentInfo',
         },
@@ -42,7 +42,7 @@ const pipeline = (argument) => [
 
 const tableName = 'results'
 
-export const findAllResults = async (page, perPage, sortOptions = {}) => {
+export const getAllResults = async (page, perPage, sortOptions = {}) => {
     const skip = (page - 1) * perPage
     return await db
         .collection(tableName)
@@ -53,14 +53,13 @@ export const findAllResults = async (page, perPage, sortOptions = {}) => {
         .toArray()
 }
 
-export const findOneResult = async (filter) => {
+export const getOneResult = async (filter) => {
     return await db
         .collection(tableName)
         .findOne(filter, { projection: { _id: 0 } })
 }
 
 export const getOneFormattedResult = async (filter) => {
-    console.log(filter);
     return await db.collection(tableName).aggregate(pipeline(filter)).toArray()
 }
 
@@ -70,10 +69,10 @@ export const createOneResult = async (body) => {
         .insertOne({ ...body, resultID: uuidv4() })
 }
 
-export const updateOneResult = async (resId, body) => {
+export const updateOneResult = async (resultID, body) => {
     return await db
         .collection(tableName)
-        .updateOne({ resultID: resId }, { $set: body })
+        .updateOne({ resultID }, { $set: body })
 }
 
 export const deleteOneResult = async (filter) => {

@@ -22,7 +22,7 @@ export const getAllStudents = async (ctx) => {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
 
-        const students = await studentQueries.findAllStudents(
+        const students = await studentQueries.getAllStudents(
             filter,
             parseInt(page),
             parseInt(perPage),

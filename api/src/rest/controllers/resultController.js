@@ -15,7 +15,7 @@ export const getAllResults = async (ctx) => {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
 
-        const results = await resultQueries.findAllResults(
+        const results = await resultQueries.getAllResults(
             parseInt(page),
             parseInt(perPage),
             sortOptions
@@ -40,12 +40,9 @@ export const getSingleFormattedResult = async (ctx) => {
         const resultDoc = await resultQueries.getOneFormattedResult({
             resultID: id,
         })
-        console.log(resultDoc)
 
         response = successObject(transformDoc(resultDoc))
-        // response = successObject(resultDoc)
     } catch (err) {
-        console.log(err)
         response = failureObject(err.message)
     }
     ctx.body = response
@@ -56,11 +53,8 @@ export const getFormattedResultByStudent = async (ctx) => {
     const { studentID } = ctx.state.student
     try {
         const resultDoc = await resultQueries.getOneFormattedResult({
-            Student: studentID,
+            studentID,
         })
-        if (!resultDoc) {
-            throw new Error('Internal Server Error')
-        }
         response = successObject(transformDoc(resultDoc))
     } catch (err) {
         response = failureObject(err.message)
@@ -70,7 +64,7 @@ export const getFormattedResultByStudent = async (ctx) => {
 
 export const createResult = async (ctx) => {
     const { body } = ctx.request
-    const { Student } = body
+    const { studentID } = body
 
     let response = {}
     try {
@@ -79,15 +73,14 @@ export const createResult = async (ctx) => {
         if (!resultDoc) {
             throw new Error('Failed to create Result')
         }
-        const { resultID } = await resultQueries.findOneResult({ Student })
+        const { resultID } = await resultQueries.getOneResult({ studentID })
 
-        await studentQueries.updateOneStudent(Student, {
+        await studentQueries.updateOneStudent(studentID, {
             $set: { result: resultID },
         })
 
         response = successObject('result Added')
     } catch (err) {
-        console.log(err)
         response = failureObject(
             err.code === 11000 ? 'Result Already Exists' : err.message
         )
@@ -112,11 +105,11 @@ export const updateResult = async (ctx) => {
 export const deleteResult = async (ctx) => {
     let response = {}
     const { id } = ctx.params.id
-    const { Student } = ctx.state.result
+    const { studentID } = ctx.state.result
     try {
         await resultQueries.deleteOneResult({ resultId: id })
 
-        await studentQueries.updateOneStudent(Student, {
+        await studentQueries.updateOneStudent(studentID, {
             $unset: { result: '' },
         })
 

@@ -5,7 +5,7 @@ const onlineUsers = new Map()
 export const handleJoinEvent = (socket, io) => async (name, callback) => {
     try {
         const allowedUsersList =
-            await allowedUsersQueries.findAllowedUsersName()
+            await allowedUsersQueries.getAllowedUsersName()
         const userNames = allowedUsersList.map((user) => user.name)
 
         if (!userNames.includes(name)) {
@@ -17,7 +17,6 @@ export const handleJoinEvent = (socket, io) => async (name, callback) => {
         callback({ socketId: socket.id })
         io.emit('onlineUsers', Array.from(onlineUsers))
     } catch (error) {
-        console.error('Error:', error)
         callback({ error: 'Error processing request' })
     }
 }
