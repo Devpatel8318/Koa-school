@@ -13,14 +13,19 @@ const AllowedUsers = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await axios.post('http://localhost:8080/allowedUsers/admin', {
+            const response = await axios.post('http://localhost:8080/allowedUsers/admin', {
                 password: passwordRef.current.value
             })
-            setAuthenticated(true)
-        } catch (err) {
-            alert('Wrong Password')
-            passwordRef.current.value = ''
+            if (response.data.success) {
+                setAuthenticated(true)
+            } else {
+                alert('Wrong Password')
+                passwordRef.current.value = ''
+            }
+        } catch (error) {
+            console.log(error)
         }
+
     }
 
     useEffect(() => {

@@ -1,10 +1,13 @@
+import { v4 as uuidv4 } from 'uuid'
 import db from '../../connection/db.js'
+
+const tableName = 'allowedUsers'
 
 export const findAllowedUsers = async (page, perPage, sortOptions = {}) => {
     const skip = (page - 1) * perPage
     return await db
-        .collection('allowedUsers')
-        .find()
+        .collection(tableName)
+        .find({}, { projection: { _id: 0 } })
         .sort(sortOptions)
         .skip(skip)
         .limit(perPage)
@@ -12,18 +15,22 @@ export const findAllowedUsers = async (page, perPage, sortOptions = {}) => {
 }
 export const findAllowedUsersName = async () => {
     return await db
-        .collection('allowedUsers')
-        .find({}, { projection: { _id: 0, name: 1 } })
+        .collection(tableName)
+        .find({}, { projection: { _id: 0, allowedUserID: 0, name: 1 } })
         .toArray()
 }
 
 export const findUserByName = async (name) => {
-    return await db.collection('allowedUsers').findOne({ name })
+    return await db
+        .collection(tableName)
+        .findOne({ name }, { projection: { _id: 0 } })
 }
 
 export const addOneUser = async (body) => {
     try {
-        return await db.collection('allowedUsers').insertOne({ name: body })
+        return await db
+            .collection(tableName)
+            .insertOne({ name: body, allowedUserID: uuidv4() })
     } catch (err) {
         if (err.code === 11000) {
             throw new Error('User already exists')
@@ -33,5 +40,5 @@ export const addOneUser = async (body) => {
     }
 }
 export const deleteUser = async (name) => {
-    return await db.collection('allowedUsers').deleteOne({ name })
+    return await db.collection(tableName).deleteOne({ name })
 }

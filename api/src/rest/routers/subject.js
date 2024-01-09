@@ -6,23 +6,26 @@ import {
     getSingleSubject,
     updateSubject,
 } from '../controllers/subjectControllers.js'
-import { doesSubjectExistById } from '../validators/subjectValidators.js'
+import { doesSubjectExistByCode } from '../validators/subjectValidators.js'
 
 const router = new Router({ prefix: '/subjects' })
 
 // get all subjects
 router.get('/', getAllSubjects)
 
-// get single subject
-router.get('/:id', doesSubjectExistById, getSingleSubject)
+// get one subject
+router.get('/:id', doesSubjectExistByCode, getSingleSubject)
 
 // create subject
 router.post('/', createSubject)
 
 // update subject
-router.patch('/:id', doesSubjectExistById, updateSubject)
+router.patch('/:id', doesSubjectExistByCode, updateSubject)
 
 // delete subject
-router.delete('/:id', doesSubjectExistById, deleteSubject)
+router.delete('/:id', doesSubjectExistByCode, deleteSubject)
+
+//TODO:
+// router.delete('/:id',validator([v1,v2,v3,v4,v5,v6,v7]) doesSubjectExistById, deleteSubject)
 
 export default router

@@ -1,12 +1,11 @@
-import { deleteOneResult } from '../queries/resultQueries.js'
-import {
-    createOneStudent,
-    deleteOneStudent,
-    findAllStudents,
-} from '../queries/studentQueries.js'
+import * as studentQueries from '../queries/studentQueries.js'
 
-export const getStudents = async (ctx) => {
-    const response = {}
+import * as resultQueries from '../queries/resultQueries.js'
+
+import { failureObject, successObject } from '../../utils/responseObject.js'
+
+export const getAllStudents = async (ctx) => {
+    let response = {}
     try {
         let filter = {}
         let sortOptions = {}
@@ -23,105 +22,83 @@ export const getStudents = async (ctx) => {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
 
-        const students = await findAllStudents(
+        const students = await studentQueries.findAllStudents(
             filter,
             parseInt(page),
             parseInt(perPage),
             sortOptions
         )
 
-        response.success = true
-        response.data = students
-        response.message = 'data displayed successfully.'
+        response = successObject(students)
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }
 
-export const getSingleStudent = async (ctx) => {
-    const response = {}
-    response.success = true
-    response.data = ctx.state.student
-    response.message = 'data displayed successfully.'
-    ctx.body = response
+export const getOneStudent = async (ctx) => {
+    const { student } = ctx.state
+    ctx.body = successObject(student)
 }
 
 export const loginStudent = async (ctx) => {
-    const response = {}
+    let response = {}
     const foundStudent = ctx.state.student
+    const { password } = ctx.request.body
 
-    if (foundStudent.password !== ctx.request.body.password) {
-        response.success = false
-        response.reason = 'Wrong Password'
-        response.message = 'Something went wrong'
+    if (password !== foundStudent.password) {
+        response = failureObject('Wrong Password')
     } else {
         delete foundStudent.password
-        response.success = true
-        response.data = foundStudent
-        response.message = 'data displayed successfully.'
+        response = successObject(foundStudent)
     }
     ctx.body = response
 }
 
 export const createStudent = async (ctx) => {
-    const response = {}
+    let response = {}
     try {
         const student = ctx.request.body
 
-        const studentDoc = await createOneStudent(student)
+        await studentQueries.createOneStudent(student)
 
-        if (!studentDoc || !studentDoc.insertedId) {
-            throw new Error('Failed to create the student')
-        }
-
-        response.success = true
-        response.data = studentDoc.insertedId
-        response.message = 'data displayed successfully.'
+        response = successObject('Student created')
     } catch (err) {
-        response.success = false
-        response.reason =
+        response = failureObject(
             err.code === 11000 ? 'Email already exists' : err.message
-        response.message = 'Something went wrong'
+        )
     }
     ctx.body = response
 }
 
 export const updateStudent = async (ctx) => {
-    const response = {}
-    const updates = ctx.request.body
+    let response = {}
     try {
-        await updateStudent(ctx.params.id, updates)
-        response.success = true
-        response.data = 'Student updated successfully'
-        response.message = 'data displayed successfully.'
+        const updates = ctx.request.body
+        const { id } = ctx.params
+        await studentQueries.updateOneStudent(id, { $set: updates })
+        response = successObject('Student updated successfully')
     } catch (err) {
-        response.success = false
-        response.reason = err.errInfo || err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.errInfo || err.message)
     }
     ctx.body = response
 }
 
 export const deleteStudent = async (ctx) => {
+    let response = {}
     try {
-        await deleteOneStudent(ctx.params.id)
+        const { id } = ctx.params
+        const { result } = ctx.state.student
+        await studentQueries.deleteOneStudent(id)
 
-        if (ctx.state.student.result) {
-            await deleteOneResult({
-                _id: ctx.state.student.result,
+        if (result) {
+            await resultQueries.deleteOneResult({
+                resultId: result,
             })
         }
-
-        response.success = true
-        response.data = 'Student deleted successfully'
-        response.message = 'data displayed successfully.'
+        response = successObject('Student deleted successfully')
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

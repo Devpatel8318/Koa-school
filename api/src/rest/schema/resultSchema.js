@@ -5,6 +5,9 @@ const resultSchema = {
         _id: {
             bsonType: 'objectId',
         },
+        resultID: {
+            bsonType: 'string',
+        },
         Signed_By: {
             bsonType: 'string',
         },
@@ -15,7 +18,7 @@ const resultSchema = {
             bsonType: 'array',
             items: {
                 bsonType: 'object',
-                required: ['sub_code', 'marks'],
+                required: ['subCode', 'marks'],
                 properties: {
                     sub_code: {
                         bsonType: 'string',

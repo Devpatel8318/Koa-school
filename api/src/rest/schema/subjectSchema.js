@@ -3,6 +3,9 @@ const subjectSchema = {
     required: ['name', 'credit', 'maximumMarks', '_id'],
     properties: {
         _id: {
+            bsonType: 'objectId',
+        },
+        subjectCode: {
             bsonType: 'string',
         },
         name: {

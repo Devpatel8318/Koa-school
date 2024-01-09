@@ -1,93 +1,72 @@
-import {
-    createOneSubject,
-    deleteOneSubject,
-    findAllSubjects,
-    updateOneSubject,
-} from '../queries/subjectQueries.js'
+import * as subjectQueries from '../queries/subjectQueries.js'
+
+import { failureObject, successObject } from '../../utils/responseObject.js'
 
 export const getAllSubjects = async (ctx) => {
-    const response = {}
+    let response = {}
     try {
-        let sortOptions = {}
         const { sortBy, sortOrder, page, perPage } = ctx.query
+        let sortOptions = {}
 
         if (sortBy && sortOrder) {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
 
-        const subjects = await findAllSubjects(
+        const subjects = await subjectQueries.findAllSubjects(
             parseInt(page),
             parseInt(perPage),
             sortOptions
         )
-
-        response.success = true
-        response.data = subjects
-        response.message = 'data displayed successfully.'
+        response = successObject(subjects)
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }
 
 export const getSingleSubject = async (ctx) => {
-    const response = {}
-    response.success = true
-    response.data = ctx.state.subject
-    response.message = 'data displayed successfully.'
-    ctx.body = response
+    const { subject } = ctx.state
+    ctx.body = successObject(subject)
 }
 
 export const createSubject = async (ctx) => {
-    const response = {}
+    let response = {}
     try {
-        const subjectDoc = await createOneSubject(ctx.request.body)
-        if (!subjectDoc) throw new Error('Failed to create Subject')
+        const { body } = ctx.request
+        await subjectQueries.createOneSubject(body)
 
-        response.success = true
-        response.data = subjectDoc.insertedId
-        response.message = 'data displayed successfully.'
+        response = successObject('Subject Created')
     } catch (err) {
-        response.success = false
-        response.reason =
-            err.code === 11000 ? 'Subject code already exists' : err.message
-        response.message = 'Something went wrong'
+        response = failureObject(
+            err.code === 11000 ? 'Subject already exists' : err.message
+        )
     }
     ctx.body = response
 }
 
 export const updateSubject = async (ctx) => {
-    const subjectId = ctx.params.id
-    const updates = ctx.request.body
-    const response = {}
+    let response = {}
     try {
-        await updateOneSubject(subjectId, updates)
-        response.success = true
-        response.data = 'Subject updated successfully'
-        response.message = 'data displayed successfully.'
+        const updates = ctx.request.body
+        const subjectId = ctx.params.id
+        await subjectQueries.updateOneSubject(subjectId, updates)
+
+        response = successObject('Subject updated successfully')
     } catch (err) {
-        response.success = false
-        response.reason = err.errInfo || err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.errInfo || err.message)
     }
     ctx.body = response
 }
 
 export const deleteSubject = async (ctx) => {
-    const subjectId = ctx.params.id
-    const response = {}
+    let response = {}
     try {
-        await deleteOneSubject(subjectId)
+        const subjectId = ctx.params.id
+        await subjectQueries.deleteOneSubject(subjectId)
 
-        response.success = true
-        response.data = 'Subject deleted successfully'
-        response.message = 'data displayed successfully.'
+        response = successObject('Subject Deleted successfully')
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

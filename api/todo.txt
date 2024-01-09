@@ -1,0 +1,34 @@
+DONE proper destructuring done
+DONE import in queries done
+DONE const response => let response DONE
+DONE change names of validators done
+DONE move 1 middleware to validator done
+DONE use utils/responseObject done
+DONE prevent from adding duplicate allowed users done
+DONE fix passkey check done
+DONE password valid and encryption different functions done
+
+
+_id:uuid
+destructuring
+validator array[v1,v2,v3,v4,v5,v6,v7]
+fields validation baaki
+
+encryptedPassword ctx.state to pass password
+lowercase Student
+remove snake_case
+password verification should be done inside validators
+proper destructuring 
+ID => Id
+remove unnecessary error checking
+getUsers => getAllUsers
+prevent results to get duplicated
+hide password from students (findOne field)
+Student = student
+final code optimize 
+
+
+
+
+Doubt
+whether to put (const {} = something) after try{} ?

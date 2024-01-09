@@ -1,14 +1,9 @@
 import jwt from 'jsonwebtoken'
 
 export const generateAuthToken = () => {
-    const token = jwt.sign(
-        { message: 'Authenticated' },
-        process.env.JWT_SECRET,
-        {
-            expiresIn: '60m',
-        }
-    )
-    return token
+    return jwt.sign({ message: 'Authenticated' }, process.env.JWT_SECRET, {
+        expiresIn: '60m',
+    })
 }
 
 export const isTokenValid = function (token) {

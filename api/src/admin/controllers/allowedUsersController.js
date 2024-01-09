@@ -1,20 +1,17 @@
+import { successObject, failureObject } from '../../utils/responseObject.js'
+
+import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
+
 import { generateAuthToken } from '../helpers/jwtFunctions.js'
-import {
-    addOneUser,
-    deleteUser,
-    findAllowedUsers,
-} from '../queries/allowedUsersQueries.js'
 
 export const loginAdmin = async (ctx) => {
-    const response = {}
+    let response = {}
+    const { password } = ctx.request.body
 
-    if (ctx.request.body.password !== process.env.PASSKEY) {
-        response.success = false
-        response.reason = 'Wrong password'
-        response.message = 'Something went wrong'
+    if (password !== process.env.PASSKEY) {
+        response = failureObject('Wrong pasword')
     } else {
-        const token = generateAuthToken()
-        ctx.cookies.set('myToken', token, {
+        ctx.cookies.set('myToken', generateAuthToken(), {
             httpOnly: true,
             secure: false,
             sameSite: 'Strict',
@@ -22,105 +19,67 @@ export const loginAdmin = async (ctx) => {
             path: '/',
             overwrite: true,
         })
-        response.success = true
-        response.data = 'ok'
-        response.message = 'data displayed successfully.'
+        response = successObject('ok')
     }
 
     ctx.body = response
 }
 
-// export const getUsers = async (ctx) => {
-//     try {
-//         const page = parseInt(ctx.query.page)
-//         const perPage = parseInt(ctx.query.perPage)
-//         let sortOptions = {}
-
-//         if (ctx.query.sortBy && ctx.query.sortOrder) {
-//             const sortOrder =
-//                 ctx.query.sortOrder.toLowerCase() === 'desc' ? -1 : 1
-//             sortOptions[ctx.query.sortBy] = sortOrder
-//         }
-
-//         const results = await findAllowedUsers(page, perPage, sortOptions)
-//         ctx.status = 200
-//         ctx.body = results
-//     } catch (err) {
-//         ctx.status = 500
-//         ctx.body = { error: err }
-//     }
-// }
-
 export const getUsers = async (ctx) => {
-    const response = {}
+    let response = {}
 
     try {
         let sortOptions = {}
         const { sortBy, sortOrder, page, perPage } = ctx.query
 
-        if (sortBy && sortOrder) {
+        if (sortBy && sortOrder)
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
-        }
 
-        const results = await findAllowedUsers(
+        const allowedUsers = await allowedUsersQueries.findAllowedUsers(
             parseInt(page),
             parseInt(perPage),
             sortOptions
         )
 
-        response.success = true
-        response.data = results
-        response.message = 'data displayed successfully.'
+        response = successObject(allowedUsers)
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
 
     ctx.body = response
 }
 export const getUser = async (ctx) => {
-    const response = {}
-    response.success = true
-    response.data = ctx.state.user
-    response.message = 'data displayed successfully.'
-    ctx.body = response
+    const { user } = ctx.state
+    ctx.body = successObject(user)
 }
 
 export const addUser = async (ctx) => {
-    const response = {}
+    let response = {}
+    const { name } = ctx.request.body
     try {
-        const allowedUserDoc = await addOneUser(ctx.request.body.name)
-        console.log(allowedUserDoc)
+        const allowedUserDoc = await allowedUsersQueries.addOneUser(name)
 
-        if (!allowedUserDoc) {
-            throw new Error('failed to add User')
-        }
-        response.success = true
-        response.data = 'new user created'
-        response.message = 'data displayed successfully.'
+        if (!allowedUserDoc) throw new Error('failed to add User')
+
+        response = successObject('new user created')
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }
 
 export const removeUser = async (ctx) => {
-    const response = {}
+    let response = {}
+    const { name } = ctx.params
     try {
-        const response = await deleteUser(ctx.params.name)
-        if (response.deletedCount === 0) {
+        const res = await allowedUsersQueries.deleteUser(name)
+        if (!res.deletedCount) {
             throw new Error('User Does not Exist')
         }
-        response.success = true
-        response.data = 'User deleted successfully'
-        response.message = 'data displayed successfully.'
+
+        response = successObject('User deleted successfully')
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

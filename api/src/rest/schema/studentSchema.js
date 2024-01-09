@@ -5,6 +5,9 @@ const studentSchema = {
         _id: {
             bsonType: 'objectId',
         },
+        studentID: {
+            bsonType: 'string',
+        },
         firstName: {
             bsonType: 'string',
             minLength: 6,
@@ -24,7 +27,7 @@ const studentSchema = {
             minLength: 6,
         },
         result: {
-            bsonType: 'objectId',
+            bsonType: 'string',
         },
     },
     additionalProperties: false,

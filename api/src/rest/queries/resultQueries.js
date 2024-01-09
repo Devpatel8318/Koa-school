@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import db from '../../connection/db.js'
 
 const pipeline = (argument) => [
@@ -5,15 +7,10 @@ const pipeline = (argument) => [
         $match: argument,
     },
     {
-        $addFields: {
-            convertedStudentId: { $toObjectId: '$Student' },
-        },
-    },
-    {
         $lookup: {
             from: 'students',
-            localField: 'convertedStudentId',
-            foreignField: '_id',
+            localField: 'Student',
+            foreignField: 'studentID',
             as: 'studentInfo',
         },
     },
@@ -23,17 +20,18 @@ const pipeline = (argument) => [
     {
         $lookup: {
             from: 'subjects',
-            localField: 'Marks.sub_code',
-            foreignField: '_id',
+            localField: 'Marks.subCode',
+            foreignField: 'subjectCode',
             as: 'subjectInfo',
         },
     },
     {
         $project: {
-            _id: 1,
+            _id: 0,
+            resultID: 1,
             Signed_By: 1,
             Marks: 1,
-            'studentInfo._id': 1,
+            'studentInfo.studentID': 1,
             'studentInfo.firstName': 1,
             'studentInfo.lastName': 1,
             'studentInfo.email': 1,
@@ -42,33 +40,42 @@ const pipeline = (argument) => [
     },
 ]
 
+const tableName = 'results'
+
 export const findAllResults = async (page, perPage, sortOptions = {}) => {
     const skip = (page - 1) * perPage
     return await db
-        .collection('results')
-        .find()
+        .collection(tableName)
+        .find({}, { projection: { _id: 0 } })
         .sort(sortOptions)
         .skip(skip)
         .limit(perPage)
         .toArray()
 }
 
-export const findOneResultById = async (id) => {
-    return await db.collection('results').findOne({ _id: id })
+export const findOneResult = async (filter) => {
+    return await db
+        .collection(tableName)
+        .findOne(filter, { projection: { _id: 0 } })
 }
 
 export const getOneFormattedResult = async (filter) => {
-    return await db.collection('results').aggregate(pipeline(filter)).toArray()
+    console.log(filter);
+    return await db.collection(tableName).aggregate(pipeline(filter)).toArray()
 }
 
 export const createOneResult = async (body) => {
-    return await db.collection('results').insertOne(body)
+    return await db
+        .collection(tableName)
+        .insertOne({ ...body, resultID: uuidv4() })
 }
 
-export const updateOneResult = async (id, body) => {
-    return await db.collection('results').updateOne({ _id: id }, { $set: body })
+export const updateOneResult = async (resId, body) => {
+    return await db
+        .collection(tableName)
+        .updateOne({ resultID: resId }, { $set: body })
 }
 
 export const deleteOneResult = async (filter) => {
-    return await db.collection('results').deleteOne(filter)
+    return await db.collection(tableName).deleteOne(filter)
 }

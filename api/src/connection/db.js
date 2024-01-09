@@ -33,6 +33,10 @@ const mongodbConnection = async () => {
             .createIndex({ email: 1 }, { unique: true })
 
         await db
+            .collection('subjects')
+            .createIndex({ subjectCode: 1 }, { unique: true })
+
+        await db
             .collection('allowedUsers')
             .createIndex({ name: 1 }, { unique: true })
 

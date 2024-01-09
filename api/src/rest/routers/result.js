@@ -1,45 +1,46 @@
 import Router from '@koa/router'
-import validId from '../middleware/validId.js'
 import {
     createResult,
     deleteResult,
     getFormattedResultByStudent,
-    getResults,
+    getAllResults,
     getSingleFormattedResult,
     getSingleResult,
     updateResult,
 } from '../controllers/resultController.js'
+
 import { doesStudentExistById } from '../validators/studentValidators.js'
 import {
     doesResultExistById,
-    validStudent,
+    isStudentvalid,
 } from '../validators/resultValidators.js'
+import isIdValid from '../validators/validId.js'
 
 const router = new Router({ prefix: '/results' })
 
-router.get('/', getResults)
+router.get('/', getAllResults)
 
-router.get('/:id', validId, doesResultExistById, getSingleResult)
+router.get('/:id', isIdValid, doesResultExistById, getSingleResult)
 
 router.get(
     '/formatted/:id',
-    validId,
+    isIdValid,
     doesResultExistById,
     getSingleFormattedResult
 )
 
 router.get(
     '/formatted/students/:id',
-    validId,
+    isIdValid,
     doesStudentExistById,
-    validStudent,
+    isStudentvalid,
     getFormattedResultByStudent
 )
 
 router.post('/', createResult)
 
-router.patch('/:id', validId, doesResultExistById, updateResult)
+router.patch('/:id', isIdValid, doesResultExistById, updateResult)
 
-router.delete('/:id', validId, doesResultExistById, deleteResult)
+router.delete('/:id', isIdValid, doesResultExistById, deleteResult)
 
 export default router

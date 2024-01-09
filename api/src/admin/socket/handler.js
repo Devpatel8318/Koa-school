@@ -1,10 +1,11 @@
-import { findAllowedUsersName } from '../queries/allowedUsersQueries.js'
+import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 
 const onlineUsers = new Map()
 
 export const handleJoinEvent = (socket, io) => async (name, callback) => {
     try {
-        const allowedUsersList = await findAllowedUsersName()
+        const allowedUsersList =
+            await allowedUsersQueries.findAllowedUsersName()
         const userNames = allowedUsersList.map((user) => user.name)
 
         if (!userNames.includes(name)) {

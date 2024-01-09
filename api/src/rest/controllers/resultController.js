@@ -1,16 +1,12 @@
-import { ObjectId } from 'mongodb'
-import {
-    createOneResult,
-    deleteOneResult,
-    findAllResults,
-    getOneFormattedResult,
-    updateOneResult,
-} from '../queries/resultQueries.js'
-import { updateOneStudent } from '../queries/studentQueries.js'
-import { transformDoc } from '../helpers/transformDoc.js'
+import * as resultQueries from '../queries/resultQueries.js'
 
-export const getResults = async (ctx) => {
-    const response = {}
+import * as studentQueries from '../queries/studentQueries.js'
+
+import { transformDoc } from '../helpers/transformDoc.js'
+import { failureObject, successObject } from '../../utils/responseObject.js'
+
+export const getAllResults = async (ctx) => {
+    let response = {}
     try {
         const { sortBy, sortOrder, page, perPage } = ctx.query
         let sortOptions = {}
@@ -19,125 +15,114 @@ export const getResults = async (ctx) => {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
 
-        const results = await findAllResults(
+        const results = await resultQueries.findAllResults(
             parseInt(page),
             parseInt(perPage),
             sortOptions
         )
 
-        response.success = true
-        response.data = results
-        response.message = 'data displayed successfully.'
+        response = successObject(results)
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }
 
 export const getSingleResult = async (ctx) => {
-    const response = {}
-    response.success = true
-    response.data = ctx.state.result
-    response.message = 'data displayed successfully.'
-    ctx.body = response
+    const { result } = ctx.state
+    ctx.body = successObject(result)
 }
 
 export const getSingleFormattedResult = async (ctx) => {
-    const response = {}
+    let response = {}
+    const { id } = ctx.params
     try {
-        const resultDoc = await getOneFormattedResult({ _id: ctx.params.id })
+        const resultDoc = await resultQueries.getOneFormattedResult({
+            resultID: id,
+        })
+        console.log(resultDoc)
 
-        response.success = true
-        response.data = transformDoc(resultDoc)
-        response.message = 'data displayed successfully.'
+        response = successObject(transformDoc(resultDoc))
+        // response = successObject(resultDoc)
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        console.log(err)
+        response = failureObject(err.message)
     }
     ctx.body = response
 }
 
 export const getFormattedResultByStudent = async (ctx) => {
-    const response = {}
+    let response = {}
+    const { studentID } = ctx.state.student
     try {
-        const resultDoc = await getOneFormattedResult({
-            Student: ctx.state.student._id,
+        const resultDoc = await resultQueries.getOneFormattedResult({
+            Student: studentID,
         })
-
-        response.success = true
-        response.data = transformDoc(resultDoc)
-        response.message = 'data displayed successfully.'
+        if (!resultDoc) {
+            throw new Error('Internal Server Error')
+        }
+        response = successObject(transformDoc(resultDoc))
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }
 
 export const createResult = async (ctx) => {
-    const response = {}
+    const { body } = ctx.request
+    const { Student } = body
+
+    let response = {}
     try {
-        const resultDoc = await createOneResult(ctx.request.body)
+        const resultDoc = await resultQueries.createOneResult(body)
 
         if (!resultDoc) {
-            ctx.status = 500
-            ctx.body = { error: 'Failed to create Result' }
-            return
+            throw new Error('Failed to create Result')
         }
-        await updateOneStudent(new ObjectId(ctx.request.body.Student), {
-            $set: { result: resultDoc.insertedId },
+        const { resultID } = await resultQueries.findOneResult({ Student })
+
+        await studentQueries.updateOneStudent(Student, {
+            $set: { result: resultID },
         })
 
-        response.success = true
-        response.data = resultDoc.insertedId
-        response.message = 'data displayed successfully.'
+        response = successObject('result Added')
     } catch (err) {
-        response.success = false
-        response.reason =
+        console.log(err)
+        response = failureObject(
             err.code === 11000 ? 'Result Already Exists' : err.message
-        response.message = 'Something went wrong'
+        )
     }
     ctx.body = response
 }
 
 export const updateResult = async (ctx) => {
-    const response = {}
+    let response = {}
     const updates = ctx.request.body
+    const { id } = ctx.params
+
     try {
-        await updateOneResult(ctx.params.id, updates)
-        response.success = true
-        response.data = 'Result updated successfully'
-        response.message = 'data displayed successfully.'
+        await resultQueries.updateOneResult(id, updates)
+        response = successObject('Result updated successfully.')
     } catch (err) {
-        response.success = false
-        response.reason = err.errInfo || err
-        response.message = 'Something went wrong'
-        ctx.status = 400
-        ctx.body = err.errInfo || err
+        response = failureObject(err.errInfo || err)
     }
     ctx.body = response
 }
 
 export const deleteResult = async (ctx) => {
-    const response = {}
+    let response = {}
+    const { id } = ctx.params.id
+    const { Student } = ctx.state.result
     try {
-        await deleteOneResult({ _id: ctx.params.id })
+        await resultQueries.deleteOneResult({ resultId: id })
 
-        await updateOneStudent(new ObjectId(ctx.state.result.Student), {
+        await studentQueries.updateOneStudent(Student, {
             $unset: { result: '' },
         })
 
-        response.success = true
-        response.data = 'Result deleted successfully'
-        response.message = 'data displayed successfully.'
+        response = successObject('Result deleted successfully')
     } catch (err) {
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

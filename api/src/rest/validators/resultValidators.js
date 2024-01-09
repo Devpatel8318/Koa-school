@@ -1,9 +1,12 @@
-import { ObjectId } from 'mongodb'
-import { findOneResultById } from '../queries/resultQueries.js'
+import { validate as isValidUuid } from 'uuid'
+import * as resultQueries from '../queries/resultQueries.js'
 
 export const doesResultExistById = async (ctx, next) => {
     try {
-        const resultDoc = await findOneResultById(ctx.params.id)
+        const { id } = ctx.params
+        const resultDoc = await resultQueries.findOneResult({
+            resultID: id,
+        })
         if (!resultDoc) {
             throw new Error('Result not found')
         } else {
@@ -11,35 +14,36 @@ export const doesResultExistById = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        const response = {}
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
-        ctx.body = response
+        ctx.body = {
+            success: false,
+            reason: err.message,
+            message: 'Something went wrong',
+        }
     }
 }
 
-export const validStudentId = async (ctx, next) => {
-    if (!ObjectId.isValid(ctx.params.id)) {
-        const response = {}
-        response.success = false
-        response.reason = 'Invalid ID'
-        response.message = 'Something went wrong'
-        ctx.body = response
+export const isStudentIdValid = async (ctx, next) => {
+    const { id } = ctx.params
+    if (!isValidUuid(id)) {
+        ctx.body = {
+            success: false,
+            reason: 'Invalid UUID',
+            message: 'Something went wrong',
+        }
     } else {
         await next()
     }
 }
 
-export const validStudent = async (ctx, next) => {
-    if (!ctx.state.student.result) {
-        const response = {}
-        response.success = false
-        response.reason = 'Invalid Student'
-        response.message = 'Something went wrong'
-        ctx.body = response
+export const isStudentvalid = async (ctx, next) => {
+    const { result } = ctx.state.student
+    if (!result) {
+        ctx.body = {
+            success: false,
+            reason: 'Invalid Student',
+            message: 'Something went wrong',
+        }
     } else {
-        ctx.state.student._id = ctx.state.student._id.toString()
         await next()
     }
 }

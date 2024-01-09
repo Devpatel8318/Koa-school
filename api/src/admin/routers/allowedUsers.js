@@ -11,20 +11,19 @@ import { doesUserExistByName } from '../validators/doesUserExistByName.js'
 
 const router = new Router({ prefix: '/allowedusers' })
 
+// login admin
 router.post('/admin', loginAdmin)
-router.get('/', auth, getUsers)
-router.get('/:name', auth, doesUserExistByName, getUser)
+
+// create new user
 router.post('/', auth, addUser)
-router.delete('/:name', auth, doesUserExistByName, removeUser)
+
+// get ALL users
+router.get('/', auth, getUsers)
+
+// get single user
+router.get('/:name', auth, doesUserExistByName, getUser)
+
+// delete
+router.delete('/:name', doesUserExistByName, removeUser)
 
 export default router
-
-// code optimzed
-// body1 done done
-// middleware auth done
-// validators done
-// helpers done
-
-
-// rest done
-// admin done

@@ -1,8 +1,9 @@
-import { findSubjectById } from '../queries/subjectQueries.js'
+import * as subjectQueries from '../queries/subjectQueries.js'
 
-export const doesSubjectExistById = async (ctx, next) => {
+export const doesSubjectExistByCode = async (ctx, next) => {
     try {
-        const subjectDoc = await findSubjectById(ctx.params.id)
+        const { id } = ctx.params
+        const subjectDoc = await subjectQueries.findSubjectByCode(id)
 
         if (!subjectDoc) {
             throw new Error('Subject not found')
@@ -11,10 +12,10 @@ export const doesSubjectExistById = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        const response = {}
-        response.success = false
-        response.reason = 'unauthorized'
-        response.message = 'Something went wrong'
-        ctx.body = response
+        ctx.body = {
+            success: false,
+            reason: err.message,
+            message: 'Something went wrong',
+        }
     }
 }

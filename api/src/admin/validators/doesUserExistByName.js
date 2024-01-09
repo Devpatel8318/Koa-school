@@ -1,7 +1,9 @@
-import { findUserByName } from '../queries/allowedUsersQueries.js'
+import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
+
 export const doesUserExistByName = async (ctx, next) => {
+    const { name } = ctx.params
     try {
-        const user = await findUserByName(ctx.params.name)
+        const user = await allowedUsersQueries.findUserByName(name)
         if (!user) {
             ctx.throw(404, 'User Not Found')
         } else {
@@ -9,10 +11,10 @@ export const doesUserExistByName = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        const response = {}
-        response.success = false
-        response.reason = err.message
-        response.message = 'Something went wrong'
-        ctx.body = response
+        ctx.body = {
+            success: false,
+            reason: err.message,
+            message: 'Something went wrong',
+        }
     }
 }

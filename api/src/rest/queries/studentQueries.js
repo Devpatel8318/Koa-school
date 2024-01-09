@@ -1,4 +1,8 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import db from '../../connection/db.js'
+
+const tableName = 'students'
 
 export const findAllStudents = async (
     filter,
@@ -8,9 +12,8 @@ export const findAllStudents = async (
 ) => {
     const skip = (page - 1) * perPage
     const students = await db
-        .collection('students')
-        .find(filter)
-        .project({ password: 0 })
+        .collection(tableName)
+        .find(filter, { projection: { _id: 0, password: 0 } })
         .sort(sortOptions)
         .skip(skip)
         .limit(perPage)
@@ -19,17 +22,19 @@ export const findAllStudents = async (
 }
 
 export const findOneStudent = async (filter, projection = {}) => {
-    return await db.collection('students').findOne(filter, projection)
+    return await db.collection(tableName).findOne(filter, projection)
 }
 
 export const createOneStudent = async (body) => {
-    return db.collection('students').insertOne(body)
+    return db.collection(tableName).insertOne({ ...body, studentID: uuidv4() })
 }
 
-export const updateOneStudent = async (id, query) => {
-    return await db.collection('students').updateOne({ _id: id }, query)
+export const updateOneStudent = async (studId, updates) => {
+    return await db
+        .collection(tableName)
+        .updateOne({ studentID: studId }, updates)
 }
-
-export const deleteOneStudent = async (id) => {
-    await db.collection('students').deleteOne({ _id: id })
+1
+export const deleteOneStudent = async (studId) => {
+    await db.collection(tableName).deleteOne({ studentID: studId })
 }
