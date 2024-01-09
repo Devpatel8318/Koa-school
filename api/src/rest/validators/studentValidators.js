@@ -2,6 +2,7 @@ import * as studentQueries from '../queries/studentQueries.js'
 
 import isEmailValid from '../../utils/isEmailValid.js'
 import isPasswordValid from '../../utils/isPasswordValid.js'
+import { failureObject } from '../../utils/responseObject.js'
 
 export const isLoginCredentialsValid = async (ctx, next) => {
     try {
@@ -19,11 +20,7 @@ export const isLoginCredentialsValid = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        ctx.body = {
-            success: false,
-            reason: err.message,
-            message: 'Something went wrong',
-        }
+        ctx.body = failureObject(err.message)
     }
 }
 
@@ -38,11 +35,7 @@ export const doesStudentExistByEmail = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        ctx.body = {
-            success: false,
-            reason: err.message,
-            message: 'Something went wrong',
-        }
+        ctx.body = failureObject(err.message)
     }
 }
 
@@ -60,11 +53,18 @@ export const doesStudentExistById = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        ctx.body = {
-            success: false,
-            reason: err.message,
-            message: 'Something went wrong',
-        }
+        ctx.body = failureObject(err.message)
     }
 }
 
+export const isPasswordCorrect = async (ctx, next) => {
+    const foundStudent = ctx.state.student
+    const { password } = ctx.request.body
+
+    if (password !== foundStudent.password) {
+        ctx.body = failureObject("Wrong Password")
+    } else {
+        delete ctx.state.student.password
+        await next()
+    }
+}

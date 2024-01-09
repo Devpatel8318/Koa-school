@@ -40,6 +40,10 @@ const mongodbConnection = async () => {
             .collection('allowedUsers')
             .createIndex({ name: 1 }, { unique: true })
 
+        await db
+            .collection('results')
+            .createIndex({ studentID: 1 }, { unique: true })
+
         return db
     } catch (error) {
         console.error(error)

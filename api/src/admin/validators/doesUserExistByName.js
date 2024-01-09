@@ -1,3 +1,4 @@
+import { failureObject } from '../../utils/responseObject.js'
 import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 
 export const doesUserExistByName = async (ctx, next) => {
@@ -11,10 +12,6 @@ export const doesUserExistByName = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        ctx.body = {
-            success: false,
-            reason: err.message,
-            message: 'Something went wrong',
-        }
+        ctx.body = failureObject(err.message)
     }
 }

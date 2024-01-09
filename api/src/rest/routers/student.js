@@ -13,6 +13,7 @@ import { encryptPassword } from '../middleware/encryptPassword.js'
 
 import {
     isLoginCredentialsValid,
+    isPasswordCorrect,
     doesStudentExistByEmail,
     doesStudentExistById,
 } from '../validators/studentValidators.js'
@@ -33,8 +34,9 @@ router.post('/', isLoginCredentialsValid, encryptPassword, createStudent)
 router.post(
     '/login',
     isLoginCredentialsValid,
-    encryptPassword,
     doesStudentExistByEmail,
+    encryptPassword,
+    isPasswordCorrect,
     loginStudent
 )
 

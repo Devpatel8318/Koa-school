@@ -1,3 +1,4 @@
+import { failureObject } from '../../utils/responseObject.js'
 import * as subjectQueries from '../queries/subjectQueries.js'
 
 export const doesSubjectExistByCode = async (ctx, next) => {
@@ -12,10 +13,6 @@ export const doesSubjectExistByCode = async (ctx, next) => {
             await next()
         }
     } catch (err) {
-        ctx.body = {
-            success: false,
-            reason: err.message,
-            message: 'Something went wrong',
-        }
+        ctx.body = failureObject(err.message)
     }
 }

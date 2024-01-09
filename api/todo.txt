@@ -18,18 +18,16 @@ DONE remove snake_case
 DONE proper destructuring 
 DONE _id:uuid
 DONE remove unnecessary error checking
+DONE Student = student
+DONE getUsers => getAllUsers
+DONE hide password from students (findOne field)
+DONE password verification should be done inside validators
+DONE prevent results to get duplicated
 
 "encryptedPassword" into  "ctx.state"  to pass the "password"
-password verification should be done inside validators
 ID => Id
-getUsers => getAllUsers
-prevent results to get duplicated
-hide password from students (findOne field)
-Student = student
 final code optimize 
-
-
-
+try to use ctx.body only once
 
 
 

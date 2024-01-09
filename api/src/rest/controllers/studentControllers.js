@@ -42,17 +42,8 @@ export const getOneStudent = async (ctx) => {
 }
 
 export const loginStudent = async (ctx) => {
-    let response = {}
-    const foundStudent = ctx.state.student
-    const { password } = ctx.request.body
-
-    if (password !== foundStudent.password) {
-        response = failureObject('Wrong Password')
-    } else {
-        delete foundStudent.password
-        response = successObject(foundStudent)
-    }
-    ctx.body = response
+    const { student } = ctx.state
+    ctx.body = successObject(student)
 }
 
 export const createStudent = async (ctx) => {

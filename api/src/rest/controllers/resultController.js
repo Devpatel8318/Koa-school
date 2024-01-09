@@ -82,7 +82,9 @@ export const createResult = async (ctx) => {
         response = successObject('result Added')
     } catch (err) {
         response = failureObject(
-            err.code === 11000 ? 'Result Already Exists' : err.message
+            err.code === 11000
+                ? 'Result Already Exists for this student'
+                : err.message
         )
     }
     ctx.body = response
