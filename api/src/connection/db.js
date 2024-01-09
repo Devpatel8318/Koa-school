@@ -42,7 +42,7 @@ const mongodbConnection = async () => {
 
         await db
             .collection('results')
-            .createIndex({ studentID: 1 }, { unique: true })
+            .createIndex({ studentId: 1 }, { unique: true })
 
         return db
     } catch (error) {

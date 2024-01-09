@@ -5,7 +5,7 @@ const studentSchema = {
         _id: {
             bsonType: 'objectId',
         },
-        studentID: {
+        studentId: {
             bsonType: 'string',
         },
         firstName: {

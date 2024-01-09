@@ -9,8 +9,8 @@ const pipeline = (argument) => [
     {
         $lookup: {
             from: 'students',
-            localField: 'studentID',
-            foreignField: 'studentID',
+            localField: 'studentId',
+            foreignField: 'studentId',
             as: 'studentInfo',
         },
     },
@@ -28,10 +28,10 @@ const pipeline = (argument) => [
     {
         $project: {
             _id: 0,
-            resultID: 1,
+            resultId: 1,
             Signed_By: 1,
             Marks: 1,
-            'studentInfo.studentID': 1,
+            'studentInfo.studentId': 1,
             'studentInfo.firstName': 1,
             'studentInfo.lastName': 1,
             'studentInfo.email': 1,
@@ -66,13 +66,13 @@ export const getOneFormattedResult = async (filter) => {
 export const createOneResult = async (body) => {
     return await db
         .collection(tableName)
-        .insertOne({ ...body, resultID: uuidv4() })
+        .insertOne({ ...body, resultId: uuidv4() })
 }
 
-export const updateOneResult = async (resultID, body) => {
+export const updateOneResult = async (resultId, body) => {
     return await db
         .collection(tableName)
-        .updateOne({ resultID }, { $set: body })
+        .updateOne({ resultId }, { $set: body })
 }
 
 export const deleteOneResult = async (filter) => {

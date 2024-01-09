@@ -43,7 +43,7 @@ export const doesStudentExistById = async (ctx, next) => {
     try {
         const { id } = ctx.params
         const student = await studentQueries.getOneStudent(
-            { studentID: id },
+            { studentId: id },
             { projection: { password: 0, _id: 0 } }
         )
         if (!student) {

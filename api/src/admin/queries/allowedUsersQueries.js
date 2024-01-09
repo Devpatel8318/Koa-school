@@ -16,7 +16,7 @@ export const getAllAllowedUsers = async (page, perPage, sortOptions = {}) => {
 export const getAllowedUsersName = async () => {
     return await db
         .collection(tableName)
-        .find({}, { projection: { _id: 0, allowedUserID: 0, name: 1 } })
+        .find({}, { projection: { _id: 0, allowedUserId: 0, name: 1 } })
         .toArray()
 }
 
@@ -30,7 +30,7 @@ export const addOneUser = async (body) => {
     try {
         return await db
             .collection(tableName)
-            .insertOne({ name: body, allowedUserID: uuidv4() })
+            .insertOne({ name: body, allowedUserId: uuidv4() })
     } catch (err) {
         if (err.code === 11000) {
             throw new Error('User already exists')

@@ -1,6 +1,6 @@
 export const transformDoc = (resultDoc) => {
     return {
-        resultID: resultDoc[0].resultID,
+        resultId: resultDoc[0].resultId,
         Signed_By: resultDoc[0].Signed_By,
         studentInfo: resultDoc[0].studentInfo,
         Marks: resultDoc[0].Marks.map((mark) => {

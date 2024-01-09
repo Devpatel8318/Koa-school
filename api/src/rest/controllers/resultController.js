@@ -38,7 +38,7 @@ export const getSingleFormattedResult = async (ctx) => {
     const { id } = ctx.params
     try {
         const resultDoc = await resultQueries.getOneFormattedResult({
-            resultID: id,
+            resultId: id,
         })
 
         response = successObject(transformDoc(resultDoc))
@@ -50,10 +50,10 @@ export const getSingleFormattedResult = async (ctx) => {
 
 export const getFormattedResultByStudent = async (ctx) => {
     let response = {}
-    const { studentID } = ctx.state.student
+    const { studentId } = ctx.state.student
     try {
         const resultDoc = await resultQueries.getOneFormattedResult({
-            studentID,
+            studentId,
         })
         response = successObject(transformDoc(resultDoc))
     } catch (err) {
@@ -64,7 +64,7 @@ export const getFormattedResultByStudent = async (ctx) => {
 
 export const createResult = async (ctx) => {
     const { body } = ctx.request
-    const { studentID } = body
+    const { studentId } = body
 
     let response = {}
     try {
@@ -73,10 +73,10 @@ export const createResult = async (ctx) => {
         if (!resultDoc) {
             throw new Error('Failed to create Result')
         }
-        const { resultID } = await resultQueries.getOneResult({ studentID })
+        const { resultId } = await resultQueries.getOneResult({ studentId })
 
-        await studentQueries.updateOneStudent(studentID, {
-            $set: { result: resultID },
+        await studentQueries.updateOneStudent(studentId, {
+            $set: { result: resultId },
         })
 
         response = successObject('result Added')
@@ -107,11 +107,11 @@ export const updateResult = async (ctx) => {
 export const deleteResult = async (ctx) => {
     let response = {}
     const { id } = ctx.params.id
-    const { studentID } = ctx.state.result
+    const { studentId } = ctx.state.result
     try {
         await resultQueries.deleteOneResult({ resultId: id })
 
-        await studentQueries.updateOneStudent(studentID, {
+        await studentQueries.updateOneStudent(studentId, {
             $unset: { result: '' },
         })
 

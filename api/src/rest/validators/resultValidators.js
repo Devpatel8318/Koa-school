@@ -6,7 +6,7 @@ export const doesResultExistById = async (ctx, next) => {
     try {
         const { id } = ctx.params
         const resultDoc = await resultQueries.getOneResult({
-            resultID: id,
+            resultId: id,
         })
         if (!resultDoc) {
             throw new Error('Result not found')
@@ -19,7 +19,7 @@ export const doesResultExistById = async (ctx, next) => {
     }
 }
 
-export const isStudentIdValid = async (ctx, next) => {
+export const isstudentIdValid = async (ctx, next) => {
     const { id } = ctx.params
     if (!isValidUuid(id)) {
         ctx.body = failureObject('Invalid UUID')

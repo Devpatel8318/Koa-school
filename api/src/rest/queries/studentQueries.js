@@ -26,13 +26,13 @@ export const getOneStudent = async (filter, projection = {}) => {
 }
 
 export const createOneStudent = async (body) => {
-    return db.collection(tableName).insertOne({ ...body, studentID: uuidv4() })
+    return db.collection(tableName).insertOne({ ...body, studentId: uuidv4() })
 }
 
-export const updateOneStudent = async (studentID, updates) => {
-    return await db.collection(tableName).updateOne({ studentID }, updates)
+export const updateOneStudent = async (studentId, updates) => {
+    return await db.collection(tableName).updateOne({ studentId }, updates)
 }
 1
-export const deleteOneStudent = async (studentID) => {
-    await db.collection(tableName).deleteOne({ studentID })
+export const deleteOneStudent = async (studentId) => {
+    await db.collection(tableName).deleteOne({ studentId })
 }
