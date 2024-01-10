@@ -1,11 +1,4 @@
 import Router from '@koa/router'
-import {
-    addUser,
-    getUser,
-    getUsers,
-    removeUser,
-    loginAdmin,
-} from '../controllers/allowedUsersController.js'
 
 import { auth } from '../middleware/allowedUsersMiddleware.js'
 
@@ -16,6 +9,14 @@ import {
     isPassKeyCorrect,
     isFieldsValid,
 } from '../validators/allowedUsersValidators.js'
+
+import {
+    addUser,
+    getUser,
+    getUsers,
+    removeUser,
+    loginAdmin,
+} from '../controllers/allowedUsersController.js'
 
 const router = new Router({ prefix: '/allowedusers' })
 

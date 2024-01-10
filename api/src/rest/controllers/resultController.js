@@ -1,9 +1,9 @@
-import * as resultQueries from '../queries/resultQueries.js'
-
-import * as studentQueries from '../queries/studentQueries.js'
+import { failureObject, successObject } from '../../utils/responseObject.js'
 
 import { transformDoc } from '../helpers/transformDoc.js'
-import { failureObject, successObject } from '../../utils/responseObject.js'
+
+import * as resultQueries from '../queries/resultQueries.js'
+import * as studentQueries from '../queries/studentQueries.js'
 
 export const getAllResults = async (ctx) => {
     let response = {}

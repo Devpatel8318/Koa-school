@@ -1,4 +1,5 @@
 import encryptedPassword from '../helpers/getEncryptedPassword.js'
+
 export const encryptPassword = async (ctx, next) => {
     try {
         const { password } = ctx.request.body

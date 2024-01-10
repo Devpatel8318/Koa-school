@@ -1,8 +1,8 @@
 import { successObject, failureObject } from '../../utils/responseObject.js'
 
-import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
-
 import { generateAuthToken } from '../helpers/jwtFunctions.js'
+
+import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 
 export const loginAdmin = async (ctx) => {
     ctx.cookies.set('myToken', generateAuthToken(), {

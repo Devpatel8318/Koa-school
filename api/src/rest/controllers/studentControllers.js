@@ -1,8 +1,8 @@
-import * as studentQueries from '../queries/studentQueries.js'
+import { failureObject, successObject } from '../../utils/responseObject.js'
 
+import * as studentQueries from '../queries/studentQueries.js'
 import * as resultQueries from '../queries/resultQueries.js'
 
-import { failureObject, successObject } from '../../utils/responseObject.js'
 
 export const getAllStudents = async (ctx) => {
     let response = {}
@@ -43,6 +43,7 @@ export const getOneStudent = async (ctx) => {
 
 export const loginStudent = async (ctx) => {
     const { student } = ctx.state
+    delete student.password
     ctx.body = successObject(student)
 }
 

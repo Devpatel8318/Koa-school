@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-const encryptedPassword = (password) => {
+const encryptPassword = (password) => {
     return crypto.createHash('md5').update(password).digest('hex')
 }
-export default encryptedPassword
+export default encryptPassword

@@ -1,4 +1,5 @@
 import { validate as isValidUuid } from 'uuid'
+
 import * as resultQueries from '../queries/resultQueries.js'
 import * as studentQueries from '../queries/studentQueries.js'
 

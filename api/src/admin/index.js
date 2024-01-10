@@ -3,6 +3,7 @@ import cors from '@koa/cors'
 import bodyParser from 'koa-bodyparser'
 import { config } from 'dotenv'
 import { createServer } from 'http'
+
 import initializeSocket from './socket/socket.js'
 import allowedUsers from './routers/allowedUsers.js'
 

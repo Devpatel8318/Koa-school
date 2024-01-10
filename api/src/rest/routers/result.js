@@ -1,15 +1,7 @@
 import Router from '@koa/router'
-import {
-    createResult,
-    deleteResult,
-    getFormattedResultByStudent,
-    getAllResults,
-    getSingleFormattedResult,
-    getSingleResult,
-    updateResult,
-} from '../controllers/resultController.js'
 
 import validator from '../middleware/validator.js'
+
 import { doesStudentExistById } from '../validators/studentValidators.js'
 import {
     doesResultExistById,
@@ -19,6 +11,16 @@ import {
     isStudentIdFieldValid,
 } from '../validators/resultValidators.js'
 import isIdValid from '../validators/validId.js'
+
+import {
+    createResult,
+    deleteResult,
+    getFormattedResultByStudent,
+    getAllResults,
+    getSingleFormattedResult,
+    getSingleResult,
+    updateResult,
+} from '../controllers/resultController.js'
 
 const router = new Router({ prefix: '/results' })
 

@@ -1,16 +1,8 @@
 import Router from '@koa/router'
-import {
-    deleteStudent,
-    getOneStudent,
-    getAllStudents,
-    loginStudent,
-    updateStudent,
-    createStudent,
-} from '../controllers/studentControllers.js'
 
 import { encryptPassword } from '../middleware/encryptPassword.js'
-
 import validator from '../middleware/validator.js'
+
 import {
     isLoginCredentialsValid,
     isPasswordCorrect,
@@ -20,6 +12,15 @@ import {
     isEmailAvailable,
 } from '../validators/studentValidators.js'
 import isIdValid from '../validators/validId.js'
+
+import {
+    deleteStudent,
+    getOneStudent,
+    getAllStudents,
+    loginStudent,
+    updateStudent,
+    createStudent,
+} from '../controllers/studentControllers.js'
 
 export const router = new Router({ prefix: '/students' })
 
@@ -32,9 +33,11 @@ router.get('/:id', validator([isIdValid, doesStudentExistById]), getOneStudent)
 // Student Login
 router.post(
     '/login',
-    validator([isLoginCredentialsValid, doesStudentExistByEmail]),
-    encryptPassword,
-    validator([isPasswordCorrect]),
+    validator([
+        isLoginCredentialsValid,
+        doesStudentExistByEmail,
+        isPasswordCorrect,
+    ]),
     loginStudent
 )
 

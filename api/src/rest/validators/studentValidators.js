@@ -1,7 +1,9 @@
-import * as studentQueries from '../queries/studentQueries.js'
-
 import isEmailValid from '../../utils/isEmailValid.js'
 import isPasswordValid from '../../utils/isPasswordValid.js'
+
+import encryptPassword from '../helpers/getEncryptedPassword.js'
+
+import * as studentQueries from '../queries/studentQueries.js'
 
 export const isLoginCredentialsValid = async (ctx) => {
     try {
@@ -9,15 +11,16 @@ export const isLoginCredentialsValid = async (ctx) => {
 
         if (!password || !email) {
             throw new Error('Please provide credentials')
-        } else if (!isEmailValid(email)) {
+        }
+        if (!isEmailValid(email)) {
             throw new Error('Please provide valid Email')
-        } else if (!isPasswordValid(password)) {
+        }
+        if (!isPasswordValid(password)) {
             throw new Error(
                 'Password should contain at least one uppercase letter, one special character, and one number'
             )
-        } else {
-            return null
         }
+        return null
     } catch (err) {
         return err.message
     }
@@ -80,12 +83,11 @@ export const doesStudentExistById = async (ctx) => {
 
 export const isPasswordCorrect = async (ctx) => {
     const foundStudent = ctx.state.student
-    const { encryptedPassword } = ctx.state
+    const { password } = ctx.request.body
 
-    if (encryptedPassword !== foundStudent.password) {
+    if (encryptPassword(password) !== foundStudent.password) {
         return 'Wrong Password'
     } else {
-        delete ctx.state.student.password
         return null
     }
 }
@@ -108,7 +110,7 @@ export const isFieldsValid = async (ctx) => {
     const invalidFields = Object.keys(body).filter(
         (field) => !allowedFields.includes(field)
     )
-    if (invalidFields.length > 0) {
+    if (invalidFields.length) {
         return 'Invalid field'
     } else {
         return null

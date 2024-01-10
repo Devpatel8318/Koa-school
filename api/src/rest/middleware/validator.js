@@ -4,7 +4,7 @@ const validator = (validatorFunctions) => {
             try {
                 const validationResult = await validatorFn(ctx)
 
-                if (validationResult !== null) {
+                if (validationResult) {
                     throw new Error(validationResult)
                 }
             } catch (err) {

@@ -1,6 +1,6 @@
-import * as subjectQueries from '../queries/subjectQueries.js'
-
 import { failureObject, successObject } from '../../utils/responseObject.js'
+
+import * as subjectQueries from '../queries/subjectQueries.js'
 
 export const getAllSubjects = async (ctx) => {
     let response = {}
