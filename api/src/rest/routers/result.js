@@ -9,6 +9,11 @@ import {
     doesStudentAlreadyHaveResult,
     isFieldsValid,
     isStudentIdFieldValid,
+    isSignedByValid,
+    areMarksValid,
+    isStudentIdFieldValidIfExists,
+    isSignedByValidIfExists,
+    areMarksValidIfExists,
 } from '../validators/resultValidators.js'
 import isIdValid from '../validators/validId.js'
 
@@ -44,6 +49,9 @@ router.post(
     '/',
     validator([
         isFieldsValid,
+        isSignedByValid,
+        areMarksValid,
+        //TODO:
         isStudentIdFieldValid,
         doesStudentAlreadyHaveResult,
     ]),
@@ -52,7 +60,14 @@ router.post(
 
 router.patch(
     '/:id',
-    validator([isFieldsValid, isIdValid, doesResultExistById]),
+    validator([
+        isFieldsValid,
+        isIdValid,
+        doesResultExistById,
+        isStudentIdFieldValidIfExists,
+        isSignedByValidIfExists,
+        areMarksValidIfExists,
+    ]),
     updateResult
 )
 

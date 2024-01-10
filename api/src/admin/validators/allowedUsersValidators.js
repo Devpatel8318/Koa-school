@@ -7,27 +7,26 @@ export const doesUserExistByName = async (ctx) => {
 
         if (!user) {
             throw new Error('User Not Found')
-        } else {
-            ctx.state.user = user
-            return null
         }
+
+        ctx.state.user = user
+        return null
     } catch (err) {
         return err.message
     }
 }
 
 export const isNameAlreadyAdded = async (ctx) => {
-    const { name } = ctx.request.body
     try {
+        const { name } = ctx.request.body
         const user = await allowedUsersQueries.getUserByName(name)
 
         console.log(user)
         if (user) {
             throw new Error('Allowed user already exists')
-        } else {
-            ctx.state.user = user
-            return null
         }
+
+        return null
     } catch (err) {
         return err.message
     }
@@ -38,9 +37,9 @@ export const isPassKeyCorrect = async (ctx) => {
 
     if (passKey !== process.env.PASSKEY) {
         return 'Wrong Password'
-    } else {
-        return null
     }
+
+    return null
 }
 
 export const isFieldsValid = async (ctx) => {
@@ -57,9 +56,19 @@ export const isFieldsValid = async (ctx) => {
         (field) => !allowedFields.includes(field)
     )
 
-    if (invalidFields.length > 0) {
+    if (invalidFields.length) {
         return 'Invalid field'
-    } else {
-        return null
     }
+
+    return null
+}
+
+export const isNameValid = async (ctx) => {
+    const { name } = ctx.request.body
+
+    if (typeof name !== 'string' || !name.trim()) {
+        return 'Name should be a non-empty string'
+    }
+
+    return null
 }

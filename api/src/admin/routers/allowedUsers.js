@@ -8,6 +8,7 @@ import {
     isNameAlreadyAdded,
     isPassKeyCorrect,
     isFieldsValid,
+    isNameValid,
 } from '../validators/allowedUsersValidators.js'
 
 import {
@@ -30,7 +31,11 @@ router.get('/', validator([auth]), getUsers)
 router.get('/:name', validator([auth, doesUserExistByName]), getUser)
 
 // create new user
-router.post('/', validator([auth, isFieldsValid, isNameAlreadyAdded]), addUser)
+router.post(
+    '/',
+    validator([auth, isFieldsValid, isNameValid, isNameAlreadyAdded]),
+    addUser
+)
 
 // delete
 router.delete('/:name', validator([auth, doesUserExistByName]), removeUser)

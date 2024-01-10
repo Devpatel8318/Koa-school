@@ -1,30 +1,6 @@
-import isEmailValid from '../../utils/isEmailValid.js'
-import isPasswordValid from '../../utils/isPasswordValid.js'
-
 import encryptPassword from '../helpers/getEncryptedPassword.js'
 
 import * as studentQueries from '../queries/studentQueries.js'
-
-export const isLoginCredentialsValid = async (ctx) => {
-    try {
-        const { email, password } = ctx.request.body
-
-        if (!password || !email) {
-            throw new Error('Please provide credentials')
-        }
-        if (!isEmailValid(email)) {
-            throw new Error('Please provide valid Email')
-        }
-        if (!isPasswordValid(password)) {
-            throw new Error(
-                'Password should contain at least one uppercase letter, one special character, and one number'
-            )
-        }
-        return null
-    } catch (err) {
-        return err.message
-    }
-}
 
 export const doesStudentExistByEmail = async (ctx) => {
     try {
@@ -86,6 +62,7 @@ export const isPasswordCorrect = async (ctx) => {
     const { password } = ctx.request.body
 
     if (encryptPassword(password) !== foundStudent.password) {
+        console.log(encryptPassword(password), foundStudent.password)
         return 'Wrong Password'
     } else {
         return null
@@ -115,4 +92,124 @@ export const isFieldsValid = async (ctx) => {
     } else {
         return null
     }
+}
+
+export const isFirstNameValid = async (ctx) => {
+    const { firstName } = ctx.request.body
+
+    if (
+        typeof firstName !== 'string' ||
+        firstName.length < 6 ||
+        firstName.length > 25
+    ) {
+        return 'First Name should be a string between 6 and 25 characters'
+    }
+    return null
+}
+
+export const isLastNameValid = async (ctx) => {
+    const { lastName } = ctx.request.body
+
+    if (
+        typeof lastName !== 'string' ||
+        lastName.length < 6 ||
+        lastName.length > 25
+    ) {
+        return 'Last Name should be a string between 6 and 25 characters'
+    }
+    return null
+}
+
+export const isEmailValid = async (ctx) => {
+    const { email } = ctx.request.body
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (
+        typeof email !== 'string' ||
+        emailPattern.length > 254 ||
+        !emailPattern.test(email)
+    ) {
+        return 'Email should be a valid email address'
+    } else {
+        return null
+    }
+}
+
+export const isPasswordValid = async (ctx) => {
+    const { password } = ctx.request.body
+
+    const passwordRegex =
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/
+
+    if (
+        typeof password !== 'string' ||
+        password.length < 6 ||
+        !passwordRegex.test(password)
+    ) {
+        return 'Password should contain at least one uppercase letter, one special character, and one number'
+    } else {
+        return null
+    }
+}
+
+export const isFirstNameValidIfExists = async (ctx) => {
+    const { firstName } = ctx.request.body
+
+    if (
+        firstName &&
+        (typeof firstName !== 'string' ||
+            firstName.length < 6 ||
+            firstName.length > 25)
+    ) {
+        return 'First Name should be a string between 6 and 25 characters'
+    }
+    return null
+}
+
+export const isLastNameValidIfExists = async (ctx) => {
+    const { lastName } = ctx.request.body
+
+    if (
+        lastName &&
+        (typeof lastName !== 'string' ||
+            lastName.length < 6 ||
+            lastName.length > 25)
+    ) {
+        return 'Last Name should be a string between 6 and 25 characters'
+    }
+    return null
+}
+
+export const isEmailValidIfExists = async (ctx) => {
+    const { email } = ctx.request.body
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (
+        email &&
+        (typeof email !== 'string' ||
+            email.length > 254 ||
+            !emailPattern.test(email))
+    ) {
+        return 'Email should be a valid email address'
+    }
+    return null
+}
+
+export const isPasswordValidIfExists = async (ctx) => {
+    const { password } = ctx.request.body
+
+    const passwordRegex =
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/
+
+    if (
+        password &&
+        (typeof password !== 'string' ||
+            password.length < 6 ||
+            !passwordRegex.test(password))
+    ) {
+        return 'Password should contain at least one uppercase letter, one special character, and one number'
+    }
+    return null
 }

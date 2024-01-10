@@ -4,12 +4,19 @@ import { encryptPassword } from '../middleware/encryptPassword.js'
 import validator from '../middleware/validator.js'
 
 import {
-    isLoginCredentialsValid,
     isPasswordCorrect,
     doesStudentExistByEmail,
     doesStudentExistById,
     isFieldsValid,
     isEmailAvailable,
+    isFirstNameValid,
+    isLastNameValid,
+    isEmailValid,
+    isPasswordValid,
+    isFirstNameValidIfExists,
+    isLastNameValidIfExists,
+    isEmailValidIfExists,
+    isPasswordValidIfExists,
 } from '../validators/studentValidators.js'
 import isIdValid from '../validators/validId.js'
 
@@ -34,7 +41,9 @@ router.get('/:id', validator([isIdValid, doesStudentExistById]), getOneStudent)
 router.post(
     '/login',
     validator([
-        isLoginCredentialsValid,
+        isFieldsValid,
+        isEmailValid,
+        isPasswordValid,
         doesStudentExistByEmail,
         isPasswordCorrect,
     ]),
@@ -44,7 +53,14 @@ router.post(
 // Create a new student
 router.post(
     '/',
-    validator([isFieldsValid, isLoginCredentialsValid, isEmailAvailable]),
+    validator([
+        isFieldsValid,
+        isEmailValid,
+        isEmailAvailable,
+        isFirstNameValid,
+        isLastNameValid,
+        isPasswordValid,
+    ]),
     encryptPassword,
     createStudent
 )
@@ -52,7 +68,15 @@ router.post(
 // Update a Student
 router.patch(
     '/:id',
-    validator([isFieldsValid, isIdValid, doesStudentExistById]),
+    validator([
+        isFieldsValid,
+        isIdValid,
+        doesStudentExistById,
+        isFirstNameValidIfExists,
+        isLastNameValidIfExists,
+        isEmailValidIfExists,
+        isPasswordValidIfExists,
+    ]),
     updateStudent
 )
 

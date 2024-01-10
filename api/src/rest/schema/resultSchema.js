@@ -20,7 +20,7 @@ const resultSchema = {
                 bsonType: 'object',
                 required: ['subCode', 'marks'],
                 properties: {
-                    sub_code: {
+                    subCode: {
                         bsonType: 'string',
                     },
                     marks: {

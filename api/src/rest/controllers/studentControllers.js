@@ -3,7 +3,6 @@ import { failureObject, successObject } from '../../utils/responseObject.js'
 import * as studentQueries from '../queries/studentQueries.js'
 import * as resultQueries from '../queries/resultQueries.js'
 
-
 export const getAllStudents = async (ctx) => {
     let response = {}
     try {
@@ -44,6 +43,7 @@ export const getOneStudent = async (ctx) => {
 export const loginStudent = async (ctx) => {
     const { student } = ctx.state
     delete student.password
+    delete student._id
     ctx.body = successObject(student)
 }
 
@@ -51,8 +51,12 @@ export const createStudent = async (ctx) => {
     let response = {}
     try {
         const student = ctx.request.body
+        const { encryptedPassword } = ctx.state
 
-        await studentQueries.createOneStudent(student)
+        await studentQueries.createOneStudent({
+            ...student,
+            password: encryptedPassword,
+        })
 
         response = successObject('Student created')
     } catch (err) {

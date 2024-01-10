@@ -35,10 +35,8 @@ final code optimize
 
 
 badha j route ma name ?????
-dynammic messages
 DONE import sequence
-
-
+DONE fields validation
 
 
 

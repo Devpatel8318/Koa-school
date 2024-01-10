@@ -16,7 +16,7 @@ export const getAllSubjects = async (ctx) => {
             parseInt(perPage),
             sortOptions
         )
-        
+
         response = successObject(subjects)
     } catch (err) {
         response = failureObject(err.message)
