@@ -55,10 +55,10 @@ export const getFormattedResultByStudent = async (ctx) => {
         const resultDoc = await resultQueries.getOneFormattedResult({
             studentId,
         })
+
         if (!resultDoc) {
             throw new Error('Failed to get Result')
         }
-
         response = successObject(transformDoc(resultDoc))
     } catch (err) {
         response = failureObject(err.message)
@@ -77,6 +77,7 @@ export const createResult = async (ctx) => {
         if (!resultDoc) {
             throw new Error('Failed to create Result')
         }
+
         const { resultId } = await resultQueries.getOneResult({ studentId })
 
         await studentQueries.updateOneStudent(studentId, {
@@ -97,6 +98,7 @@ export const updateResult = async (ctx) => {
 
     try {
         await resultQueries.updateOneResult(id, updates)
+
         response = successObject('Result updated successfully.')
     } catch (err) {
         response = failureObject(err.errInfo || err)

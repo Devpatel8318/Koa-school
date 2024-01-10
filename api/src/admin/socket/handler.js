@@ -4,8 +4,8 @@ const onlineUsers = new Map()
 
 export const handleJoinEvent = (socket, io) => async (name, callback) => {
     try {
-        const allowedUsersList =
-            await allowedUsersQueries.getAllowedUsersName()
+        const allowedUsersList = await allowedUsersQueries.getAllowedUsersName()
+
         const userNames = allowedUsersList.map((user) => user.name)
 
         if (!userNames.includes(name)) {

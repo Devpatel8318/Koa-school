@@ -65,7 +65,9 @@ export const updateStudent = async (ctx) => {
     try {
         const updates = ctx.request.body
         const { id } = ctx.params
+
         await studentQueries.updateOneStudent(id, { $set: updates })
+
         response = successObject('Student updated successfully')
     } catch (err) {
         response = failureObject(err.errInfo || err.message)
@@ -78,13 +80,13 @@ export const deleteStudent = async (ctx) => {
     try {
         const { id } = ctx.params
         const { result } = ctx.state.student
+
         await studentQueries.deleteOneStudent(id)
 
         if (result) {
-            await resultQueries.deleteOneResult({
-                resultId: result,
-            })
+            await resultQueries.deleteOneResult({ resultId: result })
         }
+
         response = successObject('Student deleted successfully')
     } catch (err) {
         response = failureObject(err.message)

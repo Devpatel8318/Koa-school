@@ -7,7 +7,6 @@ export const getAllSubjects = async (ctx) => {
     try {
         const { sortBy, sortOrder, page, perPage } = ctx.query
         let sortOptions = {}
-
         if (sortBy && sortOrder) {
             sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
         }
@@ -17,6 +16,7 @@ export const getAllSubjects = async (ctx) => {
             parseInt(perPage),
             sortOptions
         )
+        
         response = successObject(subjects)
     } catch (err) {
         response = failureObject(err.message)
@@ -33,6 +33,7 @@ export const createSubject = async (ctx) => {
     let response = {}
     try {
         const { body } = ctx.request
+
         await subjectQueries.createOneSubject(body)
 
         response = successObject('Subject Created')
@@ -47,6 +48,7 @@ export const updateSubject = async (ctx) => {
     try {
         const updates = ctx.request.body
         const subjectId = ctx.params.id
+
         await subjectQueries.updateOneSubject(subjectId, updates)
 
         response = successObject('Subject updated successfully')
@@ -60,6 +62,7 @@ export const deleteSubject = async (ctx) => {
     let response = {}
     try {
         const subjectId = ctx.params.id
+
         await subjectQueries.deleteOneSubject(subjectId)
 
         response = successObject('Subject Deleted successfully')

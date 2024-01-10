@@ -10,9 +10,9 @@ DONE password valid and encryption different functions done
 
 
 validator array[v1,v2,v3,v4,v5,v6,v7]
-fields validation baaki
 
 
+DONE fields validation baaki
 DONE lowercase Student
 DONE remove snake_case
 DONE proper destructuring 
@@ -26,11 +26,13 @@ DONE prevent results to get duplicated
 DONE ID => Id
 DONE "encryptedPassword" into  "ctx.state"  to pass the "password"
 
+
+
 final code optimize 
-try to use ctx.body only once
 
 
 
 
 Doubt
-whether to put (const {} = something) after try{} ?
+-> whether to put (const {} = something) after try{} ?
+-> import sequence

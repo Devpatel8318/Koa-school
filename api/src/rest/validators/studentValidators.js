@@ -2,9 +2,8 @@ import * as studentQueries from '../queries/studentQueries.js'
 
 import isEmailValid from '../../utils/isEmailValid.js'
 import isPasswordValid from '../../utils/isPasswordValid.js'
-import { failureObject } from '../../utils/responseObject.js'
 
-export const isLoginCredentialsValid = async (ctx, next) => {
+export const isLoginCredentialsValid = async (ctx) => {
     try {
         const { email, password } = ctx.request.body
 
@@ -17,69 +16,101 @@ export const isLoginCredentialsValid = async (ctx, next) => {
                 'Password should contain at least one uppercase letter, one special character, and one number'
             )
         } else {
-            await next()
+            return null
         }
     } catch (err) {
-        ctx.body = failureObject(err.message)
+        return err.message
     }
 }
 
-export const doesStudentExistByEmail = async (ctx, next) => {
+export const doesStudentExistByEmail = async (ctx) => {
     try {
         const { email } = ctx.request.body
+
         const student = await studentQueries.getOneStudent({ email: email })
+
         if (!student) {
             throw new Error('Student not found')
         } else {
             ctx.state.student = student
-            await next()
+            return null
         }
     } catch (err) {
-        ctx.body = failureObject(err.message)
+        return err.message
     }
 }
 
-export const isEmailAvailable = async (ctx, next) => {
+export const isEmailAvailable = async (ctx) => {
     try {
         const { email } = ctx.request.body
+
         const student = await studentQueries.getOneStudent({ email: email })
+
         if (student) {
             throw new Error('Email Already Exists')
         } else {
             ctx.state.student = student
-            await next()
+            return null
         }
     } catch (err) {
-        ctx.body = failureObject(err.message)
+        return err.message
     }
 }
 
-export const doesStudentExistById = async (ctx, next) => {
+export const doesStudentExistById = async (ctx) => {
     try {
         const { id } = ctx.params
+
         const student = await studentQueries.getOneStudent(
             { studentId: id },
             { projection: { password: 0, _id: 0 } }
         )
+
         if (!student) {
             throw new Error('Student not found')
         } else {
             ctx.state.student = student
-            await next()
+            console.log(ctx.state.student)
+            return null
         }
     } catch (err) {
-        ctx.body = failureObject(err.message)
+        return err.message
     }
 }
 
-export const isPasswordCorrect = async (ctx, next) => {
+export const isPasswordCorrect = async (ctx) => {
     const foundStudent = ctx.state.student
     const { encryptedPassword } = ctx.state
 
     if (encryptedPassword !== foundStudent.password) {
-        ctx.body = failureObject('Wrong Password')
+        return 'Wrong Password'
     } else {
         delete ctx.state.student.password
-        await next()
+        return null
+    }
+}
+export const isFieldsValid = async (ctx) => {
+    const { body } = ctx.request
+    const allowedFields = [
+        'firstName',
+        'lastName',
+        'password',
+        'email',
+        'result',
+    ]
+
+    //limit number of fields
+    if (Object.keys(body).length > allowedFields.length) {
+        return 'Invalid amount of fields'
+    }
+
+    //check for invalid fields
+    const invalidFields = Object.keys(body).filter(
+        (field) => !allowedFields.includes(field)
+    )
+    if (invalidFields.length > 0) {
+        return 'Invalid field'
+    } else {
+        return null
     }
 }

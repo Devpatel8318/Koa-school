@@ -1,13 +1,12 @@
 import { validate as isValidUuid } from 'uuid'
-import { failureObject } from '../../utils/responseObject.js'
 
-const isIdValid = async (ctx, next) => {
+const isIdValid = async (ctx) => {
     const { id } = ctx.params
 
     if (!isValidUuid(id)) {
-        ctx.body = failureObject('Invalid UUID')
+        return 'Invalid UUID'
     } else {
-        await next()
+        return null
     }
 }
 
