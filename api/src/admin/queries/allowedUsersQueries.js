@@ -16,7 +16,7 @@ export const getAllAllowedUsers = async (page, perPage, sortOptions = {}) => {
 export const getAllowedUsersName = async () => {
     return await db
         .collection(tableName)
-        .find({}, { projection: { _id: 0, allowedUserId: 0, name: 1 } })
+        .find({}, { projection: { _id: 0, name: 1 } })
         .toArray()
 }
 

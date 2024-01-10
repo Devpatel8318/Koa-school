@@ -36,7 +36,7 @@ function AllowedUsersTable() {
                 alert('Please enter Name')
                 return
             }
-            await axios.post('http://localhost:8080/allowedUsers', { name: inputedNameRef.current.value })
+            await axios.post('http://localhost:8080/allowedUsers', { name: inputedNameRef.current.value.trim().toLowerCase() })
             fetchAllowedUsers()
             inputedNameRef.current.value = ''
         } catch (error) {

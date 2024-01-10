@@ -4,11 +4,11 @@ const validator = (validatorFunctions) => {
             try {
                 const validationResult = await validatorFn(ctx)
 
-                if (validationResult !== null) {
+                if (!validationResult) {
                     throw new Error(validationResult)
                 }
-            } catch (error) {
-                ctx.throw(400, error.message)
+            } catch (err) {
+                ctx.throw(400, err.message)
             }
         }
         await next()

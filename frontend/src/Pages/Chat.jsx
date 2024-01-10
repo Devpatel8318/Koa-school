@@ -20,7 +20,7 @@ const Chat = () => {
             return
         }
         socket.emit('join', name, (response) => {
-
+            console.log(name)
             if (response.error) {
                 alert(response.error)
             } else {

@@ -45,8 +45,8 @@ const mongodbConnection = async () => {
             .createIndex({ studentId: 1 }, { unique: true })
 
         return db
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        console.error(err)
         process.exit(1)
     }
 }

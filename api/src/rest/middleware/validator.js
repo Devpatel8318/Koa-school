@@ -7,8 +7,8 @@ const validator = (validatorFunctions) => {
                 if (validationResult !== null) {
                     throw new Error(validationResult)
                 }
-            } catch (error) {
-                ctx.throw(400, error.message)
+            } catch (err) {
+                ctx.throw(400, err.message)
             }
         }
         await next()

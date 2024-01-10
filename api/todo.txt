@@ -9,9 +9,9 @@ DONE fix passkey check done
 DONE password valid and encryption different functions done
 
 
-validator array[v1,v2,v3,v4,v5,v6,v7]
 
 
+DONE validator array[v1,v2,v3,v4,v5,v6,v7]
 DONE fields validation baaki
 DONE lowercase Student
 DONE remove snake_case

@@ -14,7 +14,7 @@ const AllowedUsers = () => {
         e.preventDefault()
         try {
             const response = await axios.post('http://localhost:8080/allowedUsers/admin', {
-                password: passwordRef.current.value
+                passKey: passwordRef.current.value
             })
             if (response.data.success) {
                 setAuthenticated(true)
