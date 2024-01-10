@@ -37,9 +37,7 @@ export const createSubject = async (ctx) => {
 
         response = successObject('Subject Created')
     } catch (err) {
-        response = failureObject(
-            err.code === 11000 ? 'Subject already exists' : err.message
-        )
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

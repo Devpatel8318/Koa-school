@@ -55,9 +55,7 @@ export const createStudent = async (ctx) => {
 
         response = successObject('Student created')
     } catch (err) {
-        response = failureObject(
-            err.code === 11000 ? 'Email already exists' : err.message
-        )
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

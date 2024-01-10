@@ -19,6 +19,21 @@ export const doesResultExistById = async (ctx, next) => {
     }
 }
 
+export const doesStudentAlreadyHaveResult = async (ctx, next) => {
+    try {
+        const { studentId } = ctx.request.body
+        const resultDoc = await resultQueries.getOneResult({ studentId })
+        if (resultDoc) {
+            throw new Error('Result for student already exists')
+        } else {
+            ctx.state.result = resultDoc
+            await next()
+        }
+    } catch (err) {
+        ctx.body = failureObject(err.message)
+    }
+}
+
 export const isstudentIdValid = async (ctx, next) => {
     const { id } = ctx.params
     if (!isValidUuid(id)) {

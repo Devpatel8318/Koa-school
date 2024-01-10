@@ -1,7 +1,8 @@
 import encryptedPassword from '../helpers/getEncryptedPassword.js'
 export const encryptPassword = async (ctx, next) => {
     try {
-        ctx.request.body.password = encryptedPassword(ctx.request.body.password)
+        const { password } = ctx.request.body
+        ctx.state.encryptedPassword = encryptedPassword(password)
         await next()
     } catch (err) {
         ctx.body = {

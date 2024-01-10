@@ -39,6 +39,21 @@ export const doesStudentExistByEmail = async (ctx, next) => {
     }
 }
 
+export const isEmailAvailable = async (ctx, next) => {
+    try {
+        const { email } = ctx.request.body
+        const student = await studentQueries.getOneStudent({ email: email })
+        if (student) {
+            throw new Error('Email Already Exists')
+        } else {
+            ctx.state.student = student
+            await next()
+        }
+    } catch (err) {
+        ctx.body = failureObject(err.message)
+    }
+}
+
 export const doesStudentExistById = async (ctx, next) => {
     try {
         const { id } = ctx.params
@@ -59,10 +74,10 @@ export const doesStudentExistById = async (ctx, next) => {
 
 export const isPasswordCorrect = async (ctx, next) => {
     const foundStudent = ctx.state.student
-    const { password } = ctx.request.body
+    const { encryptedPassword } = ctx.state
 
-    if (password !== foundStudent.password) {
-        ctx.body = failureObject("Wrong Password")
+    if (encryptedPassword !== foundStudent.password) {
+        ctx.body = failureObject('Wrong Password')
     } else {
         delete ctx.state.student.password
         await next()

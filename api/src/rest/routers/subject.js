@@ -6,7 +6,10 @@ import {
     getSingleSubject,
     updateSubject,
 } from '../controllers/subjectControllers.js'
-import { doesSubjectExistByCode } from '../validators/subjectValidators.js'
+import {
+    doesSubjectExistByCode,
+    isSubjectCodeAlreadyAdded,
+} from '../validators/subjectValidators.js'
 
 const router = new Router({ prefix: '/subjects' })
 
@@ -17,7 +20,7 @@ router.get('/', getAllSubjects)
 router.get('/:id', doesSubjectExistByCode, getSingleSubject)
 
 // create subject
-router.post('/', createSubject)
+router.post('/', isSubjectCodeAlreadyAdded, createSubject)
 
 // update subject
 router.patch('/:id', doesSubjectExistByCode, updateSubject)

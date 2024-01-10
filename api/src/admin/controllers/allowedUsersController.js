@@ -5,24 +5,15 @@ import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 import { generateAuthToken } from '../helpers/jwtFunctions.js'
 
 export const loginAdmin = async (ctx) => {
-    let response = {}
-    const { password } = ctx.request.body
-
-    if (password !== process.env.PASSKEY) {
-        response = failureObject('Wrong pasword')
-    } else {
-        ctx.cookies.set('myToken', generateAuthToken(), {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'Strict',
-            maxAge: 60 * 60 * 1000, //60 minutes
-            path: '/',
-            overwrite: true,
-        })
-        response = successObject('ok')
-    }
-
-    ctx.body = response
+    ctx.cookies.set('myToken', generateAuthToken(), {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Strict',
+        maxAge: 60 * 60 * 1000, //60 minutes
+        path: '/',
+        overwrite: true,
+    })
+    ctx.body = successObject('ok')
 }
 
 export const getUsers = async (ctx) => {

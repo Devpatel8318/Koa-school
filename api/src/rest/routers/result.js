@@ -13,6 +13,7 @@ import { doesStudentExistById } from '../validators/studentValidators.js'
 import {
     doesResultExistById,
     isStudentvalid,
+    doesStudentAlreadyHaveResult,
 } from '../validators/resultValidators.js'
 import isIdValid from '../validators/validId.js'
 
@@ -37,7 +38,7 @@ router.get(
     getFormattedResultByStudent
 )
 
-router.post('/', createResult)
+router.post('/', doesStudentAlreadyHaveResult, createResult)
 
 router.patch('/:id', isIdValid, doesResultExistById, updateResult)
 

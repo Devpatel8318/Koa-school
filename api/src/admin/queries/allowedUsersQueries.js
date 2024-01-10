@@ -27,17 +27,9 @@ export const getUserByName = async (name) => {
 }
 
 export const addOneUser = async (body) => {
-    try {
-        return await db
-            .collection(tableName)
-            .insertOne({ name: body, allowedUserId: uuidv4() })
-    } catch (err) {
-        if (err.code === 11000) {
-            throw new Error('User already exists')
-        } else {
-            throw err
-        }
-    }
+    return await db
+        .collection(tableName)
+        .insertOne({ name: body, allowedUserId: uuidv4() })
 }
 export const deleteUser = async (name) => {
     return await db.collection(tableName).deleteOne({ name })

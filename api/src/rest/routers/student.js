@@ -16,6 +16,7 @@ import {
     isPasswordCorrect,
     doesStudentExistByEmail,
     doesStudentExistById,
+    isEmailAvailable,
 } from '../validators/studentValidators.js'
 import isIdValid from '../validators/validId.js'
 
@@ -28,7 +29,13 @@ router.get('/', getAllStudents)
 router.get('/:id', isIdValid, doesStudentExistById, getOneStudent)
 
 // Create a new student
-router.post('/', isLoginCredentialsValid, encryptPassword, createStudent)
+router.post(
+    '/',
+    isLoginCredentialsValid,
+    encryptPassword,
+    isEmailAvailable,
+    createStudent
+)
 
 // Student Login
 router.post(

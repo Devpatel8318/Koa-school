@@ -16,3 +16,19 @@ export const doesSubjectExistByCode = async (ctx, next) => {
         ctx.body = failureObject(err.message)
     }
 }
+
+export const isSubjectCodeAlreadyAdded = async (ctx, next) => {
+    try {
+        const { subjectCode } = ctx.request.body
+        const subjectDoc = await subjectQueries.getSubjectByCode(subjectCode)
+
+        if (subjectDoc) {
+            throw new Error('Subject Code Already Added')
+        } else {
+            ctx.state.subject = subjectDoc
+            await next()
+        }
+    } catch (err) {
+        ctx.body = failureObject(err.message)
+    }
+}

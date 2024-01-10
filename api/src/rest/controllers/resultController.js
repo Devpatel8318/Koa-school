@@ -55,6 +55,10 @@ export const getFormattedResultByStudent = async (ctx) => {
         const resultDoc = await resultQueries.getOneFormattedResult({
             studentId,
         })
+        if (!resultDoc) {
+            throw new Error('Failed to get Result')
+        }
+
         response = successObject(transformDoc(resultDoc))
     } catch (err) {
         response = failureObject(err.message)
@@ -81,11 +85,7 @@ export const createResult = async (ctx) => {
 
         response = successObject('result Added')
     } catch (err) {
-        response = failureObject(
-            err.code === 11000
-                ? 'Result Already Exists for this student'
-                : err.message
-        )
+        response = failureObject(err.message)
     }
     ctx.body = response
 }

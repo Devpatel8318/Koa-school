@@ -7,15 +7,16 @@ import {
     loginAdmin,
 } from '../controllers/allowedUsersController.js'
 import { auth } from '../middleware/allowedUsersMiddleware.js'
-import { doesUserExistByName } from '../validators/doesUserExistByName.js'
+import { doesUserExistByName,isNameAlreadyAdded } from '../validators/doesUserExistByName.js'
+import isPassKeyCorrect from '../validators/isPassKeyCorrect.js'
 
 const router = new Router({ prefix: '/allowedusers' })
 
 // login admin
-router.post('/admin', loginAdmin)
+router.post('/admin', isPassKeyCorrect, loginAdmin)
 
 // create new user
-router.post('/', auth, addUser)
+router.post('/', auth, isNameAlreadyAdded, addUser)
 
 // get ALL users
 router.get('/', auth, getUsers)

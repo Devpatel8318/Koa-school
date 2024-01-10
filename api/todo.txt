@@ -23,9 +23,9 @@ DONE getUsers => getAllUsers
 DONE hide password from students (findOne field)
 DONE password verification should be done inside validators
 DONE prevent results to get duplicated
+DONE ID => Id
+DONE "encryptedPassword" into  "ctx.state"  to pass the "password"
 
-"encryptedPassword" into  "ctx.state"  to pass the "password"
-ID => Id
 final code optimize 
 try to use ctx.body only once
 
