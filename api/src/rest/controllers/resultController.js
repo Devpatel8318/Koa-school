@@ -40,7 +40,7 @@ export const getSingleFormattedResult = async (ctx) => {
             throw new Error('Internal Server Error.')
         }
 
-        response = successObject(transformDoc(resultData))
+        response = successObject(transformDoc(resultData[0]))
     } catch (err) {
         response = failureObject(err.message)
     }
@@ -60,7 +60,7 @@ export const getFormattedResultByStudent = async (ctx) => {
             throw new Error('Internal Server Error.')
         }
 
-        response = successObject(transformDoc(resultData))
+        response = successObject(transformDoc(resultData[0]))
     } catch (err) {
         response = failureObject(err.message)
     }

@@ -87,7 +87,7 @@ export const isNameValid = async (ctx) => {
 export const isCreditValid = async (ctx) => {
     const { credit } = ctx.request.body
 
-    if (typeof credit !== 'number') {
+    if (typeof credit !== 'number' && credit < 0) {
         return 'Credit should be a Number.'
     }
 
@@ -97,7 +97,7 @@ export const isCreditValid = async (ctx) => {
 export const isMaximumMarksValid = async (ctx) => {
     const { maximumMarks } = ctx.request.body
 
-    if (typeof maximumMarks !== 'number') {
+    if (typeof maximumMarks !== 'number' && maximumMarks < 0) {
         return 'Maximum Marks should be a Number.'
     }
 
@@ -143,7 +143,7 @@ export const isNameValidIfExists = async (ctx) => {
 export const isCreditValidIfExists = async (ctx) => {
     const { credit } = ctx.request.body
 
-    if (credit && typeof credit !== 'number') {
+    if (credit && typeof credit !== 'number' && credit < 0) {
         return 'Credit should be a Number.'
     }
 
@@ -153,7 +153,7 @@ export const isCreditValidIfExists = async (ctx) => {
 export const isMaximumMarksValidIfExists = async (ctx) => {
     const { maximumMarks } = ctx.request.body
 
-    if (maximumMarks && typeof maximumMarks !== 'number') {
+    if (maximumMarks && typeof maximumMarks !== 'number' && maximumMarks < 0) {
         return 'Maximum Marks should be a number.'
     }
 

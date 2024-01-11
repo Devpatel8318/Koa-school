@@ -1,6 +1,6 @@
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export default emailValidator = (email) => {
+const emailValidator = (email) => {
     if (
         typeof email !== 'string' ||
         emailPattern.length > 254 ||
@@ -10,3 +10,4 @@ export default emailValidator = (email) => {
     }
     return true
 }
+export default emailValidator

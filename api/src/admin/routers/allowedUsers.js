@@ -1,6 +1,6 @@
 import Router from '@koa/router'
 
-import { auth } from '../middleware/allowedUsersMiddleware.js'
+import auth from '../middleware/allowedUsersMiddleware.js'
 
 import validator from '../middleware/validator.js'
 import {
@@ -29,15 +29,7 @@ router.post('/admin', validator([isPassKeyCorrect]), loginAdmin)
 router.get('/all', validator([auth]), getUsers)
 
 // get single user
-router.get(
-    '/:name',
-    validator([
-        auth,
-        //TODO:
-        doesUserExistByNameAndAttach,
-    ]),
-    getUser
-)
+router.get('/:name', validator([auth, doesUserExistByNameAndAttach]), getUser)
 
 // create new user
 router.post(

@@ -2,49 +2,39 @@ import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 
 export const doesUserExistByName = async (ctx) => {
     const { name } = ctx.params
-    try {
-        const user = await allowedUsersQueries.getUserByName(name)
 
-        if (!user) {
-            throw new Error('User Not Found.')
-        }
+    const user = await allowedUsersQueries.getUserByName(name)
 
-        return null
-    } catch (err) {
-        return err.message
+    if (!user) {
+        return 'User Not Found.'
     }
+
+    return null
 }
 
 export const doesUserExistByNameAndAttach = async (ctx) => {
     const { name } = ctx.params
-    try {
-        const user = await allowedUsersQueries.getUserByName(name)
 
-        if (!user) {
-            throw new Error('User Not Found.')
-        }
+    const user = await allowedUsersQueries.getUserByName(name)
 
-        ctx.state.user = user
-        return null
-    } catch (err) {
-        return err.message
+    if (!user) {
+        return 'User Not Found.'
     }
+
+    ctx.state.user = user
+    return null
 }
 
 export const isNameAlreadyAdded = async (ctx) => {
-    try {
-        const { name } = ctx.request.body
+    const { name } = ctx.request.body
 
-        const user = await allowedUsersQueries.getUserByName(name)
+    const user = await allowedUsersQueries.getUserByName(name)
 
-        if (user) {
-            throw new Error('Allowed user already exists.')
-        }
-
-        return null
-    } catch (err) {
-        return err.message
+    if (user) {
+        return 'Allowed User already exists.'
     }
+
+    return null
 }
 
 export const isPassKeyCorrect = async (ctx) => {

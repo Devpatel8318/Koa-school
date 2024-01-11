@@ -1,7 +1,7 @@
 const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/
 
-export default passwordValidator = (password) => {
+const passwordValidator = (password) => {
     if (
         typeof password !== 'string' ||
         password.length < 6 ||
@@ -11,3 +11,4 @@ export default passwordValidator = (password) => {
     }
     return true
 }
+export default passwordValidator
