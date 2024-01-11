@@ -132,7 +132,7 @@ export const areMarksValid = async (ctx) => {
 
     return null
 }
-export const doesSubjectExist = async (ctx) => {
+export const areSubjectCodesValid = async (ctx) => {
     const { Marks } = ctx.request.body
 
     const subCodes = Marks.map((Mark) => Mark.subCode)
@@ -155,16 +155,16 @@ export const doesSubjectExist = async (ctx) => {
 export const isStudentIdFieldValidIfExists = async (ctx) => {
     const { studentId } = ctx.request.body
 
-    if (studentId && !isValidUuid(studentId)) {
+    if (!studentId) return null
+
+    if (!isValidUuid(studentId)) {
         return 'Invalid student Id.'
     }
 
-    if (studentId) {
-        const student = await studentQueries.getOneStudent({ studentId })
+    const student = await studentQueries.getOneStudent({ studentId })
 
-        if (!student) {
-            return 'Student not found.'
-        }
+    if (!student) {
+        return 'Student not found.'
     }
 
     return null
@@ -182,27 +182,50 @@ export const isSignedByValidIfExists = async (ctx) => {
 
 export const areMarksValidIfExists = async (ctx) => {
     const { Marks } = ctx.request.body
+
+    if (!Marks) return null
+
     let isMarksFormatInvalid = false
 
-    if (Marks && !Array.isArray(Marks)) {
+    if (!Array.isArray(Marks)) {
         return 'Marks should be an array.'
     }
 
-    if (Marks) {
-        Marks.forEach((mark) => {
-            if (
-                typeof mark.subCode !== 'string' ||
-                !mark.subCode.trim() ||
-                typeof mark.marks !== 'number' ||
-                !Number.isInteger(mark.marks)
-            ) {
-                isMarksFormatInvalid = true
-            }
-        })
-    }
+    Marks.forEach((mark) => {
+        if (
+            typeof mark.subCode !== 'string' ||
+            !mark.subCode.trim() ||
+            typeof mark.marks !== 'number' ||
+            !Number.isInteger(mark.marks)
+        ) {
+            isMarksFormatInvalid = true
+        }
+    })
 
     if (isMarksFormatInvalid) {
         return 'Invalid Format for Marks.'
+    }
+
+    return null
+}
+
+export const areSubjectCodesValidIfExists = async (ctx) => {
+    const { Marks } = ctx.request.body
+
+    if (!Marks) return null
+
+    const subCodes = Marks.map((Mark) => Mark.subCode)
+
+    const promisesArray = subCodes.map((subcode) =>
+        subjectQueries.getSubjectByCode(subcode)
+    )
+
+    const promiseResponseData = await Promise.all(promisesArray)
+
+    const isAnySubjectCodeInvalid = promiseResponseData.includes(null)
+
+    if (isAnySubjectCodeInvalid) {
+        return 'Subject does not exist for given Subject Code.'
     }
 
     return null
