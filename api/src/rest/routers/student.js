@@ -30,10 +30,10 @@ import {
     createStudent,
 } from '../controllers/studentControllers.js'
 
-export const router = new Router({ prefix: '/students' })
+export const router = new Router({ prefix: '/student' })
 
 // Get all students
-router.get('/', getAllStudents)
+router.get('/all', getAllStudents)
 
 // Get Single student
 router.get(
@@ -57,7 +57,7 @@ router.post(
 
 // Create a new student
 router.post(
-    '/',
+    '/add',
     validator([
         isFieldsValid,
         isEmailValid,

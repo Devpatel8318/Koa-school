@@ -1,16 +1,13 @@
 import { failureObject } from '../../utils/responseObject.js'
+
 const validator = (validatorFunctions) => {
     return async (ctx, next) => {
         for await (const validatorFn of validatorFunctions) {
-            try {
-                const validationResult = await validatorFn(ctx)
+            const validationResult = await validatorFn(ctx)
 
-                if (validationResult) {
-                    throw new Error(validationResult)
-                }
-            } catch (err) {
+            if (validationResult) {
                 ctx.status = 400
-                ctx.body = failureObject(err.message , "Validation Failed")
+                ctx.body = failureObject(validationResult, 'Validation Failed.')
                 return
             }
         }

@@ -9,7 +9,7 @@ export const encryptPassword = async (ctx, next) => {
         ctx.body = {
             success: false,
             reason: err.message,
-            message: 'Something went wrong',
+            message: 'Something went wrong.',
         }
     }
 }

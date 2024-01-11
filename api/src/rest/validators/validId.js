@@ -4,7 +4,7 @@ const isIdValid = async (ctx) => {
     const { id } = ctx.params
 
     if (!isValidUuid(id)) {
-        return 'Invalid Id'
+        return 'Invalid Id.'
     }
     return null
 }

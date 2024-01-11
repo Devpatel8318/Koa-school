@@ -67,7 +67,6 @@ router.patch(
     validator([
         isFieldsValid,
         isIdValid,
-        //TODO:
         doesResultExistById,
         isStudentIdFieldValidIfExists,
         isSignedByValidIfExists,

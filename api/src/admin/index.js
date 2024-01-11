@@ -37,7 +37,7 @@ app.use(allowedUsers.routes())
 
 app.use(async (ctx) => {
     ctx.status = 404
-    ctx.body = { message: 'Route does not exist' }
+    ctx.body = { message: 'Route does not exist.' }
 })
 
 initializeSocket(httpServer)

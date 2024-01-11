@@ -1,8 +1,8 @@
-import { successObject, failureObject } from '../../utils/responseObject.js'
-
-import { generateAuthToken } from '../helpers/jwtFunctions.js'
+import { successObject } from '../../utils/responseObject.js'
 
 import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
+
+import { generateAuthToken } from '../helpers/jwtFunctions.js'
 
 export const loginAdmin = async (ctx) => {
     ctx.cookies.set('myToken', generateAuthToken(), {
@@ -17,27 +17,19 @@ export const loginAdmin = async (ctx) => {
 }
 
 export const getUsers = async (ctx) => {
-    let response = {}
+    let sortOptions = {}
+    const { sortBy, sortOrder, page, perPage } = ctx.query
 
-    try {
-        let sortOptions = {}
-        const { sortBy, sortOrder, page, perPage } = ctx.query
+    if (sortBy && sortOrder)
+        sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
 
-        if (sortBy && sortOrder)
-            sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
+    const allowedUsers = await allowedUsersQueries.getAllAllowedUsers(
+        parseInt(page),
+        parseInt(perPage),
+        sortOptions
+    )
 
-        const allowedUsers = await allowedUsersQueries.getAllAllowedUsers(
-            parseInt(page),
-            parseInt(perPage),
-            sortOptions
-        )
-
-        response = successObject(allowedUsers)
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-
-    ctx.body = response
+    ctx.body = successObject(allowedUsers)
 }
 export const getUser = async (ctx) => {
     const { user } = ctx.state
@@ -45,27 +37,17 @@ export const getUser = async (ctx) => {
 }
 
 export const addUser = async (ctx) => {
-    let response = {}
     const { name } = ctx.request.body
-    try {
-        await allowedUsersQueries.addOneUser(name)
 
-        response = successObject('new user created')
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-    ctx.body = response
+    await allowedUsersQueries.addOneUser(name)
+
+    ctx.body = successObject('new user created.')
 }
 
 export const removeUser = async (ctx) => {
-    let response = {}
     const { name } = ctx.params
-    try {
-        await allowedUsersQueries.deleteUser(name)
 
-        response = successObject('User deleted successfully')
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-    ctx.body = response
+    await allowedUsersQueries.deleteUser(name)
+
+    ctx.body = successObject('User deleted successfully.')
 }

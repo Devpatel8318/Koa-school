@@ -1,31 +1,25 @@
 import { failureObject, successObject } from '../../utils/responseObject.js'
 
-import { transformDoc } from '../helpers/transformDoc.js'
-
 import * as resultQueries from '../queries/resultQueries.js'
 import * as studentQueries from '../queries/studentQueries.js'
 
+import { transformDoc } from '../helpers/transformDoc.js'
+
 export const getAllResults = async (ctx) => {
-    let response = {}
-    try {
-        const { sortBy, sortOrder, page, perPage } = ctx.query
-        let sortOptions = {}
+    const { sortBy, sortOrder, page, perPage } = ctx.query
+    let sortOptions = {}
 
-        if (sortBy && sortOrder) {
-            sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
-        }
-
-        const results = await resultQueries.getAllResults(
-            parseInt(page),
-            parseInt(perPage),
-            sortOptions
-        )
-
-        response = successObject(results)
-    } catch (err) {
-        response = failureObject(err.message)
+    if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
     }
-    ctx.body = response
+
+    const results = await resultQueries.getAllResults(
+        parseInt(page),
+        parseInt(perPage),
+        sortOptions
+    )
+
+    ctx.body = successObject(results)
 }
 
 export const getSingleResult = async (ctx) => {
@@ -35,13 +29,18 @@ export const getSingleResult = async (ctx) => {
 
 export const getSingleFormattedResult = async (ctx) => {
     let response = {}
-    const { id } = ctx.params
     try {
-        const resultDoc = await resultQueries.getOneFormattedResult({
+        const { id } = ctx.params
+
+        const resultData = await resultQueries.getOneFormattedResult({
             resultId: id,
         })
 
-        response = successObject(transformDoc(resultDoc))
+        if (resultData && !resultData.length) {
+            throw new Error('Internal Server Error.')
+        }
+
+        response = successObject(transformDoc(resultData))
     } catch (err) {
         response = failureObject(err.message)
     }
@@ -50,16 +49,18 @@ export const getSingleFormattedResult = async (ctx) => {
 
 export const getFormattedResultByStudent = async (ctx) => {
     let response = {}
-    const { studentId } = ctx.state.student
     try {
-        const resultDoc = await resultQueries.getOneFormattedResult({
+        const { studentId } = ctx.state.student
+
+        const resultData = await resultQueries.getOneFormattedResult({
             studentId,
         })
 
-        if (!resultDoc) {
-            throw new Error('Failed to get Result')
+        if (resultData && !resultData.length) {
+            throw new Error('Internal Server Error.')
         }
-        response = successObject(transformDoc(resultDoc))
+
+        response = successObject(transformDoc(resultData))
     } catch (err) {
         response = failureObject(err.message)
     }
@@ -67,15 +68,15 @@ export const getFormattedResultByStudent = async (ctx) => {
 }
 
 export const createResult = async (ctx) => {
-    const { body } = ctx.request
-    const { studentId } = body
-
     let response = {}
     try {
-        const resultDoc = await resultQueries.createOneResult(body)
+        const { body } = ctx.request
+        const { studentId } = body
 
-        if (!resultDoc) {
-            throw new Error('Failed to create Result')
+        const resultData = await resultQueries.createOneResult(body)
+
+        if (!resultData) {
+            throw new Error('Failed to create Result.')
         }
 
         const { resultId } = await resultQueries.getOneResult({ studentId })
@@ -92,34 +93,23 @@ export const createResult = async (ctx) => {
 }
 
 export const updateResult = async (ctx) => {
-    let response = {}
     const updates = ctx.request.body
     const { id } = ctx.params
 
-    try {
-        await resultQueries.updateOneResult(id, updates)
+    await resultQueries.updateOneResult(id, updates)
 
-        response = successObject('Result updated successfully.')
-    } catch (err) {
-        response = failureObject(err.errInfo || err)
-    }
-    ctx.body = response
+    ctx.body = successObject('Result updated successfully.')
 }
 
 export const deleteResult = async (ctx) => {
-    let response = {}
-    const { id } = ctx.params.id
+    const { id } = ctx.params
     const { studentId } = ctx.state.result
-    try {
-        await resultQueries.deleteOneResult({ resultId: id })
 
-        await studentQueries.updateOneStudent(studentId, {
-            $unset: { result: '' },
-        })
+    await resultQueries.deleteOneResult({ resultId: id })
 
-        response = successObject('Result deleted successfully')
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-    ctx.body = response
+    await studentQueries.updateOneStudent(studentId, {
+        $unset: { result: '' },
+    })
+
+    ctx.body = successObject('Result deleted successfully.')
 }

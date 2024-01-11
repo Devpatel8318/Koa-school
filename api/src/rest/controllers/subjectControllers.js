@@ -1,27 +1,21 @@
-import { failureObject, successObject } from '../../utils/responseObject.js'
+import { successObject } from '../../utils/responseObject.js'
 
 import * as subjectQueries from '../queries/subjectQueries.js'
 
 export const getAllSubjects = async (ctx) => {
-    let response = {}
-    try {
-        const { sortBy, sortOrder, page, perPage } = ctx.query
-        let sortOptions = {}
-        if (sortBy && sortOrder) {
-            sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
-        }
-
-        const subjects = await subjectQueries.getAllSubjects(
-            parseInt(page),
-            parseInt(perPage),
-            sortOptions
-        )
-
-        response = successObject(subjects)
-    } catch (err) {
-        response = failureObject(err.message)
+    const { sortBy, sortOrder, page, perPage } = ctx.query
+    let sortOptions = {}
+    if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
     }
-    ctx.body = response
+
+    const subjects = await subjectQueries.getAllSubjects(
+        parseInt(page),
+        parseInt(perPage),
+        sortOptions
+    )
+
+    ctx.body = successObject(subjects)
 }
 
 export const getSingleSubject = async (ctx) => {
@@ -30,44 +24,26 @@ export const getSingleSubject = async (ctx) => {
 }
 
 export const createSubject = async (ctx) => {
-    let response = {}
-    try {
-        const { body } = ctx.request
+    const { body } = ctx.request
 
-        await subjectQueries.createOneSubject(body)
+    await subjectQueries.createOneSubject(body)
 
-        response = successObject('Subject Created')
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-    ctx.body = response
+    ctx.body = successObject('Subject Created.')
 }
 
 export const updateSubject = async (ctx) => {
-    let response = {}
-    try {
-        const updates = ctx.request.body
-        const subjectId = ctx.params.id
+    const updates = ctx.request.body
+    const subjectId = ctx.params.id
 
-        await subjectQueries.updateOneSubject(subjectId, updates)
+    await subjectQueries.updateOneSubject(subjectId, updates)
 
-        response = successObject('Subject updated successfully')
-    } catch (err) {
-        response = failureObject(err.errInfo || err.message)
-    }
-    ctx.body = response
+    ctx.body = successObject('Subject updated successfully.')
 }
 
 export const deleteSubject = async (ctx) => {
-    let response = {}
-    try {
-        const subjectId = ctx.params.id
+    const subjectId = ctx.params.id
 
-        await subjectQueries.deleteOneSubject(subjectId)
+    await subjectQueries.deleteOneSubject(subjectId)
 
-        response = successObject('Subject Deleted successfully')
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-    ctx.body = response
+    ctx.body = successObject('Subject Deleted successfully.')
 }

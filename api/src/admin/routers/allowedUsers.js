@@ -20,13 +20,13 @@ import {
     loginAdmin,
 } from '../controllers/allowedUsersController.js'
 
-const router = new Router({ prefix: '/allowedusers' })
+const router = new Router({ prefix: '/alloweduser' })
 
 // login admin
 router.post('/admin', validator([isPassKeyCorrect]), loginAdmin)
 
 // get ALL users
-router.get('/', validator([auth]), getUsers)
+router.get('/all', validator([auth]), getUsers)
 
 // get single user
 router.get(
@@ -41,7 +41,7 @@ router.get(
 
 // create new user
 router.post(
-    '/',
+    '/add',
     validator([auth, isFieldsValid, isNameValid, isNameAlreadyAdded]),
     addUser
 )

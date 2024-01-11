@@ -6,7 +6,7 @@ export const doesUserExistByName = async (ctx) => {
         const user = await allowedUsersQueries.getUserByName(name)
 
         if (!user) {
-            throw new Error('User Not Found')
+            throw new Error('User Not Found.')
         }
 
         return null
@@ -21,7 +21,7 @@ export const doesUserExistByNameAndAttach = async (ctx) => {
         const user = await allowedUsersQueries.getUserByName(name)
 
         if (!user) {
-            throw new Error('User Not Found')
+            throw new Error('User Not Found.')
         }
 
         ctx.state.user = user
@@ -34,11 +34,11 @@ export const doesUserExistByNameAndAttach = async (ctx) => {
 export const isNameAlreadyAdded = async (ctx) => {
     try {
         const { name } = ctx.request.body
+
         const user = await allowedUsersQueries.getUserByName(name)
 
-        console.log(user)
         if (user) {
-            throw new Error('Allowed user already exists')
+            throw new Error('Allowed user already exists.')
         }
 
         return null
@@ -51,7 +51,7 @@ export const isPassKeyCorrect = async (ctx) => {
     const { passKey } = ctx.request.body
 
     if (passKey !== process.env.PASSKEY) {
-        return 'Wrong Password'
+        return 'Wrong Password.'
     }
 
     return null
@@ -63,7 +63,7 @@ export const isFieldsValid = async (ctx) => {
 
     // limit number of fields
     if (Object.keys(body).length > allowedFields.length) {
-        return 'Invalid amount of fields'
+        return 'Invalid amount of fields.'
     }
 
     //check for invalid fields
@@ -71,8 +71,8 @@ export const isFieldsValid = async (ctx) => {
         (field) => !allowedFields.includes(field)
     )
 
-    if (invalidFields.length) {
-        return 'Invalid field'
+    if (invalidFields && invalidFields.length) {
+        return 'Invalid field.'
     }
 
     return null
@@ -82,7 +82,7 @@ export const isNameValid = async (ctx) => {
     const { name } = ctx.request.body
 
     if (typeof name !== 'string' || !name.trim()) {
-        return 'Name should be a non-empty string'
+        return 'Name should be a non-empty string.'
     }
 
     return null

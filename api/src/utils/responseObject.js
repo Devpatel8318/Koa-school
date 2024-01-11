@@ -2,7 +2,7 @@ export const failureObject = (reason, message) => {
     const response = {}
     response.success = false
     response.reason = reason
-    response.message = message || 'Something went wrong'
+    response.message = message || 'Something went wrong.'
     return response
 }
 

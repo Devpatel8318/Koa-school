@@ -1,38 +1,32 @@
-import { failureObject, successObject } from '../../utils/responseObject.js'
+import { successObject } from '../../utils/responseObject.js'
 
 import * as studentQueries from '../queries/studentQueries.js'
 import * as resultQueries from '../queries/resultQueries.js'
 
 export const getAllStudents = async (ctx) => {
-    let response = {}
-    try {
-        let filter = {}
-        let sortOptions = {}
-        const { sortBy, sortOrder, page, perPage, result } = ctx.query
+    let filter = {}
+    let sortOptions = {}
+    const { sortBy, sortOrder, page, perPage, result } = ctx.query
 
-        if (result === 'false') {
-            filter = { result: { $exists: false } }
-        }
-        if (result === 'true') {
-            filter = { result: { $exists: true } }
-        }
-
-        if (sortBy && sortOrder) {
-            sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
-        }
-
-        const students = await studentQueries.getAllStudents(
-            filter,
-            parseInt(page),
-            parseInt(perPage),
-            sortOptions
-        )
-
-        response = successObject(students)
-    } catch (err) {
-        response = failureObject(err.message)
+    if (result === 'false') {
+        filter = { result: { $exists: false } }
     }
-    ctx.body = response
+    if (result === 'true') {
+        filter = { result: { $exists: true } }
+    }
+
+    if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
+    }
+
+    const students = await studentQueries.getAllStudents(
+        filter,
+        parseInt(page),
+        parseInt(perPage),
+        sortOptions
+    )
+
+    ctx.body = successObject(students)
 }
 
 export const getOneStudent = async (ctx) => {
@@ -42,59 +36,43 @@ export const getOneStudent = async (ctx) => {
 
 export const loginStudent = async (ctx) => {
     const { student } = ctx.state
+
     delete student.password
     delete student._id
+
     ctx.body = successObject(student)
 }
 
 export const createStudent = async (ctx) => {
-    let response = {}
-    try {
-        const student = ctx.request.body
-        const { encryptedPassword } = ctx.state
+    const student = ctx.request.body
+    const { encryptedPassword } = ctx.state
 
-        await studentQueries.createOneStudent({
-            ...student,
-            password: encryptedPassword,
-        })
+    await studentQueries.createOneStudent({
+        ...student,
+        password: encryptedPassword,
+    })
 
-        response = successObject('Student created')
-    } catch (err) {
-        response = failureObject(err.message)
-    }
-    ctx.body = response
+    ctx.body = successObject('Student created.')
 }
 
 export const updateStudent = async (ctx) => {
-    let response = {}
-    try {
-        const updates = ctx.request.body
-        const { id } = ctx.params
+    const updates = ctx.request.body
+    const { id } = ctx.params
 
-        await studentQueries.updateOneStudent(id, { $set: updates })
+    await studentQueries.updateOneStudent(id, { $set: updates })
 
-        response = successObject('Student updated successfully')
-    } catch (err) {
-        response = failureObject(err.errInfo || err.message)
-    }
-    ctx.body = response
+    ctx.body = successObject('Student updated successfully.')
 }
 
 export const deleteStudent = async (ctx) => {
-    let response = {}
-    try {
-        const { id } = ctx.params
-        const { result } = ctx.state.student
+    const { id } = ctx.params
+    const { result } = ctx.state.student
 
-        await studentQueries.deleteOneStudent(id)
+    await studentQueries.deleteOneStudent(id)
 
-        if (result) {
-            await resultQueries.deleteOneResult({ resultId: result })
-        }
-
-        response = successObject('Student deleted successfully')
-    } catch (err) {
-        response = failureObject(err.message)
+    if (result) {
+        await resultQueries.deleteOneResult({ resultId: result })
     }
-    ctx.body = response
+
+    ctx.body = successObject('Student deleted successfully.')
 }

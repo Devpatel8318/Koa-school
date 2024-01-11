@@ -34,7 +34,6 @@ final code optimize
 
 
 
-badha j route ma name ?????
 DONE import sequence
 DONE fields validation
 
@@ -62,8 +61,10 @@ controller
 
 
 
-try catch in validator functions
-var name resultDoc-> resultData
-add try catch only when requires
-api names
-. dot at messages
+DONE try catch in validator functions
+DONE var name resultDoc-> resultData
+DONE add try catch only when requires
+DONE api names
+DONE . dot at messages
+DONE import sequence changed
+DONE for loop elimination

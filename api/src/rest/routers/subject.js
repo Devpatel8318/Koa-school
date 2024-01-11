@@ -27,10 +27,10 @@ import {
     isDescriptionValidIfExists,
 } from '../validators/subjectValidators.js'
 
-const router = new Router({ prefix: '/subjects' })
+const router = new Router({ prefix: '/subject' })
 
 // get all subjects
-router.get('/', getAllSubjects)
+router.get('/all', getAllSubjects)
 
 // get one subject
 router.get(
@@ -41,7 +41,7 @@ router.get(
 
 // create subject
 router.post(
-    '/',
+    '/add',
     validator([
         isFieldsValid,
         isSubjectCodeValid,
