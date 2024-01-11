@@ -5,9 +5,8 @@ const isIdValid = async (ctx) => {
 
     if (!isValidUuid(id)) {
         return 'Invalid Id'
-    } else {
-        return null
     }
+    return null
 }
 
 export default isIdValid

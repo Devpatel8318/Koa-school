@@ -9,6 +9,21 @@ export const doesUserExistByName = async (ctx) => {
             throw new Error('User Not Found')
         }
 
+        return null
+    } catch (err) {
+        return err.message
+    }
+}
+
+export const doesUserExistByNameAndAttach = async (ctx) => {
+    const { name } = ctx.params
+    try {
+        const user = await allowedUsersQueries.getUserByName(name)
+
+        if (!user) {
+            throw new Error('User Not Found')
+        }
+
         ctx.state.user = user
         return null
     } catch (err) {

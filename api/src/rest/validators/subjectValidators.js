@@ -8,10 +8,25 @@ export const doesSubjectExistByCode = async (ctx) => {
 
         if (!subjectDoc) {
             throw new Error('Subject not found')
-        } else {
-            ctx.state.subject = subjectDoc
-            return null
         }
+
+        return null
+    } catch (err) {
+        return err.message
+    }
+}
+
+export const doesSubjectExistByCodeAndAttach = async (ctx) => {
+    try {
+        const { id } = ctx.params
+
+        const subjectDoc = await subjectQueries.getSubjectByCode(id)
+
+        if (!subjectDoc) {
+            throw new Error('Subject not found')
+        }
+        ctx.state.subject = subjectDoc
+        return null
     } catch (err) {
         return err.message
     }
@@ -25,10 +40,9 @@ export const isSubjectCodeAlreadyAdded = async (ctx) => {
 
         if (subjectDoc) {
             throw new Error('Subject Code Already Added')
-        } else {
-            ctx.state.subject = subjectDoc
-            return null
         }
+        ctx.state.subject = subjectDoc
+        return null
     } catch (err) {
         return err.message
     }
@@ -55,9 +69,8 @@ export const isFieldsValid = async (ctx) => {
     )
     if (invalidFields.length) {
         return 'Invalid field name'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isSubjectCodeValid = async (ctx) => {
@@ -65,9 +78,8 @@ export const isSubjectCodeValid = async (ctx) => {
 
     if (typeof subjectCode !== 'string' || !subjectCode.trim()) {
         return 'Subject Code should be a non-empty string'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isNameValid = async (ctx) => {
@@ -75,9 +87,8 @@ export const isNameValid = async (ctx) => {
 
     if (typeof name !== 'string' || name.length < 5) {
         return 'Name should be a string with a minimum length of 5 characters'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isCreditValid = async (ctx) => {
@@ -85,9 +96,8 @@ export const isCreditValid = async (ctx) => {
 
     if (typeof credit !== 'number') {
         return 'Credit should be a number'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isMaximumMarksValid = async (ctx) => {
@@ -95,9 +105,8 @@ export const isMaximumMarksValid = async (ctx) => {
 
     if (typeof maximumMarks !== 'number') {
         return 'Maximum Marks should be a number'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isDescriptionValid = async (ctx) => {

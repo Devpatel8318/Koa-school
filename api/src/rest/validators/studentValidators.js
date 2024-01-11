@@ -10,10 +10,10 @@ export const doesStudentExistByEmail = async (ctx) => {
 
         if (!student) {
             throw new Error('Student not found')
-        } else {
-            ctx.state.student = student
-            return null
         }
+
+        ctx.state.student = student
+        return null
     } catch (err) {
         return err.message
     }
@@ -27,16 +27,31 @@ export const isEmailAvailable = async (ctx) => {
 
         if (student) {
             throw new Error('Email Already Exists')
-        } else {
-            ctx.state.student = student
-            return null
         }
+        ctx.state.student = student
+        return null
     } catch (err) {
         return err.message
     }
 }
 
 export const doesStudentExistById = async (ctx) => {
+    try {
+        const { id } = ctx.params
+
+        const student = await studentQueries.getOneStudent({ studentId: id })
+
+        if (!student) {
+            throw new Error('Student not found')
+        }
+
+        return null
+    } catch (err) {
+        return err.message
+    }
+}
+
+export const doesStudentExistByIdAndAttach = async (ctx) => {
     try {
         const { id } = ctx.params
 
@@ -47,11 +62,11 @@ export const doesStudentExistById = async (ctx) => {
 
         if (!student) {
             throw new Error('Student not found')
-        } else {
-            ctx.state.student = student
-            console.log(ctx.state.student)
-            return null
         }
+
+        ctx.state.student = student
+        console.log(ctx.state.student)
+        return null
     } catch (err) {
         return err.message
     }
@@ -64,9 +79,8 @@ export const isPasswordCorrect = async (ctx) => {
     if (encryptPassword(password) !== foundStudent.password) {
         console.log(encryptPassword(password), foundStudent.password)
         return 'Wrong Password'
-    } else {
-        return null
     }
+    return null
 }
 export const isFieldsValid = async (ctx) => {
     const { body } = ctx.request
@@ -89,9 +103,8 @@ export const isFieldsValid = async (ctx) => {
     )
     if (invalidFields.length) {
         return 'Invalid field'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isFirstNameValid = async (ctx) => {
@@ -131,9 +144,8 @@ export const isEmailValid = async (ctx) => {
         !emailPattern.test(email)
     ) {
         return 'Email should be a valid email address'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isPasswordValid = async (ctx) => {
@@ -148,9 +160,8 @@ export const isPasswordValid = async (ctx) => {
         !passwordRegex.test(password)
     ) {
         return 'Password should contain at least one uppercase letter, one special character, and one number'
-    } else {
-        return null
     }
+    return null
 }
 
 export const isFirstNameValidIfExists = async (ctx) => {

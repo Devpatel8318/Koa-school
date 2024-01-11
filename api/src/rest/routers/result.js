@@ -2,9 +2,10 @@ import Router from '@koa/router'
 
 import validator from '../middleware/validator.js'
 
-import { doesStudentExistById } from '../validators/studentValidators.js'
+import { doesStudentExistByIdAndAttach } from '../validators/studentValidators.js'
 import {
     doesResultExistById,
+    doesResultExistByIdAndAttach,
     isStudentvalid,
     doesStudentAlreadyHaveResult,
     isFieldsValid,
@@ -27,31 +28,34 @@ import {
     updateResult,
 } from '../controllers/resultController.js'
 
-const router = new Router({ prefix: '/results' })
+const router = new Router({ prefix: '/result' })
 
-router.get('/', getAllResults)
+router.get('/all', getAllResults)
 
-router.get('/:id', validator([isIdValid, doesResultExistById]), getSingleResult)
+router.get(
+    '/:id',
+    validator([isIdValid, doesResultExistByIdAndAttach]),
+    getSingleResult
+)
 
 router.get(
     '/formatted/:id',
-    validator([isIdValid, doesResultExistById]),
+    validator([isIdValid, doesResultExistByIdAndAttach]),
     getSingleFormattedResult
 )
 
 router.get(
     '/formatted/students/:id',
-    validator([isIdValid, doesStudentExistById, isStudentvalid]),
+    validator([isIdValid, doesStudentExistByIdAndAttach, isStudentvalid]),
     getFormattedResultByStudent
 )
 
 router.post(
-    '/',
+    '/add',
     validator([
         isFieldsValid,
         isSignedByValid,
         areMarksValid,
-        //TODO:
         isStudentIdFieldValid,
         doesStudentAlreadyHaveResult,
     ]),
@@ -63,6 +67,7 @@ router.patch(
     validator([
         isFieldsValid,
         isIdValid,
+        //TODO:
         doesResultExistById,
         isStudentIdFieldValidIfExists,
         isSignedByValidIfExists,
@@ -71,6 +76,10 @@ router.patch(
     updateResult
 )
 
-router.delete('/:id', validator([isIdValid, doesResultExistById]), deleteResult)
+router.delete(
+    '/:id',
+    validator([isIdValid, doesResultExistByIdAndAttach]),
+    deleteResult
+)
 
 export default router

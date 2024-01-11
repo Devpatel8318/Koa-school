@@ -49,6 +49,8 @@ third party
 
 utils
 
+queries
+
 middleware
 
 validators
@@ -57,4 +59,11 @@ helpers
 
 controller
 
-?queries
+
+
+
+try catch in validator functions
+var name resultDoc-> resultData
+add try catch only when requires
+api names
+. dot at messages

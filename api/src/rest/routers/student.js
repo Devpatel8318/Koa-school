@@ -7,6 +7,7 @@ import {
     isPasswordCorrect,
     doesStudentExistByEmail,
     doesStudentExistById,
+    doesStudentExistByIdAndAttach,
     isFieldsValid,
     isEmailAvailable,
     isFirstNameValid,
@@ -35,7 +36,11 @@ export const router = new Router({ prefix: '/students' })
 router.get('/', getAllStudents)
 
 // Get Single student
-router.get('/:id', validator([isIdValid, doesStudentExistById]), getOneStudent)
+router.get(
+    '/:id',
+    validator([isIdValid, doesStudentExistByIdAndAttach]),
+    getOneStudent
+)
 
 // Student Login
 router.post(
@@ -71,6 +76,7 @@ router.patch(
     validator([
         isFieldsValid,
         isIdValid,
+        //TODO:
         doesStudentExistById,
         isFirstNameValidIfExists,
         isLastNameValidIfExists,
@@ -83,7 +89,7 @@ router.patch(
 // Delete a student
 router.delete(
     '/:id',
-    validator([isIdValid, doesStudentExistById]),
+    validator([isIdValid, doesStudentExistByIdAndAttach]),
     deleteStudent
 )
 

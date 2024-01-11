@@ -12,6 +12,7 @@ import validator from '../middleware/validator.js'
 
 import {
     doesSubjectExistByCode,
+    doesSubjectExistByCodeAndAttach,
     isFieldsValid,
     isSubjectCodeAlreadyAdded,
     isCreditValid,
@@ -32,7 +33,11 @@ const router = new Router({ prefix: '/subjects' })
 router.get('/', getAllSubjects)
 
 // get one subject
-router.get('/:id', validator([doesSubjectExistByCode]), getSingleSubject)
+router.get(
+    '/:id',
+    validator([doesSubjectExistByCodeAndAttach]),
+    getSingleSubject
+)
 
 // create subject
 router.post(
@@ -53,6 +58,7 @@ router.post(
 router.patch(
     '/:id',
     validator([
+        //TODO:
         doesSubjectExistByCode,
         isFieldsValid,
         isSubjectCodeValidIfExists,

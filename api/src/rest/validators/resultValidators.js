@@ -4,10 +4,25 @@ import * as resultQueries from '../queries/resultQueries.js'
 import * as studentQueries from '../queries/studentQueries.js'
 
 export const doesResultExistById = async (ctx) => {
+    const { id } = ctx.params
+
+    const resultDoc = await resultQueries.getOneResult({
+        resultId: id,
+    })
+
+    if (!resultDoc) {
+        throw new Error('Result not found')
+    }
+
+    return null
+}
+
+export const doesResultExistByIdAndAttach = async (ctx) => {
     try {
         const { id } = ctx.params
 
         const resultDoc = await resultQueries.getOneResult({
+            // result data
             resultId: id,
         })
 
@@ -57,7 +72,7 @@ export const isFieldsValid = async (ctx) => {
     }
 
     if (Marks && Marks.length > 10) {
-        return 'Result at maximum contains Marks of 10 subjects'
+        return 'Result At maximum contains Marks of 10 subjects.'
     }
 
     //check for invalid fields
@@ -83,9 +98,9 @@ export const isStudentIdFieldValid = async (ctx) => {
 
         if (!student) {
             throw new Error('Student not found')
-        } else {
-            return null
         }
+
+        return null
     } catch (err) {
         return err.message
     }
@@ -105,7 +120,7 @@ export const areMarksValid = async (ctx) => {
     const { Marks } = ctx.request.body
 
     if (!Array.isArray(Marks)) {
-        return 'Marks should be an array'
+        return 'Marks should be an array.'
     }
 
     for (const mark of Marks) {

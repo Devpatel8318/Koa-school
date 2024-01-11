@@ -5,6 +5,7 @@ import { auth } from '../middleware/allowedUsersMiddleware.js'
 import validator from '../middleware/validator.js'
 import {
     doesUserExistByName,
+    doesUserExistByNameAndAttach,
     isNameAlreadyAdded,
     isPassKeyCorrect,
     isFieldsValid,
@@ -28,7 +29,15 @@ router.post('/admin', validator([isPassKeyCorrect]), loginAdmin)
 router.get('/', validator([auth]), getUsers)
 
 // get single user
-router.get('/:name', validator([auth, doesUserExistByName]), getUser)
+router.get(
+    '/:name',
+    validator([
+        auth,
+        //TODO:
+        doesUserExistByNameAndAttach,
+    ]),
+    getUser
+)
 
 // create new user
 router.post(
