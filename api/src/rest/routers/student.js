@@ -14,12 +14,7 @@ import {
     isLastNameValid,
     isEmailValid,
     isPasswordValid,
-    isFirstNameValidIfExists,
-    isLastNameValidIfExists,
-    isEmailValidIfExists,
-    isPasswordValidIfExists,
 } from '../validators/studentValidators.js'
-import isIdValid from '../validators/validId.js'
 
 import {
     deleteStudent,
@@ -33,12 +28,12 @@ import {
 export const router = new Router({ prefix: '/student' })
 
 // Get all students
-router.get('/all', getAllStudents)
+router.get('/list', getAllStudents)
 
 // Get Single student
 router.get(
-    '/:id',
-    validator([isIdValid, doesStudentExistByIdAndAttach]),
+    '/one/:studentId',
+    validator([doesStudentExistByIdAndAttach]),
     getOneStudent
 )
 
@@ -71,25 +66,23 @@ router.post(
 )
 
 // Update a Student
-router.patch(
-    '/:id',
+router.put(
+    '/edit/:studentId',
     validator([
         isFieldsValid,
-        isIdValid,
-        //TODO:
         doesStudentExistById,
-        isFirstNameValidIfExists,
-        isLastNameValidIfExists,
-        isEmailValidIfExists,
-        isPasswordValidIfExists,
+        isEmailValid,
+        isFirstNameValid,
+        isLastNameValid,
+        isPasswordValid,
     ]),
     updateStudent
 )
 
 // Delete a student
 router.delete(
-    '/:id',
-    validator([isIdValid, doesStudentExistByIdAndAttach]),
+    '/delete/:studentId',
+    validator([doesStudentExistByIdAndAttach]),
     deleteStudent
 )
 

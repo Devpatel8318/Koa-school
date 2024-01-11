@@ -57,18 +57,18 @@ export const createStudent = async (ctx) => {
 
 export const updateStudent = async (ctx) => {
     const updates = ctx.request.body
-    const { id } = ctx.params
+    const { studentId } = ctx.params
 
-    await studentQueries.updateOneStudent(id, { $set: updates })
+    await studentQueries.updateOneStudent(studentId, { $set: updates })
 
     ctx.body = successObject('Student updated successfully.')
 }
 
 export const deleteStudent = async (ctx) => {
-    const { id } = ctx.params
+    const { studentId } = ctx.params
     const { result } = ctx.state.student
 
-    await studentQueries.deleteOneStudent(id)
+    await studentQueries.deleteOneStudent(studentId)
 
     if (result) {
         await resultQueries.deleteOneResult({ resultId: result })

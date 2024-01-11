@@ -26,10 +26,14 @@ const router = new Router({ prefix: '/alloweduser' })
 router.post('/admin', validator([isPassKeyCorrect]), loginAdmin)
 
 // get ALL users
-router.get('/all', validator([auth]), getUsers)
+router.get('/list', validator([auth]), getUsers)
 
 // get single user
-router.get('/:name', validator([auth, doesUserExistByNameAndAttach]), getUser)
+router.get(
+    '/one/:name',
+    validator([auth, doesUserExistByNameAndAttach]),
+    getUser
+)
 
 // create new user
 router.post(
@@ -39,6 +43,10 @@ router.post(
 )
 
 // delete
-router.delete('/:name', validator([auth, doesUserExistByName]), removeUser)
+router.delete(
+    '/delete/:name',
+    validator([auth, doesUserExistByName]),
+    removeUser
+)
 
 export default router

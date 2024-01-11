@@ -1,9 +1,9 @@
 import * as subjectQueries from '../queries/subjectQueries.js'
 
 export const doesSubjectExistByCode = async (ctx) => {
-    const { id } = ctx.params
+    const { subjectCode } = ctx.params
 
-    const subjectData = await subjectQueries.getSubjectByCode(id)
+    const subjectData = await subjectQueries.getSubjectByCode(subjectCode)
 
     if (!subjectData) {
         return 'Subject not found.'
@@ -13,9 +13,9 @@ export const doesSubjectExistByCode = async (ctx) => {
 }
 
 export const doesSubjectExistByCodeAndAttach = async (ctx) => {
-    const { id } = ctx.params
+    const { subjectCode } = ctx.params
 
-    const subjectData = await subjectQueries.getSubjectByCode(id)
+    const subjectData = await subjectQueries.getSubjectByCode(subjectCode)
 
     if (!subjectData) {
         return 'Subject not found.'

@@ -5,6 +5,7 @@ import * as subjectQueries from '../queries/subjectQueries.js'
 export const getAllSubjects = async (ctx) => {
     const { sortBy, sortOrder, page, perPage } = ctx.query
     let sortOptions = {}
+
     if (sortBy && sortOrder) {
         sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
     }
@@ -33,17 +34,17 @@ export const createSubject = async (ctx) => {
 
 export const updateSubject = async (ctx) => {
     const updates = ctx.request.body
-    const subjectId = ctx.params.id
+    const { subjectCode } = ctx.params
 
-    await subjectQueries.updateOneSubject(subjectId, updates)
+    await subjectQueries.updateOneSubject(subjectCode, updates)
 
     ctx.body = successObject('Subject updated successfully.')
 }
 
 export const deleteSubject = async (ctx) => {
-    const subjectId = ctx.params.id
+    const { subjectCode } = ctx.params
 
-    await subjectQueries.deleteOneSubject(subjectId)
+    await subjectQueries.deleteOneSubject(subjectCode)
 
     ctx.body = successObject('Subject Deleted successfully.')
 }

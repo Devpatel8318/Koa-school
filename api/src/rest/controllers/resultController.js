@@ -30,19 +30,24 @@ export const getSingleResult = async (ctx) => {
 export const getSingleFormattedResult = async (ctx) => {
     let response = {}
     try {
-        const { id } = ctx.params
+        const { resultId } = ctx.params
 
         const resultData = await resultQueries.getOneFormattedResult({
-            resultId: id,
+            resultId,
         })
 
         if (resultData && !resultData.length) {
-            throw new Error('Internal Server Error.')
+            const err = new Error('Internal Server Error')
+            err.status = 500
+            throw err
         }
 
         response = successObject(transformDoc(resultData[0]))
     } catch (err) {
         response = failureObject(err.message)
+        if (err.status) {
+            ctx.status = err.status
+        }
     }
     ctx.body = response
 }
@@ -57,12 +62,17 @@ export const getFormattedResultByStudent = async (ctx) => {
         })
 
         if (resultData && !resultData.length) {
-            throw new Error('Internal Server Error.')
+            const err = new Error('Internal Server Error')
+            err.status = 500
+            throw err
         }
 
         response = successObject(transformDoc(resultData[0]))
     } catch (err) {
         response = failureObject(err.message)
+        if (err.status) {
+            ctx.status = err.status
+        }
     }
     ctx.body = response
 }
@@ -94,18 +104,18 @@ export const createResult = async (ctx) => {
 
 export const updateResult = async (ctx) => {
     const updates = ctx.request.body
-    const { id } = ctx.params
+    const { resultId } = ctx.params
 
-    await resultQueries.updateOneResult(id, updates)
+    await resultQueries.updateOneResult(resultId, updates)
 
     ctx.body = successObject('Result updated successfully.')
 }
 
 export const deleteResult = async (ctx) => {
-    const { id } = ctx.params
+    const { resultId } = ctx.params
     const { studentId } = ctx.state.result
 
-    await resultQueries.deleteOneResult({ resultId: id })
+    await resultQueries.deleteOneResult({ resultId })
 
     await studentQueries.updateOneStudent(studentId, {
         $unset: { result: '' },

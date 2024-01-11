@@ -9,7 +9,6 @@ import {
 } from '../controllers/subjectControllers.js'
 
 import validator from '../middleware/validator.js'
-
 import {
     doesSubjectExistByCode,
     doesSubjectExistByCodeAndAttach,
@@ -20,21 +19,16 @@ import {
     isMaximumMarksValid,
     isNameValid,
     isSubjectCodeValid,
-    isSubjectCodeValidIfExists,
-    isNameValidIfExists,
-    isCreditValidIfExists,
-    isMaximumMarksValidIfExists,
-    isDescriptionValidIfExists,
 } from '../validators/subjectValidators.js'
 
 const router = new Router({ prefix: '/subject' })
 
 // get all subjects
-router.get('/all', getAllSubjects)
+router.get('/list', getAllSubjects)
 
 // get one subject
 router.get(
-    '/:id',
+    '/one/:subjectCode',
     validator([doesSubjectExistByCodeAndAttach]),
     getSingleSubject
 )
@@ -55,22 +49,24 @@ router.post(
 )
 
 // update subject
-router.patch(
-    '/:id',
+router.put(
+    '/edit/:subjectCode',
     validator([
-        //TODO:
         doesSubjectExistByCode,
         isFieldsValid,
-        isSubjectCodeValidIfExists,
-        isNameValidIfExists,
-        isCreditValidIfExists,
-        isMaximumMarksValidIfExists,
-        isDescriptionValidIfExists,
+        isNameValid,
+        isCreditValid,
+        isMaximumMarksValid,
+        isDescriptionValid,
     ]),
     updateSubject
 )
 
 // delete subject
-router.delete('/:id', validator([doesSubjectExistByCode]), deleteSubject)
+router.delete(
+    '/delete/:subjectCode',
+    validator([doesSubjectExistByCode]),
+    deleteSubject
+)
 
 export default router

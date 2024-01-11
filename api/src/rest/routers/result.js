@@ -13,12 +13,7 @@ import {
     isSignedByValid,
     areMarksValid,
     areSubjectCodesValid,
-    isStudentIdFieldValidIfExists,
-    isSignedByValidIfExists,
-    areMarksValidIfExists,
-    areSubjectCodesValidIfExists,
 } from '../validators/resultValidators.js'
-import isIdValid from '../validators/validId.js'
 
 import {
     createResult,
@@ -32,23 +27,23 @@ import {
 
 const router = new Router({ prefix: '/result' })
 
-router.get('/all', getAllResults)
+router.get('/list', getAllResults)
 
 router.get(
-    '/:id',
-    validator([isIdValid, doesResultExistByIdAndAttach]),
+    '/one/:resultId',
+    validator([doesResultExistByIdAndAttach]),
     getSingleResult
 )
 
 router.get(
-    '/formatted/:id',
-    validator([isIdValid, doesResultExistByIdAndAttach]),
+    '/formatted/:resultId',
+    validator([doesResultExistByIdAndAttach]),
     getSingleFormattedResult
 )
 
 router.get(
-    '/formatted/students/:id',
-    validator([isIdValid, doesStudentExistByIdAndAttach, isStudentvalid]),
+    '/formatted/students/:resultId',
+    validator([doesStudentExistByIdAndAttach, isStudentvalid]),
     getFormattedResultByStudent
 )
 
@@ -56,32 +51,31 @@ router.post(
     '/add',
     validator([
         isFieldsValid,
+        isStudentIdFieldValid,
+        doesStudentAlreadyHaveResult,
         isSignedByValid,
         areMarksValid,
         areSubjectCodesValid,
-        isStudentIdFieldValid,
-        doesStudentAlreadyHaveResult,
     ]),
     createResult
 )
 
-router.patch(
-    '/:id',
+router.put(
+    '/edit/:resultId',
     validator([
         isFieldsValid,
-        isIdValid,
         doesResultExistById,
-        isStudentIdFieldValidIfExists,
-        isSignedByValidIfExists,
-        areMarksValidIfExists,
-        areSubjectCodesValidIfExists,
+        isStudentIdFieldValid,
+        isSignedByValid,
+        areMarksValid,
+        areSubjectCodesValid,
     ]),
     updateResult
 )
 
 router.delete(
-    '/:id',
-    validator([isIdValid, doesResultExistByIdAndAttach]),
+    '/delete/:resultId',
+    validator([doesResultExistByIdAndAttach]),
     deleteResult
 )
 

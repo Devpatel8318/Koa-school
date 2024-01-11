@@ -72,8 +72,7 @@ DONE for loop elimination
 
 
 
-// route name more enhancement
-// logical error msg
-// use put req
-
-ctx.params ma je id joiae direct ae j name rakhido
+/d/ route name more enhancement
+/d/ logical error msg
+/d/ use put req
+/d/ ctx.params ma je id joiae direct ae j name rakhido
