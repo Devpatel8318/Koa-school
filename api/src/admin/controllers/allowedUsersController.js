@@ -3,6 +3,7 @@ import { successObject } from '../../utils/responseObject.js'
 import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 
 import { generateAuthToken } from '../helpers/jwtFunctions.js'
+import formatName from '../helpers/formatName.js'
 
 export const loginAdmin = async (ctx) => {
     ctx.cookies.set('myToken', generateAuthToken(), {
@@ -39,7 +40,7 @@ export const getUser = async (ctx) => {
 export const addUser = async (ctx) => {
     const { name } = ctx.request.body
 
-    await allowedUsersQueries.addOneUser(name)
+    await allowedUsersQueries.addOneUser(formatName(name))
 
     ctx.body = successObject('new user created.')
 }
@@ -47,7 +48,7 @@ export const addUser = async (ctx) => {
 export const removeUser = async (ctx) => {
     const { name } = ctx.params
 
-    await allowedUsersQueries.deleteUser(name)
+    await allowedUsersQueries.deleteUser(formatName(name))
 
     ctx.body = successObject('User deleted successfully.')
 }

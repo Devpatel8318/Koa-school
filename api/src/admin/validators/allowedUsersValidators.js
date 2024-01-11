@@ -1,9 +1,11 @@
 import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 
+import formatName from '../helpers/formatName.js'
+
 export const doesUserExistByName = async (ctx) => {
     const { name } = ctx.params
 
-    const user = await allowedUsersQueries.getUserByName(name)
+    const user = await allowedUsersQueries.getUserByName(formatName(name))
 
     if (!user) {
         return 'User Not Found.'
@@ -15,7 +17,7 @@ export const doesUserExistByName = async (ctx) => {
 export const doesUserExistByNameAndAttach = async (ctx) => {
     const { name } = ctx.params
 
-    const user = await allowedUsersQueries.getUserByName(name)
+    const user = await allowedUsersQueries.getUserByName(formatName(name))
 
     if (!user) {
         return 'User Not Found.'
@@ -28,7 +30,7 @@ export const doesUserExistByNameAndAttach = async (ctx) => {
 export const isNameAlreadyAdded = async (ctx) => {
     const { name } = ctx.request.body
 
-    const user = await allowedUsersQueries.getUserByName(name)
+    const user = await allowedUsersQueries.getUserByName(formatName(name))
 
     if (user) {
         return 'Allowed User already exists.'
