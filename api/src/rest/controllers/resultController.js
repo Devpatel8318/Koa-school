@@ -85,7 +85,7 @@ export const createResult = async (ctx) => {
             $set: { result: resultId },
         })
 
-        response = successObject('result Added')
+        response = successObject('result Added.')
     } catch (err) {
         response = failureObject(err.message)
     }

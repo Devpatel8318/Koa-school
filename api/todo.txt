@@ -68,3 +68,12 @@ DONE api names
 DONE . dot at messages
 DONE import sequence changed
 DONE for loop elimination
+
+
+
+
+// route name more enhancement
+// logical error msg
+// use put req
+
+ctx.params ma je id joiae direct ae j name rakhido
