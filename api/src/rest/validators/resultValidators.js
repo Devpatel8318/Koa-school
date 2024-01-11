@@ -2,6 +2,7 @@ import { validate as isValidUuid } from 'uuid'
 
 import * as resultQueries from '../queries/resultQueries.js'
 import * as studentQueries from '../queries/studentQueries.js'
+import * as subjectQueries from '../queries/subjectQueries.js'
 
 export const doesResultExistById = async (ctx) => {
     const { id } = ctx.params
@@ -127,6 +128,25 @@ export const areMarksValid = async (ctx) => {
 
     if (isMarksFormatInvalid) {
         return 'Invalid Format for Marks.'
+    }
+
+    return null
+}
+export const doesSubjectExist = async (ctx) => {
+    const { Marks } = ctx.request.body
+
+    const subCodes = Marks.map((Mark) => Mark.subCode)
+
+    const promisesArray = subCodes.map((subcode) =>
+        subjectQueries.getSubjectByCode(subcode)
+    )
+
+    const promiseResponseData = await Promise.all(promisesArray)
+
+    const isAnySubjectCodeInvalid = promiseResponseData.includes(null)
+
+    if (isAnySubjectCodeInvalid) {
+        return 'Subject does not exist for given Subject Code.'
     }
 
     return null
