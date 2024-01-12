@@ -47,7 +47,7 @@ export const isPassKeyCorrect = async (ctx) => {
     return null
 }
 
-export const isFieldsValid = async (ctx) => {
+export const isFieldValid = async (ctx) => {
     const { body } = ctx.request
     const allowedFields = ['name']
 
@@ -62,7 +62,7 @@ export const isFieldsValid = async (ctx) => {
     )
 
     if (invalidFields && invalidFields.length) {
-        return 'Invalid field.'
+        return 'Invalid field: name'
     }
 
     return null

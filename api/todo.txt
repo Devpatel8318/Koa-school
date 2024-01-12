@@ -80,3 +80,18 @@ DONE for loop elimination
 
 
 add auth as middleware before valitator
+
+
+DONE entered marks must be less than maximum marks
+DONE marks must be greater than 0
+subCode => subjectCode
+exact message that which field is invalid
+
+
+                                        
+
+
+
+
+Doubt:
+Where to put formatName function

@@ -11,8 +11,9 @@ import {
     isFieldsValid,
     isStudentIdFieldValid,
     isSignedByValid,
-    areMarksValid,
+    isMarksArrayValid,
     areSubjectCodesValid,
+    isMarksGreaterThanMaximumMarks,
 } from '../validators/resultValidators.js'
 
 import {
@@ -54,8 +55,9 @@ router.post(
         isStudentIdFieldValid,
         doesStudentAlreadyHaveResult,
         isSignedByValid,
-        areMarksValid,
+        isMarksArrayValid,
         areSubjectCodesValid,
+        isMarksGreaterThanMaximumMarks,
     ]),
     createResult
 )
@@ -67,7 +69,7 @@ router.put(
         doesResultExistById,
         isStudentIdFieldValid,
         isSignedByValid,
-        areMarksValid,
+        isMarksArrayValid,
         areSubjectCodesValid,
     ]),
     updateResult

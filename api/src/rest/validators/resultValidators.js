@@ -103,7 +103,7 @@ export const isSignedByValid = async (ctx) => {
     return null
 }
 
-export const areMarksValid = async (ctx) => {
+export const isMarksArrayValid = async (ctx) => {
     const { Marks } = ctx.request.body
     let isMarksFormatInvalid = false
 
@@ -116,7 +116,8 @@ export const areMarksValid = async (ctx) => {
             typeof mark.subCode !== 'string' ||
             !mark.subCode.trim() ||
             typeof mark.marks !== 'number' ||
-            !Number.isInteger(mark.marks)
+            !Number.isInteger(mark.marks) ||
+            mark.marks < 0
         ) {
             isMarksFormatInvalid = true
         }
@@ -131,18 +132,35 @@ export const areMarksValid = async (ctx) => {
 export const areSubjectCodesValid = async (ctx) => {
     const { Marks } = ctx.request.body
 
-    const subCodes = Marks.map((Mark) => Mark.subCode)
-
-    const promisesArray = subCodes.map((subcode) =>
-        subjectQueries.getSubjectByCode(subcode)
+    const promiseResponseData = await Promise.all(
+        Marks.map((oneSubjectMarksData) =>
+            subjectQueries.getSubjectByCode(oneSubjectMarksData.subCode)
+        )
     )
 
-    const promiseResponseData = await Promise.all(promisesArray)
-
-    const isAnySubjectCodeInvalid = promiseResponseData.includes(null)
-
-    if (isAnySubjectCodeInvalid) {
+    if (promiseResponseData.includes(null)) {
         return 'Subject does not exist for given Subject Code.'
+    }
+
+    ctx.state.subjectsMaximumMarks = Object.fromEntries(
+        promiseResponseData.map((data) => [data.subjectCode, data.maximumMarks])
+    )
+
+    return null
+}
+
+export const isMarksGreaterThanMaximumMarks = async (ctx) => {
+    const { subjectsMaximumMarks } = ctx.state
+    const { Marks } = ctx.request.body
+
+    const marksInvalid = Marks.some(
+        (oneSubjectMarksData) =>
+            oneSubjectMarksData.marks >
+            subjectsMaximumMarks[oneSubjectMarksData.subCode]
+    )
+
+    if (marksInvalid) {
+        return "Marks must be Less than Subject's Maximum Marks"
     }
 
     return null
