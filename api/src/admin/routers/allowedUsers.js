@@ -28,7 +28,7 @@ router.post('/admin', validator([isPassKeyCorrect]), loginAdmin)
 // get ALL users
 router.get('/list', auth, getUsers)
 
-// get single user
+// !get single user
 router.get(
     '/view/:name',
     auth,
@@ -36,7 +36,7 @@ router.get(
     getUser
 )
 
-// create new user
+// !create new user
 router.post(
     '/add',
     auth,
@@ -44,7 +44,7 @@ router.post(
     addUser
 )
 
-// delete
+// !delete
 router.delete(
     '/delete/:name',
     auth,
