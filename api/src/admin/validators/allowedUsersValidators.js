@@ -33,7 +33,7 @@ export const isNameAlreadyAdded = async (ctx) => {
     const user = await allowedUsersQueries.getUserByName(formatName(name))
 
     if (user) {
-        return 'Allowed User already exists.'
+        return 'User already exists.'
     }
 
     return null
