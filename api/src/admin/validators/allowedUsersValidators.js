@@ -62,7 +62,7 @@ export const isFieldValid = async (ctx) => {
     )
 
     if (invalidFields && invalidFields.length) {
-        return 'Invalid field: name'
+        return `Invalid Fields: ${invalidFields.join(', ')}.`
     }
 
     return null

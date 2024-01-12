@@ -1,6 +1,5 @@
-const a = { b: 'a' }
-try {
-    console.log(JSON.parse(a))
-} catch (error) {
-    //frud
-}
+const invalidFields = ['name', 'surname']
+
+const response = `Invalid Fields: ${invalidFields.join(', ')}.`
+
+console.log(response)

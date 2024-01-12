@@ -57,8 +57,9 @@ export const isFieldsValid = async (ctx) => {
     const invalidFields = Object.keys(body).filter(
         (field) => !allowedFields.includes(field)
     )
-    if (invalidFields.length) {
-        return 'Invalid field Name.'
+
+    if (invalidFields && invalidFields.length) {
+        return `Invalid Fields: ${invalidFields.join(', ')}.`
     }
 
     return null

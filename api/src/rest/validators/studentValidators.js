@@ -89,8 +89,8 @@ export const isFieldsValid = async (ctx) => {
         (field) => !allowedFields.includes(field)
     )
 
-    if (invalidFields.length) {
-        return 'Invalid field.'
+    if (invalidFields && invalidFields.length) {
+        return `Invalid Fields: ${invalidFields.join(', ')}.`
     }
 
     return null
