@@ -28,7 +28,7 @@ router.get('/list', getAllSubjects)
 
 // get one subject
 router.get(
-    '/one/:subjectCode',
+    '/view/:subjectCode',
     validator([doesSubjectExistByCodeAndAttach]),
     getSingleSubject
 )

@@ -30,7 +30,7 @@ const router = new Router({ prefix: '/result' })
 router.get('/list', getAllResults)
 
 router.get(
-    '/one/:resultId',
+    '/view/:resultId',
     validator([doesResultExistByIdAndAttach]),
     getSingleResult
 )

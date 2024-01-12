@@ -62,6 +62,7 @@ controller
 
 
 DONE try catch in validator functions
+
 DONE var name resultDoc-> resultData
 DONE add try catch only when requires
 DONE api names
@@ -72,7 +73,10 @@ DONE for loop elimination
 
 
 
-/d/ route name more enhancement
-/d/ logical error msg
-/d/ use put req
-/d/ ctx.params ma je id joiae direct ae j name rakhido
+/d/ route name more enhancement done
+/d/ logical error msg done
+/d/ use put req done
+/d/ ctx.params ma je id joiae direct ae j name rakhido done
+
+
+add auth as middleware before valitator

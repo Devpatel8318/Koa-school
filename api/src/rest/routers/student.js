@@ -32,7 +32,7 @@ router.get('/list', getAllStudents)
 
 // Get Single student
 router.get(
-    '/one/:studentId',
+    '/view/:studentId',
     validator([doesStudentExistByIdAndAttach]),
     getOneStudent
 )
