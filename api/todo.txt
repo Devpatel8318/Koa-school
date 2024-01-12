@@ -88,6 +88,8 @@ subCode => subjectCode
 exact message that which field is invalid
 
 
+
+result contain unique subjects
                                         
 
 

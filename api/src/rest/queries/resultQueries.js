@@ -20,7 +20,7 @@ const pipeline = (argument) => [
     {
         $lookup: {
             from: 'subjects',
-            localField: 'Marks.subCode',
+            localField: 'Marks.subjectCode',
             foreignField: 'subjectCode',
             as: 'subjectInfo',
         },

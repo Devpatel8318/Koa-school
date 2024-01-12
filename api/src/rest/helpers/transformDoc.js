@@ -5,10 +5,10 @@ export const transformDoc = (resultDoc) => {
         studentInfo: resultDoc.studentInfo,
         Marks: resultDoc.Marks.map((mark) => {
             const correspondingSubject = resultDoc.subjectInfo.find(
-                (subject) => subject.subjectCode === mark.subCode
+                (subject) => subject.subjectCode === mark.subjectCode
             )
             return {
-                subCode: mark.subCode,
+                subjectCode: mark.subjectCode,
                 marks: mark.marks,
                 name: correspondingSubject.name,
                 credit: correspondingSubject.credit,

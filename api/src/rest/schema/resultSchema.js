@@ -18,9 +18,9 @@ const resultSchema = {
             bsonType: 'array',
             items: {
                 bsonType: 'object',
-                required: ['subCode', 'marks'],
+                required: ['subjectCode', 'marks'],
                 properties: {
-                    subCode: {
+                    subjectCode: {
                         bsonType: 'string',
                     },
                     marks: {

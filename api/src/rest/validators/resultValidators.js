@@ -105,23 +105,19 @@ export const isSignedByValid = async (ctx) => {
 
 export const isMarksArrayValid = async (ctx) => {
     const { Marks } = ctx.request.body
-    let isMarksFormatInvalid = false
 
     if (!Array.isArray(Marks)) {
         return 'Marks should be an array.'
     }
 
-    Marks.forEach((mark) => {
-        if (
-            typeof mark.subCode !== 'string' ||
-            !mark.subCode.trim() ||
+    const isMarksFormatInvalid = Marks.some(
+        (mark) =>
+            typeof mark.subjectCode !== 'string' ||
+            !mark.subjectCode.trim() ||
             typeof mark.marks !== 'number' ||
             !Number.isInteger(mark.marks) ||
             mark.marks < 0
-        ) {
-            isMarksFormatInvalid = true
-        }
-    })
+    )
 
     if (isMarksFormatInvalid) {
         return 'Invalid Format for Marks.'
@@ -134,12 +130,12 @@ export const areSubjectCodesValid = async (ctx) => {
 
     const promiseResponseData = await Promise.all(
         Marks.map((oneSubjectMarksData) =>
-            subjectQueries.getSubjectByCode(oneSubjectMarksData.subCode)
+            subjectQueries.getSubjectByCode(oneSubjectMarksData.subjectCode)
         )
     )
 
     if (promiseResponseData.includes(null)) {
-        return 'Subject does not exist for given Subject Code.'
+        return 'Subject does not exist from given Subject Codes.'
     }
 
     ctx.state.subjectsMaximumMarks = Object.fromEntries(
@@ -156,7 +152,7 @@ export const isMarksGreaterThanMaximumMarks = async (ctx) => {
     const marksInvalid = Marks.some(
         (oneSubjectMarksData) =>
             oneSubjectMarksData.marks >
-            subjectsMaximumMarks[oneSubjectMarksData.subCode]
+            subjectsMaximumMarks[oneSubjectMarksData.subjectCode]
     )
 
     if (marksInvalid) {
