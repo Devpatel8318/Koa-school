@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "rest": "nodemon src/rest/index.js",
     "admin": "nodemon src/admin/index.js",
     "build": "babel src/ -d dist/"
@@ -31,6 +31,8 @@
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.7",
     "@babel/preset-flow": "^7.23.3",
+    "axios": "^1.6.5",
+    "jest": "^29.7.0",
     "nodemon": "^3.0.2"
   }
 }
