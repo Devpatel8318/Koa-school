@@ -103,11 +103,16 @@ export const isSignedByValid = async (ctx) => {
     return null
 }
 
+//allowing results with no marks
 export const isMarksArrayValid = async (ctx) => {
     const { Marks } = ctx.request.body
 
     if (!Array.isArray(Marks)) {
         return 'Marks should be an array.'
+    }
+
+    if (new Set(Marks.map((mark) => mark.subjectCode)).size !== Marks.length) {
+        return 'Duplicate Subject Codes entered'
     }
 
     const isMarksFormatInvalid = Marks.some(
@@ -125,6 +130,7 @@ export const isMarksArrayValid = async (ctx) => {
 
     return null
 }
+
 export const areSubjectCodesValid = async (ctx) => {
     const { Marks } = ctx.request.body
 
