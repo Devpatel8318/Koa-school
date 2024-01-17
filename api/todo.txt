@@ -10,7 +10,6 @@ DONE password valid and encryption different functions done
 
 
 
-
 DONE validator array[v1,v2,v3,v4,v5,v6,v7]
 DONE fields validation baaki
 DONE lowercase Student
@@ -28,41 +27,20 @@ DONE "encryptedPassword" into  "ctx.state"  to pass the "password"
 
 
 
-final code optimize 
-
-
-
-
-
-DONE import sequence
 DONE fields validation
-
-
-
-
-
-
-
+DONE import sequence
 
 third party
-
 utils
-
 queries
-
 middleware
-
 validators
-
 helpers
-
 controller
 
 
 
-
 DONE try catch in validator functions
-
 DONE var name resultDoc-> resultData
 DONE add try catch only when requires
 DONE api names
@@ -72,14 +50,12 @@ DONE for loop elimination
 
 
 
-
-/d/ route name more enhancement done
-/d/ logical error msg done
-/d/ use put req done
-/d/ ctx.params ma je id joiae direct ae j name rakhido done
-
-
+DONE route name more enhancement done
+DONE logical error msg done
+DONE use put req done
+DONE ctx.params ma je id joiae direct ae j name rakhido done
 DONE add auth as middleware before valitator
+
 
 
 DONE entered marks must be less than maximum marks
@@ -90,12 +66,24 @@ DONE result should contain unique subjects
 
 
 
-
-                            
-
+final code optimize 
 
 
 
-Doubt:
-should a trim all feilds?
-Where to put formatName function
+
+=======
+add student
+email nu validation je chhe aema condition alag alag lailo
+password
+fn, ln
+encryptedPassword ne cont ma lailo
+
+student jyare create thai jai tyare aeni uuid joiae chhe resp ma
+
+ek object banao and aema badhi fields add karo and ae j object db ma update thavo joiae
+
+===
+
+result
+isMarksArrayValid: aa validator ma flag lo and a flag ni andar condition nakho
+areSubjectCodesValid  aa validator ma ek single query maro
