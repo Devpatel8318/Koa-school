@@ -1,8 +1,9 @@
+import isEmailPatternValid from '../../utils/isEmailPatternValid.js'
+import isPasswordPatternValid from '../../utils/isPasswordPatternValid.js'
+
 import * as studentQueries from '../queries/studentQueries.js'
 
 import encryptPassword from '../helpers/getEncryptedPassword.js'
-import emailValidator from '../helpers/emailValidator.js'
-import passwordValidator from '../helpers/passwordValidator.js'
 
 export const doesStudentExistByEmail = async (ctx) => {
     const { email } = ctx.request.body
@@ -99,12 +100,20 @@ export const isFieldsValid = async (ctx) => {
 export const isFirstNameValid = async (ctx) => {
     const { firstName } = ctx.request.body
 
-    if (
-        typeof firstName !== 'string' ||
-        firstName.length < 6 ||
-        firstName.length > 25
-    ) {
-        return 'First Name should be a string between 6 and 25 characters.'
+    if (!firstName) {
+        return 'Please Provide First Name.'
+    }
+
+    if (typeof firstName !== 'string') {
+        return 'First Name must be a String.'
+    }
+
+    if (firstName.length > 25) {
+        return 'First Name must be less than 25 characters.'
+    }
+
+    if (firstName.length < 6) {
+        return 'First Name must be more than 6 characters.'
     }
 
     return null
@@ -113,12 +122,20 @@ export const isFirstNameValid = async (ctx) => {
 export const isLastNameValid = async (ctx) => {
     const { lastName } = ctx.request.body
 
-    if (
-        typeof lastName !== 'string' ||
-        lastName.length < 6 ||
-        lastName.length > 25
-    ) {
-        return 'Last Name should be a string between 6 and 25 characters.'
+    if (!lastName) {
+        return 'Please Provide Last Name.'
+    }
+
+    if (typeof lastName !== 'string') {
+        return 'Last Name must be a String.'
+    }
+
+    if (lastName.length > 25) {
+        return 'Last Name must be less than 25 characters.'
+    }
+
+    if (lastName.length < 6) {
+        return 'Last Name must be more than 6 characters.'
     }
 
     return null
@@ -127,7 +144,19 @@ export const isLastNameValid = async (ctx) => {
 export const isEmailValid = async (ctx) => {
     const { email } = ctx.request.body
 
-    if (!emailValidator(email)) {
+    if (!email) {
+        return 'Please Provide Email.'
+    }
+
+    if (typeof email !== 'string') {
+        return 'Email must be a String.'
+    }
+
+    if (email.length > 254) {
+        return 'Email must be less than 254 characters.'
+    }
+
+    if (!isEmailPatternValid(email)) {
         return 'Email should be a valid email address.'
     }
 
@@ -137,7 +166,19 @@ export const isEmailValid = async (ctx) => {
 export const isPasswordValid = async (ctx) => {
     const { password } = ctx.request.body
 
-    if (!passwordValidator(password)) {
+    if (!password) {
+        return 'Please Provide Password.'
+    }
+
+    if (typeof password !== 'string') {
+        return 'Password must be a String.'
+    }
+
+    if (password.length < 6) {
+        return 'Password Name must be more than 6 characters.'
+    }
+
+    if (!isPasswordPatternValid(password)) {
         return 'Password should contain at least one uppercase letter, one special character, and one number.'
     }
 

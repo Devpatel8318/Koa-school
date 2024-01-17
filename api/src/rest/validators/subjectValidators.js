@@ -68,8 +68,12 @@ export const isFieldsValid = async (ctx) => {
 export const isSubjectCodeValid = async (ctx) => {
     const { subjectCode } = ctx.request.body
 
-    if (typeof subjectCode !== 'string' || !subjectCode.trim()) {
-        return 'Subject Code should be a non-empty string.'
+    if (!subjectCode) {
+        return 'Please Provide Subject Code.'
+    }
+
+    if (typeof subjectCode !== 'string') {
+        return 'Subject Code must be a string.'
     }
 
     return null
@@ -78,8 +82,16 @@ export const isSubjectCodeValid = async (ctx) => {
 export const isNameValid = async (ctx) => {
     const { name } = ctx.request.body
 
-    if (typeof name !== 'string' || name.length < 5) {
-        return 'Name should be a string with a minimum length of 5 characters.'
+    if (!name) {
+        return 'Please Provide Name.'
+    }
+
+    if (typeof name !== 'string') {
+        return 'Name must be a String.'
+    }
+
+    if (name.length < 5) {
+        return 'Name must be more than 5 characters.'
     }
 
     return null
@@ -88,8 +100,16 @@ export const isNameValid = async (ctx) => {
 export const isCreditValid = async (ctx) => {
     const { credit } = ctx.request.body
 
-    if (typeof credit !== 'number' && credit < 0) {
-        return 'Credit should be a Number.'
+    if (!credit) {
+        return 'Please Provide Credit.'
+    }
+
+    if (typeof credit !== 'number') {
+        return 'Credit must be a Number.'
+    }
+
+    if (credit < 0) {
+        return 'Credit must be positive Number.'
     }
 
     return null
@@ -98,8 +118,16 @@ export const isCreditValid = async (ctx) => {
 export const isMaximumMarksValid = async (ctx) => {
     const { maximumMarks } = ctx.request.body
 
-    if (typeof maximumMarks !== 'number' && maximumMarks < 0) {
-        return 'Maximum Marks should be a Number.'
+    if (!maximumMarks) {
+        return 'Please Provide Maximum Marks.'
+    }
+
+    if (typeof maximumMarks !== 'number') {
+        return 'Maximum Marks must be a Number.'
+    }
+
+    if (maximumMarks < 0) {
+        return 'Maximum Marks must be positive Number.'
     }
 
     return null
@@ -108,11 +136,16 @@ export const isMaximumMarksValid = async (ctx) => {
 export const isDescriptionValid = async (ctx) => {
     const { description } = ctx.request.body
 
-    if (
-        description &&
-        (typeof description !== 'string' || description.length > 100)
-    ) {
-        return 'Description should be a string with a maximum length of 100 characters.'
+    if (!description) {
+        return 'Please Provide Description'
+    }
+
+    if (typeof description !== 'string') {
+        return 'Description must be a string'
+    }
+
+    if (description.length > 100) {
+        return 'description must be less than 100 characters.'
     }
 
     return null

@@ -1,7 +1,9 @@
-import { successObject } from '../../utils/responseObject.js'
+import { v4 as uuidv4 } from 'uuid'
 
+import { successObject } from '../../utils/responseObject.js'
 import * as studentQueries from '../queries/studentQueries.js'
 import * as resultQueries from '../queries/resultQueries.js'
+import encryptPassword from '../helpers/getEncryptedPassword.js'
 
 export const getAllStudents = async (ctx) => {
     let filter = {}
@@ -44,24 +46,39 @@ export const loginStudent = async (ctx) => {
 }
 
 export const createStudent = async (ctx) => {
-    const student = ctx.request.body
-    const { encryptedPassword } = ctx.state
+    const { firstName, lastName, password, email } = ctx.request.body
+    const studentId = uuidv4()
 
-    await studentQueries.createOneStudent({
-        ...student,
-        password: encryptedPassword,
-    })
+    const newStudentData = {
+        studentId,
+        firstName,
+        lastName,
+        email,
+        password: encryptPassword(password),
+    }
 
-    ctx.body = successObject('Student created.')
+    await studentQueries.createOneStudent(newStudentData)
+
+    ctx.body = successObject(studentId, 'Student created.')
 }
 
 export const updateStudent = async (ctx) => {
-    const updates = ctx.request.body
+    const { firstName, lastName, email, password } = ctx.request.body
     const { studentId } = ctx.params
 
-    await studentQueries.updateOneStudent(studentId, { $set: updates })
+    const changedStudentData = {
+        studentId,
+        firstName,
+        lastName,
+        email,
+        password,
+    }
 
-    ctx.body = successObject('Student updated successfully.')
+    await studentQueries.updateOneStudent(studentId, {
+        $set: changedStudentData,
+    })
+
+    ctx.body = successObject(studentId, 'Student updated successfully.')
 }
 
 export const deleteStudent = async (ctx) => {

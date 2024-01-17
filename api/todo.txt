@@ -73,17 +73,16 @@ final code optimize
 
 =======
 add student
-email nu validation je chhe aema condition alag alag lailo
-password
-fn, ln
-encryptedPassword ne cont ma lailo
-
-student jyare create thai jai tyare aeni uuid joiae chhe resp ma
-
-ek object banao and aema badhi fields add karo and ae j object db ma update thavo joiae
-
+DONE rename email validator and move it to util
+DONE (email,password,FN,LN) nu validation je chhe aema condition alag alag lailo
+DONE encryptedPassword ne cont ma lailo
+DONE student jyare create thai jai tyare aeni uuid joiae chhe resp ma
+DONE ek object banao and aema badhi fields add karo and ae j object db ma update thavo joiae
 ===
 
 result
-isMarksArrayValid: aa validator ma flag lo and a flag ni andar condition nakho
-areSubjectCodesValid  aa validator ma ek single query maro
+DONE isMarksArrayValid: aa validator ma flag lo and a flag ni andar condition nakho
+DONE areSubjectCodesValid  aa validator ma ek single query maro
+
+
+put 422 error handler

@@ -2,8 +2,20 @@ import db from '../../connection/db.js'
 
 const tableName = 'subjects'
 
-export const getAllSubjects = async (page, perPage, sortOptions = {}) => {
+export const getAllSubjects = async (
+    page = null,
+    perPage = null,
+    sortOptions = {}
+) => {
+    if (page === null && perPage === null) {
+        return await db
+            .collection(tableName)
+            .find({}, { projection: { _id: 0 } })
+            .sort(sortOptions)
+            .toArray()
+    }
     const skip = (page - 1) * perPage
+
     return await db
         .collection(tableName)
         .find({}, { projection: { _id: 0 } })

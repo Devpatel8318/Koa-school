@@ -1,4 +1,4 @@
-export const failureObject = (reason, message, status) => {
+export const failureObject = (reason, message) => {
     const response = {}
     response.success = false
     response.reason = reason
@@ -6,10 +6,10 @@ export const failureObject = (reason, message, status) => {
     return response
 }
 
-export const successObject = (data) => {
+export const successObject = (data, message) => {
     const response = {}
     response.success = true
     response.data = data
-    response.message = 'data displayed successfully.'
+    response.message = message || 'data displayed successfully.'
     return response
 }

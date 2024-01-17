@@ -6,7 +6,7 @@ import { doesStudentExistByIdAndAttach } from '../validators/studentValidators.j
 import {
     doesResultExistById,
     doesResultExistByIdAndAttach,
-    isStudentvalid,
+    doesStudentHaveResult,
     doesStudentAlreadyHaveResult,
     isFieldsValid,
     isStudentIdFieldValid,
@@ -14,6 +14,7 @@ import {
     isMarksArrayValid,
     areSubjectCodesValid,
     isMarksGreaterThanMaximumMarks,
+    isStudentIdChanged,
 } from '../validators/resultValidators.js'
 
 import {
@@ -44,7 +45,7 @@ router.get(
 
 router.get(
     '/formatted/students/:resultId',
-    validator([doesStudentExistByIdAndAttach, isStudentvalid]),
+    validator([doesStudentExistByIdAndAttach, doesStudentHaveResult]),
     getFormattedResultByStudent
 )
 
@@ -68,9 +69,11 @@ router.put(
         isFieldsValid,
         doesResultExistById,
         isStudentIdFieldValid,
+        isStudentIdChanged,
         isSignedByValid,
         isMarksArrayValid,
         areSubjectCodesValid,
+        isMarksGreaterThanMaximumMarks,
     ]),
     updateResult
 )

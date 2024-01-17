@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid'
+
 import { failureObject, successObject } from '../../utils/responseObject.js'
 
 import * as resultQueries from '../queries/resultQueries.js'
@@ -78,37 +80,39 @@ export const getFormattedResultByStudent = async (ctx) => {
 }
 
 export const createResult = async (ctx) => {
-    let response = {}
-    try {
-        const { body } = ctx.request
-        const { studentId } = body
+    const { Signed_By, studentId, Marks } = ctx.request.body
+    const resultId = uuidv4()
 
-        const resultData = await resultQueries.createOneResult(body)
-
-        if (!resultData) {
-            throw new Error('Failed to create Result.')
-        }
-
-        const { resultId } = await resultQueries.getOneResult({ studentId })
-
-        await studentQueries.updateOneStudent(studentId, {
-            $set: { result: resultId },
-        })
-
-        response = successObject('result Added.')
-    } catch (err) {
-        response = failureObject(err.message)
+    const newResultData = {
+        resultId,
+        Signed_By,
+        studentId,
+        Marks,
     }
-    ctx.body = response
+
+    await resultQueries.createOneResult(newResultData)
+
+    await studentQueries.updateOneStudent(studentId, {
+        $set: { result: resultId },
+    })
+
+    ctx.body = successObject(resultId, 'result Added.')
 }
 
 export const updateResult = async (ctx) => {
-    const updates = ctx.request.body
+    const { Signed_By, studentId, Marks } = ctx.request.body
     const { resultId } = ctx.params
 
-    await resultQueries.updateOneResult(resultId, updates)
+    const changedResultData = {
+        resultId,
+        Signed_By,
+        studentId,
+        Marks,
+    }
 
-    ctx.body = successObject('Result updated successfully.')
+    await resultQueries.updateOneResult(resultId, changedResultData)
+
+    ctx.body = successObject(resultId, 'Result updated successfully.')
 }
 
 export const deleteResult = async (ctx) => {

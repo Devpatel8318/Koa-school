@@ -25,20 +25,33 @@ export const getSingleSubject = async (ctx) => {
 }
 
 export const createSubject = async (ctx) => {
-    const { body } = ctx.request
+    const { subjectCode, name, credit, maximumMarks } = ctx.request.body
 
-    await subjectQueries.createOneSubject(body)
+    const newSubjectData = {
+        subjectCode,
+        name,
+        credit,
+        maximumMarks,
+    }
 
-    ctx.body = successObject('Subject Created.')
+    await subjectQueries.createOneSubject(newSubjectData)
+
+    ctx.body = successObject(subjectCode, 'Subject Created.')
 }
 
 export const updateSubject = async (ctx) => {
-    const updates = ctx.request.body
-    const { subjectCode } = ctx.params
+    const { subjectCode, name, credit, maximumMarks } = ctx.request.body
 
-    await subjectQueries.updateOneSubject(subjectCode, updates)
+    const changedSubjectData = {
+        subjectCode,
+        name,
+        credit,
+        maximumMarks,
+    }
 
-    ctx.body = successObject('Subject updated successfully.')
+    await subjectQueries.updateOneSubject(subjectCode, changedSubjectData)
+
+    ctx.body = successObject(subjectCode, 'Subject updated successfully.')
 }
 
 export const deleteSubject = async (ctx) => {

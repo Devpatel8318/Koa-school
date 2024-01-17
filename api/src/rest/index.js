@@ -21,7 +21,14 @@ app.use(
         credentials: true,
     })
 )
-app.use(bodyParser())
+app.use(
+    bodyParser({
+        enableTypes: ['json'],
+        onerror(err, ctx) {
+            ctx.throw('Invalid Body', 422)
+        },
+    })
+)
 
 app.use(async (ctx, next) => {
     try {

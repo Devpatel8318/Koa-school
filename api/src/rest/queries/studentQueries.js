@@ -26,7 +26,7 @@ export const getOneStudent = async (filter, projection = {}) => {
 }
 
 export const createOneStudent = async (body) => {
-    return db.collection(tableName).insertOne({ ...body, studentId: uuidv4() })
+    return db.collection(tableName).insertOne(body)
 }
 
 export const updateOneStudent = async (studentId, updates) => {

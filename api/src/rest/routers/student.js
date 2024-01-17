@@ -1,6 +1,5 @@
 import Router from '@koa/router'
 
-import { encryptPassword } from '../middleware/encryptPassword.js'
 import validator from '../middleware/validator.js'
 
 import {
@@ -61,7 +60,6 @@ router.post(
         isLastNameValid,
         isPasswordValid,
     ]),
-    encryptPassword,
     createStudent
 )
 
