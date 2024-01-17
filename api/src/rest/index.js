@@ -21,14 +21,6 @@ app.use(
         credentials: true,
     })
 )
-app.use(
-    bodyParser({
-        enableTypes: ['json'],
-        onerror(err, ctx) {
-            ctx.throw('Invalid Body', 422)
-        },
-    })
-)
 
 app.use(async (ctx, next) => {
     try {
@@ -36,10 +28,22 @@ app.use(async (ctx, next) => {
     } catch (err) {
         ctx.status = err.status || 500
         ctx.body = {
+            status: err.status,
             message: err.message,
         }
     }
 })
+
+app.use(
+    bodyParser({
+        enableTypes: ['json'],
+        onerror(err, ctx) {
+            const error = new Error('Invalid Body')
+            error.status = 422
+            throw error
+        },
+    })
+)
 
 app.use(studentRouter.routes())
 app.use(subjectRouter.routes())
