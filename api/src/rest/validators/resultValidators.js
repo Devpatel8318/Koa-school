@@ -149,28 +149,25 @@ export const areSubjectCodesValid = async (ctx) => {
     const { Marks } = ctx.request.body
     const enteredSubjectCodes = Marks.map((mark) => mark.subjectCode)
 
-    const subjects = await subjectQueries.getAllSubjects()
-    const validSubjectCodes = subjects.map((subject) => subject.subjectCode)
-
-    const isSubjectCodeInvalid = enteredSubjectCodes.filter(
-        (subcode) => !validSubjectCodes.includes(subcode)
+    const subjects = await subjectQueries.getAllSubjects({
+        subjectCode: { $in: enteredSubjectCodes },
+    })
+    const validSubjectCodes = new Set(
+        subjects.map((subject) => subject.subjectCode)
     )
 
-    if (isSubjectCodeInvalid.length) {
-        return `Subject does not exist for given code: ${isSubjectCodeInvalid.join(
+    const invalidSubjectCodes = enteredSubjectCodes.filter(
+        (subject) => !validSubjectCodes.has(subject)
+    )
+
+    if (invalidSubjectCodes.length) {
+        return `Subject does not exist for given code: ${invalidSubjectCodes.join(
             ', '
         )}`
     }
 
-    const subjectsMaximumMarks = subjects.filter((subject) =>
-        enteredSubjectCodes.includes(subject.subjectCode)
-    )
-
     ctx.state.subjectsMaximumMarks = Object.fromEntries(
-        subjectsMaximumMarks.map((subject) => [
-            subject.subjectCode,
-            subject.maximumMarks,
-        ])
+        subjects.map((subject) => [subject.subjectCode, subject.maximumMarks])
     )
 
     return null

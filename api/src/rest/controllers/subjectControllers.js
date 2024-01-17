@@ -11,6 +11,7 @@ export const getAllSubjects = async (ctx) => {
     }
 
     const subjects = await subjectQueries.getAllSubjects(
+        {},
         parseInt(page),
         parseInt(perPage),
         sortOptions

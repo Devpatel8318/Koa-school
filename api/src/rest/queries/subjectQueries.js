@@ -3,6 +3,7 @@ import db from '../../connection/db.js'
 const tableName = 'subjects'
 
 export const getAllSubjects = async (
+    filter = {},
     page = null,
     perPage = null,
     sortOptions = {}
@@ -10,7 +11,7 @@ export const getAllSubjects = async (
     if (page === null && perPage === null) {
         return await db
             .collection(tableName)
-            .find({}, { projection: { _id: 0 } })
+            .find(filter, { projection: { _id: 0 } })
             .sort(sortOptions)
             .toArray()
     }
@@ -18,7 +19,7 @@ export const getAllSubjects = async (
 
     return await db
         .collection(tableName)
-        .find({}, { projection: { _id: 0 } })
+        .find(filter, { projection: { _id: 0 } })
         .sort(sortOptions)
         .skip(skip)
         .limit(perPage)
