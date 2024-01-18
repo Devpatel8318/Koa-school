@@ -10,8 +10,8 @@ function Results() {
 
     const fetchStudents = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/students?result=true')
-            setStudents(response.data)
+            const { data } = await axios.get('http://localhost:8000/student/list?result=true')
+            setStudents(data.data)
         } catch (error) {
             handleFetchError('students', error)
         }
@@ -20,8 +20,9 @@ function Results() {
     const fetchResult = async () => {
         try {
             if (!selectedStudent) return
-            const formattedResult = await axios.get(`http://localhost:8000/results/formatted/students/${selectedStudent}`)
-            setResult(formattedResult.data)
+            const { data } = await axios.get(`http://localhost:8000/result/formatted/students/${selectedStudent}`)
+            console.log(data.data)
+            setResult(data.data)
         } catch (error) {
             handleFetchError('result', error)
         }
@@ -45,9 +46,9 @@ function Results() {
             const confirmDeletion = window.confirm('Are you sure you want to delete this Result?')
 
             if (confirmDeletion) {
-                const deleteResponse = await axios.delete(`http://localhost:8000/results/${result._id}`)
+                const { data } = await axios.delete(`http://localhost:8000/result/delete/${result.resultId}`)
 
-                if (deleteResponse.status === 200) {
+                if (data.success) {
                     alert('Student deleted successfully.')
                     fetchStudents()
                     setSelectedStudent('')
@@ -90,13 +91,13 @@ function Results() {
                                         </div>
                                     </div>
                                     <table className="min-w-full text-sm font-light text-center sm:text-lg">
-                                        <TableHeader titles={["sub_code", "name", "credits", "obtained marks", "Maximum Marks"]} />
+                                        <TableHeader titles={["subjectCode", "name", "credits", "obtained marks", "Maximum Marks"]} />
                                         <tbody>
                                             {result?.Marks?.map((data, index) => (
                                                 <tr
                                                     key={index}
                                                     className="transition duration-300 ease-in-out border-b hover:bg-gray-200">
-                                                    <td className="px-6 py-4 font-medium whitespace-nowrap">{data.sub_code}</td>
+                                                    <td className="px-6 py-4 font-medium whitespace-nowrap">{data.subjectCode}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{data.name}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{data.credit}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{data.marks}</td>

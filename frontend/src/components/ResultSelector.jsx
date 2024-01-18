@@ -18,8 +18,8 @@ function ResultSelector({ handleStudentChange, selectedStudent, students }) {
                                 <option value="" disabled>
                                     Select an option
                                 </option>
-                                {students.map(student => (
-                                    <option key={student._id} value={student._id}>
+                                {students?.map(student => (
+                                    <option key={student.studentId} value={student.studentId}>
                                         {student.firstName} {student.lastName}
                                     </option>
                                 ))}

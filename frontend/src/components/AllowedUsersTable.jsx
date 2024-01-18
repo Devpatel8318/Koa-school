@@ -12,21 +12,29 @@ function AllowedUsersTable() {
         if (!confirmation) return
 
         try {
-            await axios.delete('http://localhost:8080/allowedUsers/' + name)
-            fetchAllowedUsers()
+            const { data } = await axios.delete('http://localhost:8080/allowedUser/delete/' + name)
+
+            if (data.success) {
+                fetchAllowedUsers()
+            } else {
+                alert(data.reason)
+            }
         } catch (error) {
-            alert('Error:' + error.response.data.error)
-            console.error('Error removing user:', error)
+            alert(error.response.data.reason)
         }
     }
 
     const fetchAllowedUsers = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/allowedUsers')
-            setAllowedUsers(response.data.data)
+            const { data } = await axios.get('http://localhost:8080/allowedUser/view?list=all')
+            if (data.success) {
+                setAllowedUsers(data.data)
+            }
+            else {
+                alert(data.reason)
+            }
         } catch (error) {
-            alert('Error:' + error.response.data.error)
-            console.error('Error fetching allowed users:', error)
+            alert(error.response.data.reason)
         }
     }
 
@@ -36,12 +44,18 @@ function AllowedUsersTable() {
                 alert('Please enter Name')
                 return
             }
-            await axios.post('http://localhost:8080/allowedUsers', { name: inputedNameRef.current.value.trim().toLowerCase() })
-            fetchAllowedUsers()
+
+            const { data } = await axios.post('http://localhost:8080/allowedUser/add/', { name: inputedNameRef.current.value.trim().toLowerCase() })
+
+            if (data.success) {
+                fetchAllowedUsers()
+            }
+            else {
+                alert(data.reason)
+            }
             inputedNameRef.current.value = ''
         } catch (error) {
-            alert('Error:' + error.response.data.error)
-            console.error('Error adding user:', error)
+            alert(error.response.data.reason)
         }
     }
 

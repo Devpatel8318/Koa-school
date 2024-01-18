@@ -6,6 +6,7 @@ import io from 'socket.io-client'
 import AllowedUsersTable from '../components/AllowedUsersTable'
 
 const AllowedUsers = () => {
+
     const [authenticated, setAuthenticated] = useState(false)
     const passwordRef = useRef(null)
     const [socket, setSocket] = useState(null)
@@ -13,19 +14,13 @@ const AllowedUsers = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.post('http://localhost:8080/allowedUsers/admin', {
+            await axios.post('http://localhost:8080/allowedUser/admin', {
                 passKey: passwordRef.current.value
             })
-            if (response.data.success) {
-                setAuthenticated(true)
-            } else {
-                alert('Wrong Password')
-                passwordRef.current.value = ''
-            }
+            setAuthenticated(true)
         } catch (error) {
-            console.log(error)
+            alert(error.response.data.reason)
         }
-
     }
 
     useEffect(() => {

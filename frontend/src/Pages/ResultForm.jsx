@@ -13,7 +13,7 @@ function ResultForm() {
 
     const fetchStudents = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/students?result=false')
+            const response = await axios.get('http://localhost:8000/student/list?result=false')
             setStudents(response.data)
         } catch (error) {
             alert('Error')
@@ -23,7 +23,7 @@ function ResultForm() {
 
     const fetchSubjects = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/subjects')
+            const response = await axios.get('http://localhost:8000/subject/list')
             setSubjects(response.data)
         } catch (error) {
             alert('Error')
@@ -73,7 +73,7 @@ function ResultForm() {
             if (!formData.Signed_By) {
                 return alert("Please provide Signed By")
             }
-            await axios.post('http://localhost:8000/results', formData)
+            await axios.post('http://localhost:8000/result/add', formData)
             alert("Result Created")
             setFormData({
                 Signed_By: "",
@@ -110,7 +110,7 @@ function ResultForm() {
                     </label>
                     <select className='mt-4 text-xl' name="Student" id="Student" onChange={handleChange} value={formData.Student}>
                         <option value="" disabled selected>Select an option</option>
-                        {students && students.map(student => (
+                        {students && students?.map(student => (
                             <option value={student._id}>{student.firstName} {student.lastName}</option>
                         ))}
                     </select>
@@ -126,10 +126,10 @@ function ResultForm() {
                                             <tr
                                                 key={index}
                                                 className="transition duration-100 ease-in-out border-b hover:bg-gray-200">
-                                                <td className="px-6 py-4 font-medium whitespace-nowrap">{subject._id}</td>
+                                                <td className="px-6 py-4 font-medium whitespace-nowrap">{subject.subjectCode}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">{subject.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">{subject.credit}</td>
-                                                <input value={getMarksValue(subject._id)} onChange={(ev) => handleMarksChange(subject._id, subject.maximumMarks, ev)} type='text' min={0} className="px-6 py-4 whitespace-nowrap"></input>
+                                                <input value={getMarksValue(subject.subjectCode)} onChange={(ev) => handleMarksChange(subject.subjectCode, subject.maximumMarks, ev)} type='text' min={0} className="px-6 py-4 whitespace-nowrap"></input>
                                                 <td className="px-6 py-4 whitespace-nowrap">{subject.maximumMarks}</td>
                                             </tr>
                                         ))}
