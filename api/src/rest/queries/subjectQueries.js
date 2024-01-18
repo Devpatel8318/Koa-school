@@ -8,21 +8,15 @@ export const getAllSubjects = async (
     perPage = null,
     sortOptions = {}
 ) => {
-    if (page === null && perPage === null) {
-        return await db
-            .collection(tableName)
-            .find(filter, { projection: { _id: 0 } })
-            .sort(sortOptions)
-            .toArray()
-    }
     const skip = (page - 1) * perPage
+    const limit = perPage || 0
 
     return await db
         .collection(tableName)
         .find(filter, { projection: { _id: 0 } })
         .sort(sortOptions)
         .skip(skip)
-        .limit(perPage)
+        .limit(limit)
         .toArray()
 }
 

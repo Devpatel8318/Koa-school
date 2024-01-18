@@ -13,7 +13,7 @@ export const loginAdmin = async (ctx) => {
         path: '/',
         overwrite: true,
     })
-    ctx.body = successObject('ok')
+    ctx.body = successObject('Login Successfull.')
 }
 
 export const getUsers = async (ctx) => {
@@ -29,11 +29,12 @@ export const getUsers = async (ctx) => {
         sortOptions
     )
 
-    ctx.body = successObject(allowedUsers)
+    ctx.body = successObject('', allowedUsers)
 }
 export const getUser = async (ctx) => {
     const { user } = ctx.state
-    ctx.body = successObject(user)
+
+    ctx.body = successObject('', user)
 }
 
 export const addUser = async (ctx) => {
@@ -41,7 +42,7 @@ export const addUser = async (ctx) => {
 
     await allowedUsersQueries.addOneUser(name)
 
-    ctx.body = successObject('new user created.')
+    ctx.body = successObject('new user created.', { name })
 }
 
 export const removeUser = async (ctx) => {

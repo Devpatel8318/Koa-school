@@ -71,8 +71,12 @@ export const isFieldValid = async (ctx) => {
 export const isNameValid = async (ctx) => {
     const { name } = ctx.request.body
 
-    if (typeof name !== 'string' || !name.trim()) {
-        return 'Name should be a non-empty string.'
+    if (!name) {
+        return 'Please Provide Name.'
+    }
+
+    if (typeof name !== 'string') {
+        return 'Name must be a String.'
     }
 
     return null

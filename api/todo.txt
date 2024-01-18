@@ -83,6 +83,11 @@ DONE ek object banao and aema badhi fields add karo and ae j object db ma update
 result
 DONE isMarksArrayValid: aa validator ma flag lo and a flag ni andar condition nakho
 DONE areSubjectCodesValid  aa validator ma ek single query maro
+DONEput 422 error handler
 
 
-put 422 error handler
+
+
+DONE enhance successObject
+DONE optional description
+DONE skip default 0

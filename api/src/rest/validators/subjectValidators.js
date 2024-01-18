@@ -136,17 +136,14 @@ export const isMaximumMarksValid = async (ctx) => {
 export const isDescriptionValid = async (ctx) => {
     const { description } = ctx.request.body
 
-    if (!description) {
-        return 'Please Provide Description'
-    }
+    if (description) {
+        if (typeof description !== 'string') {
+            return 'Description must be a string'
+        }
 
-    if (typeof description !== 'string') {
-        return 'Description must be a string'
+        if (description.length > 100) {
+            return 'description must be less than 100 characters.'
+        }
     }
-
-    if (description.length > 100) {
-        return 'description must be less than 100 characters.'
-    }
-
     return null
 }

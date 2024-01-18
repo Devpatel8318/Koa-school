@@ -6,10 +6,14 @@ export const failureObject = (reason, message) => {
     return response
 }
 
-export const successObject = (data, message) => {
+export const successObject = (message = '', data = {}) => {
     const response = {}
+
     response.success = true
-    response.data = data
+    if (Object.keys(data).length) {
+        response.data = data
+    }
     response.message = message || 'data displayed successfully.'
+
     return response
 }

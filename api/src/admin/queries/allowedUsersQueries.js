@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import db from '../../connection/db.js'
 
 const tableName = 'allowedUsers'
@@ -27,10 +25,8 @@ export const getUserByName = async (name) => {
         .findOne({ name }, { projection: { _id: 0 } })
 }
 
-export const addOneUser = async (body) => {
-    return await db
-        .collection(tableName)
-        .insertOne({ name: body, allowedUserId: uuidv4() })
+export const addOneUser = async (name) => {
+    return await db.collection(tableName).insertOne({ name })
 }
 export const deleteUser = async (name) => {
     return await db.collection(tableName).deleteOne({ name })

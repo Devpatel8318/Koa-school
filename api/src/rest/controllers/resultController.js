@@ -21,12 +21,12 @@ export const getAllResults = async (ctx) => {
         sortOptions
     )
 
-    ctx.body = successObject(results)
+    ctx.body = successObject('', results)
 }
 
 export const getSingleResult = async (ctx) => {
     const { result } = ctx.state
-    ctx.body = successObject(result)
+    ctx.body = successObject('', result)
 }
 
 export const getSingleFormattedResult = async (ctx) => {
@@ -44,7 +44,7 @@ export const getSingleFormattedResult = async (ctx) => {
             throw err
         }
 
-        response = successObject(transformDoc(resultData[0]))
+        response = successObject('', transformDoc(resultData[0]))
     } catch (err) {
         response = failureObject(err.message)
         if (err.status) {
@@ -69,7 +69,7 @@ export const getFormattedResultByStudent = async (ctx) => {
             throw err
         }
 
-        response = successObject(transformDoc(resultData[0]))
+        response = successObject('', transformDoc(resultData[0]))
     } catch (err) {
         response = failureObject(err.message)
         if (err.status) {
@@ -96,7 +96,7 @@ export const createResult = async (ctx) => {
         $set: { result: resultId },
     })
 
-    ctx.body = successObject(resultId, 'result Added.')
+    ctx.body = successObject('result Added.', { resultId })
 }
 
 export const updateResult = async (ctx) => {
@@ -112,7 +112,7 @@ export const updateResult = async (ctx) => {
 
     await resultQueries.updateOneResult(resultId, changedResultData)
 
-    ctx.body = successObject(resultId, 'Result updated successfully.')
+    ctx.body = successObject('Result updated successfully.', { resultId })
 }
 
 export const deleteResult = async (ctx) => {

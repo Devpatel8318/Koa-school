@@ -16,7 +16,6 @@ export const handleJoinEvent = (socket, io) => async (name, callback) => {
         callback({ socketId: socket.id })
         io.emit('onlineUsers', Array.from(onlineUsers))
     } catch (err) {
-        console.log(err)
         callback({ error: 'Error processing request' })
     }
 }

@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import db from '../../connection/db.js'
 
 const pipeline = (argument) => [
@@ -64,9 +62,7 @@ export const getOneFormattedResult = async (filter) => {
 }
 
 export const createOneResult = async (body) => {
-    return await db
-        .collection(tableName)
-        .insertOne({ ...body, resultId: uuidv4() })
+    return await db.collection(tableName).insertOne(body)
 }
 
 export const updateOneResult = async (resultId, body) => {

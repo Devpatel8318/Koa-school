@@ -1,6 +1,6 @@
 const allowedUsersSchema = {
     bsonType: 'object',
-    required: ['name', 'allowedUserId'],
+    required: ['name'],
     properties: {
         name: {
             bsonType: 'string',

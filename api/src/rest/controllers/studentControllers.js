@@ -28,12 +28,12 @@ export const getAllStudents = async (ctx) => {
         sortOptions
     )
 
-    ctx.body = successObject(students)
+    ctx.body = successObject('', students)
 }
 
 export const getOneStudent = async (ctx) => {
     const { student } = ctx.state
-    ctx.body = successObject(student)
+    ctx.body = successObject('', student)
 }
 
 export const loginStudent = async (ctx) => {
@@ -42,7 +42,7 @@ export const loginStudent = async (ctx) => {
     delete student.password
     delete student._id
 
-    ctx.body = successObject(student)
+    ctx.body = successObject('Login Successfull', student)
 }
 
 export const createStudent = async (ctx) => {
@@ -59,7 +59,7 @@ export const createStudent = async (ctx) => {
 
     await studentQueries.createOneStudent(newStudentData)
 
-    ctx.body = successObject(studentId, 'Student created.')
+    ctx.body = successObject('Student created.', { studentId })
 }
 
 export const updateStudent = async (ctx) => {
@@ -78,7 +78,7 @@ export const updateStudent = async (ctx) => {
         $set: changedStudentData,
     })
 
-    ctx.body = successObject(studentId, 'Student updated successfully.')
+    ctx.body = successObject('Student updated successfully.', { studentId })
 }
 
 export const deleteStudent = async (ctx) => {

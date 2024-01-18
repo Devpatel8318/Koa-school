@@ -39,12 +39,12 @@ router.get(
 
 router.get(
     '/formatted/:resultId',
-    validator([doesResultExistByIdAndAttach]),
+    validator([doesResultExistById]),
     getSingleFormattedResult
 )
 
 router.get(
-    '/formatted/students/:resultId',
+    '/formatted/students/:studentId',
     validator([doesStudentExistByIdAndAttach, doesStudentHaveResult]),
     getFormattedResultByStudent
 )
