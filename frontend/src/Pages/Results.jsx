@@ -21,7 +21,6 @@ function Results() {
         try {
             if (!selectedStudent) return
             const { data } = await axios.get(`http://localhost:8000/result/formatted/students/${selectedStudent}`)
-            console.log(data.data)
             setResult(data.data)
         } catch (error) {
             handleFetchError('result', error)

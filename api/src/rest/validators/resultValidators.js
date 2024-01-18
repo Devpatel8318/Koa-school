@@ -121,6 +121,8 @@ export const isMarksArrayValid = async (ctx) => {
         return 'Marks should be an array.'
     }
 
+    console.log(Marks)
+
     const subjectCodes = Marks.map((mark) => mark.subjectCode)
 
     const doesDuplicateSubjectCodesExists =

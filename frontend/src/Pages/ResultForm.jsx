@@ -7,14 +7,14 @@ function ResultForm() {
     const [subjects, setSubjects] = useState([])
     const [formData, setFormData] = useState({
         Signed_By: null,
-        Student: null,
+        studentId: null,
         Marks: []
     })
 
     const fetchStudents = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/student/list?result=false')
-            setStudents(response.data)
+            const { data } = await axios.get('http://localhost:8000/student/list?result=false')
+            setStudents(data.data)
         } catch (error) {
             alert('Error')
             console.error('Error fetching students:', error)
@@ -23,8 +23,8 @@ function ResultForm() {
 
     const fetchSubjects = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/subject/list')
-            setSubjects(response.data)
+            const { data } = await axios.get('http://localhost:8000/subject/list')
+            setSubjects(data.data)
         } catch (error) {
             alert('Error')
             console.error('Error fetching subjects:', error)
@@ -47,15 +47,15 @@ function ResultForm() {
             value = maximumMarks
         }
         const updatedMarks = formData.Marks.map(item => {
-            if (item.sub_code === subjectCode) {
+            if (item.subjectCode === subjectCode) {
                 return { ...item, marks: value }
             }
             return item
         })
 
-        const existingIndex = formData.Marks.findIndex(item => item.sub_code === subjectCode)
+        const existingIndex = formData.Marks.findIndex(item => item.subjectCode === subjectCode)
         if (existingIndex === -1) {
-            updatedMarks.push({ sub_code: subjectCode, marks: value })
+            updatedMarks.push({ subjectCode, marks: value })
         }
 
         setFormData({
@@ -67,7 +67,7 @@ function ResultForm() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            if (!formData.Student) {
+            if (!formData.studentId) {
                 return alert("Please Select a Student")
             }
             if (!formData.Signed_By) {
@@ -77,7 +77,7 @@ function ResultForm() {
             alert("Result Created")
             setFormData({
                 Signed_By: "",
-                Student: "",
+                studentId: "",
                 Marks: []
             })
             fetchStudents()
@@ -88,7 +88,7 @@ function ResultForm() {
     }
 
     const getMarksValue = (subjectCode) => {
-        const existingIndex = formData.Marks.findIndex(item => item.sub_code === subjectCode)
+        const existingIndex = formData.Marks.findIndex(item => item.subjectCode === subjectCode)
         if (existingIndex === -1) {
             return 0
         } else {
@@ -108,10 +108,10 @@ function ResultForm() {
                     <label className="block text-gray-700 text-lg font-bold mb-2" htmlFor="firstName">
                         Student
                     </label>
-                    <select className='mt-4 text-xl' name="Student" id="Student" onChange={handleChange} value={formData.Student}>
+                    <select className='mt-4 text-xl' name="studentId" id="studentId" onChange={handleChange} value={formData.studentId}>
                         <option value="" disabled selected>Select an option</option>
                         {students && students?.map(student => (
-                            <option value={student._id}>{student.firstName} {student.lastName}</option>
+                            <option value={student.studentId}>{student.firstName} {student.lastName}</option>
                         ))}
                     </select>
                 </div>
@@ -120,7 +120,7 @@ function ResultForm() {
                         <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                             <div className="overflow-hidden">
                                 <table className="min-w-full text-sm font-light text-center sm:text-lg">
-                                    <TableHeader titles={["sub_code", "name", "credits", "obtained marks", "Maximum Marks"]} />
+                                    <TableHeader titles={["subject Code", "name", "credits", "obtained marks", "Maximum Marks"]} />
                                     <tbody>
                                         {subjects?.map((subject, index) => (
                                             <tr
