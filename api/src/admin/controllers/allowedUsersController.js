@@ -52,3 +52,28 @@ export const removeUser = async (ctx) => {
 
     ctx.body = successObject('User deleted successfully.')
 }
+
+export const getData = async (ctx) => {
+    const { user } = ctx.state
+    const responseObejct = {}
+
+    if (user) {
+        Object.assign(responseObejct, successObject('', user))
+    } else {
+        let sortOptions = {}
+        const { sortBy, sortOrder, page, perPage } = ctx.query
+
+        if (sortBy && sortOrder)
+            sortOptions[sortBy] = sortOrder.toLowerCase() === 'desc' ? -1 : 1
+
+        const allowedUsers = await allowedUsersQueries.getAllAllowedUsers(
+            {},
+            parseInt(page),
+            parseInt(perPage),
+            sortOptions
+        )
+        Object.assign(responseObejct, successObject('', allowedUsers))
+    }
+
+    ctx.body = responseObejct
+}

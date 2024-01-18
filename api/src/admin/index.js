@@ -20,8 +20,6 @@ app.use(
         credentials: true,
     })
 )
-app.use(bodyParser())
-
 app.use(async (ctx, next) => {
     try {
         await next()
@@ -32,6 +30,17 @@ app.use(async (ctx, next) => {
         }
     }
 })
+
+app.use(
+    bodyParser({
+        enableTypes: ['json'],
+        onerror(err, ctx) {
+            const error = new Error('Invalid Body')
+            error.status = 422
+            throw error
+        },
+    })
+)
 
 app.use(allowedUsers.routes())
 

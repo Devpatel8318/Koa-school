@@ -3,9 +3,9 @@ import * as allowedUsersQueries from '../queries/allowedUsersQueries.js'
 export const doesUserExistByName = async (ctx) => {
     const { name } = ctx.params
 
-    const user = await allowedUsersQueries.getUserByName(name)
+    const user = await allowedUsersQueries.getAllAllowedUsers({ name })
 
-    if (!user) {
+    if (user && !user.length) {
         return 'User Not Found.'
     }
 
@@ -13,33 +13,57 @@ export const doesUserExistByName = async (ctx) => {
 }
 
 export const doesUserExistByNameAndAttach = async (ctx) => {
-    const { name } = ctx.params
+    const { list, name } = ctx.request.query
 
-    const user = await allowedUsersQueries.getUserByName(name)
+    if (list === 'all') {
+        return null
+    }
 
-    if (!user) {
+    if (list !== 'single') {
+        return 'Invalid Request'
+    }
+
+    if (!name) {
+        return 'Please Provide Name'
+    }
+
+    const user = await allowedUsersQueries.getAllAllowedUsers({ name })
+
+    if (user && !user.length) {
         return 'User Not Found.'
     }
 
     ctx.state.user = user
+
     return null
 }
 
 export const isNameAlreadyAdded = async (ctx) => {
     const { name } = ctx.request.body
 
-    const user = await allowedUsersQueries.getUserByName(name)
+    const user = await allowedUsersQueries.getAllAllowedUsers({ name })
 
-    if (user) {
+    if (user && user.length) {
         return 'User already exists.'
     }
 
     return null
 }
 
-export const isPassKeyCorrect = async (ctx) => {
+export const isPassKeyPresent = async (ctx) => {
     const { passKey } = ctx.request.body
 
+    if (!passKey) {
+        return 'Please Provide PassKey'
+    }
+
+    if (typeof passKey !== 'string') {
+        return 'Passkey Must be a String'
+    }
+}
+
+export const isPassKeyCorrect = async (ctx) => {
+    const { passKey } = ctx.request.body
     if (passKey !== process.env.PASSKEY) {
         return 'Wrong Password.'
     }
@@ -47,7 +71,7 @@ export const isPassKeyCorrect = async (ctx) => {
     return null
 }
 
-export const isFieldValid = async (ctx) => {
+export const isCreateFieldsValid = async (ctx) => {
     const { body } = ctx.request
     const allowedFields = ['name']
 
@@ -63,6 +87,26 @@ export const isFieldValid = async (ctx) => {
 
     if (invalidFields && invalidFields.length) {
         return `Invalid Fields: ${invalidFields.join(', ')}.`
+    }
+
+    return null
+}
+export const isLoginFieldsValid = async (ctx) => {
+    const { body } = ctx.request
+    const allowedFields = ['passKey']
+
+    // limit number of fields
+    if (Object.keys(body).length > allowedFields.length) {
+        return 'Invalid amount of fields.'
+    }
+
+    //check for invalid fields
+    const invalidFields = Object.keys(body).filter(
+        (field) => !allowedFields.includes(field)
+    )
+
+    if (invalidFields && invalidFields.length) {
+        return `Invalid Field: ${invalidFields[0]}.`
     }
 
     return null

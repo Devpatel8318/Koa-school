@@ -7,8 +7,10 @@ import {
     doesUserExistByName,
     doesUserExistByNameAndAttach,
     isNameAlreadyAdded,
+    isPassKeyPresent,
     isPassKeyCorrect,
-    isFieldValid,
+    isCreateFieldsValid,
+    isLoginFieldsValid,
     isNameValid,
 } from '../validators/allowedUsersValidators.js'
 
@@ -18,29 +20,26 @@ import {
     getUsers,
     removeUser,
     loginAdmin,
+    getData,
 } from '../controllers/allowedUsersController.js'
 
 const router = new Router({ prefix: '/alloweduser' })
 
 // login admin
-router.post('/admin', validator([isPassKeyCorrect]), loginAdmin)
-
-// get ALL users
-router.get('/list', auth, getUsers)
-
-// get single user
-router.get(
-    '/view/:name',
-    auth,
-    validator([doesUserExistByNameAndAttach]),
-    getUser
+router.post(
+    '/admin',
+    validator([isLoginFieldsValid, isPassKeyPresent, isPassKeyCorrect]),
+    loginAdmin
 )
 
-// create new user
+// get users
+router.get('/view', auth, validator([doesUserExistByNameAndAttach]), getData)
+
+//create
 router.post(
     '/add',
     auth,
-    validator([isFieldValid, isNameValid, isNameAlreadyAdded]),
+    validator([isCreateFieldsValid, isNameValid, isNameAlreadyAdded]),
     addUser
 )
 

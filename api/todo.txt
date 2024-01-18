@@ -91,3 +91,8 @@ DONEput 422 error handler
 DONE enhance successObject
 DONE optional description
 DONE skip default 0
+
+
+list=all
+else
+list=single  then check name=dev
